@@ -3,8 +3,10 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页"
-				// "navigationStyle": "custom"
+				// "navigationBarBackgroundColor":"#2957C4",
+				"navigationStyle": "custom"
+				// "navigationBarTitleText": "首页"
+				
 			}
 		},
 		{
@@ -20,29 +22,30 @@
 				}
 			
 		}
+       
         ,{
-            "path" : "pages/index/index/index",
+            "path" : "pages/reportform/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "报表",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/login/login",
+            "path" : "pages/policeinfo/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "报警信息",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/profile/index",
+            "path" : "pages/trend/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "趋势",
                 "enablePullDownRefresh": false
             }
             
@@ -50,23 +53,49 @@
     ],
 	"tabBar": {
 		"custom": false,
-		"selectedColor": "#79D5AD",
+		"selectedColor": "#5481EA",
 		"color": "#999999",
 		"backgroundColor": "#ffffff",
 		"borderStyle": "white",
-		"height":"0px",
-		"list": [{
+		// "height":"0px",
+		"list": [
+			{
 			"pagePath": "pages/index/index",
-			"text": "首页"
+			"text": "首页",
+			"iconPath":"static/tabhome.png",
+			"selectedIconPath":"static/tabhomeactive.png"
+		},
+		{
+			"pagePath": "pages/reportform/index",
+			"text": "报表",
+			"iconPath":"static/tabreportform.png",
+			"selectedIconPath":"static/tabreportformactive.png"
 		},
 		 {
+			"pagePath": "pages/policeinfo/index",
+			"text": "报警信息",
+			"iconPath":"static/tabpolice.png",
+			"selectedIconPath":"static/tabpoliceactivie.png"
+		},
+		{
+			"pagePath": "pages/trend/index",
+			"text": "趋势",
+			"iconPath":"static/tabtrend.png",
+			"selectedIconPath":"static/tabtrendactive.png"
+		},
+		{
 			"pagePath": "pages/profile/index",
-			"text": "我的"
-		}]
+			"text": "我的",
+			"iconPath":"static/tabprofile.png",
+			"selectedIconPath":"static/tabprofileactive.png"
+		}
+		
+		
+		]
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "车间上位",
+		"navigationBarTitleText": "",
 		"navigationBarBackgroundColor": "#fff",
 		"backgroundColor": "#fff",
 		"onReachBottomDistance":100
