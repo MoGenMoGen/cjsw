@@ -18,7 +18,8 @@
 			{
 				"path": "pages/profile/index",
 				"style": {
-					"navigationBarTitleText": "个人中心"
+					"navigationStyle": "custom"
+					// "navigationBarTitleText": "个人中心"
 				}
 			
 		}
@@ -46,6 +47,24 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "趋势",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/login/forgetpass",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "忘记密码",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/profile/modifypass",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "修改密码",
                 "enablePullDownRefresh": false
             }
             
