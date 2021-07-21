@@ -10,8 +10,8 @@
 			<view class="login_form">
 				<view class="form_phone">
 					<image :src="phoneimg" mode="widthFix" />
-					<input type="number" placeholder="请输入手机号码" maxlength="11" placeholder-style="color:#909090"
-						v-model="info.phone" />
+					<input type="text" placeholder="请输入手机号码" maxlength="11" placeholder-style="color:#909090"
+						v-model="info.username" />
 				</view>
 				<view class="form_password">
 					<image :src="passimg" mode="widthFix" />
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+	import {md5} from '../../utils/md5.js';
 	import bg from "static/banner1.png";
 	import phoneimg from "static/loginPhone.png";
 	import passimg from "static/loginPass.png";
@@ -39,17 +40,55 @@
 				phoneimg,
 				passimg,
 				info: {
-					phone: "",
+					username: "",
 					password: "",
+					tenantId: "000000",
+					grant_type:"password"
 				}, //用户信息
 			};
 		},
 		methods: {
-			summit() {
-				uni.switchTab({
-					url:"/pages/index/index"
-				})
-			},
+			async summit() {
+				if ( !this.info.username) {
+					uni.showToast({
+						icon: "loading",
+						title: "请输入账号",
+						duration: 1000,
+					});
+				} else if (!this.info.password) {
+					uni.showToast({
+						icon: "loading",
+						title: "请输入密码",
+						duration: 1000,
+					});
+				} else {
+					let data=await this.api.login({
+						username: this.info.username,
+						password: md5(this.info.password,32),
+						tenantId: "000000",
+						grant_type:"password"
+					})
+					console.log(data);
+					
+					// uni.setStorageSync("loginType", Number(res.post_id));
+					// 后台需要的token缓存
+					uni.setStorageSync(
+						"Blade-Auth",
+						`${data.token_type} ${data.refresh_token}`
+					);
+					// 用户信息缓存
+					uni.setStorageSync("userinfo", data)
+									
+					uni.switchTab({
+						url: "/pages/index/index",
+					});
+					
+				}
+				
+				
+				
+				
+			},   
 			forget() {
 				uni.navigateTo({
 					url:"/pages/login/forgetpass"

@@ -1,6 +1,9 @@
 
-// const serverURL = "http://ttcmob.gzvst.top";// 天天查     
-const serverURL = "http://192.168.0.29:80"; // 天天查
+// const serverURL = "http://hwnpoht.nat.ipyingshe.com/api";// 嘉兴敏华     
+// const serverURL = "http://192.168.1.113/api";// 嘉兴敏华    
+const serverURL = "http://10086.jinkworld.com/api/";// 嘉兴敏华    
+ 
+
 const imgURL = "https://h5.guluint.com/ruicao/Image/";
 
 module.exports = {

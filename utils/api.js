@@ -134,7 +134,7 @@ function post(url, data, header) {
 	});
 	return promise;
 }
-// 专门针对登录的post提交,error_code=='400'账号或密码错误,error_code=='402'账号未注册，没有error_code成功
+// 专门针对登录的post提交,error_code=='400'账号或密码错误,没有error_code成功
 // 其他接口用的get/post,code==401未授权，code=200成功，其他code就是服务器问题
 
 
@@ -144,19 +144,12 @@ function loginpost(url, data, header) {
 		title: "加载中"
 	});
 
-	let BladeAuth = uni.getStorageSync("Blade-Auth")
-	let myheader = {
-		"Blade-Auth": BladeAuth
-	}
 	header = header ? header : {}
-	myheader = {
-		...myheader,
-		...header
-	}
+
 	let promise = new Promise((resolve, reject) => {
 		uni.request({
 			data: data,
-			header: myheader,
+			header,
 			method: "post",
 			url: config.serverURL + url,
 			success: function(res) {
@@ -166,19 +159,10 @@ function loginpost(url, data, header) {
 					uni.showToast({
 						title: res.data.error_description,
 						// title: "111",
-						icon: 'loading',
+						icon: 'none',
 						duration: 2000
 					})
 
-				}
-				// 402账号未注册
-				else if (res.data.error_code == "402") {
-					uni.showToast({
-						title: res.data.error_description,
-						// title:"222",
-						duration: 2000,
-						icon: 'loading'
-					})
 				} else if (!res.data.error_code) {
 					console.log(1242343564565)
 				} else {
@@ -215,12 +199,12 @@ class api {
 	//登录
 	login(data) {
 		return new Promise((resolve, reject) => {
-			loginpost("/blade-auth/login", data, {
-				"Tenant-Id": "000000",
+			loginpost("/blade-auth/oauth/token", data, {
+
 				"Authorization": "Basic c3dvcmQ6c3dvcmRfc2VjcmV0",
 				"Content-Type": "application/x-www-form-urlencoded",
 			}).then(res => {
-				uni.setStorageSync("user_id", res.user_id)
+				// uni.setStorageSync("user_id", res.user_id)
 				resolve(res);
 			});
 		});
@@ -335,6 +319,49 @@ class api {
 				complete: function() {
 					uni.hideLoading();
 				}
+			});
+		})
+	}
+
+	// 首页轮播图
+	getbanner() {
+		return new Promise((resolve, reject) => {
+			get("/blade-banner/banner/list?type=mob-index", {}, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		});
+
+	}
+	// 获取头部切换栏列表
+	getheadswitchList() {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/site/workshopList", {}, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+// 获取首页内容列表
+getwrapperList(data){
+	return new Promise((resolve, reject) => {
+		get("//blade-mh/site/siteByWorkShopId", data, {
+			'Content-Type': 'application/json'
+		}).then(res => {
+			resolve(res.data);
+		});
+	})
+}
+
+//获取折线图数据
+	getsiteValList(data){
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/site/siteValList", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
 			});
 		})
 	}

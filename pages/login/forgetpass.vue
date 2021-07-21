@@ -14,6 +14,12 @@
 					<image :src="vertifycode" mode="widthFix" />
 					<input type="text" placeholder="请输入验证码" maxlength="10" placeholder-style="color:#909090"
 						v-model="info.vertifycode" />
+					<view class="vertifylink" v-if="codeTime==0" @click="getCheckNum">
+						获取验证码
+					</view>
+					<view class="vertifylinkactive" v-else>
+						{{codeTime}}s
+					</view>
 				</view>
 				<view class="item">
 					<image :src="passimg" mode="widthFix" />
@@ -43,6 +49,8 @@
 				modifyPassCover,
 				vertifycode,
 				loginPhone,
+				vertifyflag: false,
+				codeTime: 0,
 				info: {
 					phone: "",
 					vertifycode: "",
@@ -50,15 +58,35 @@
 				},
 			};
 		},
-		methods: {
-			async summit() {
+		methods: { 
+			getCheckNum() {
+				let res=this.reg.checkPhone(this.info.phone);
+				if(res!='ok')
+				{
+					return uni.showToast({   
+						title:res,
+						icon:'none',
+						duration: 1500
+					})
+				}
+				this.codeTime = 5
+				let timer = setInterval(() => {
+					this.codeTime--;
+					if (this.codeTime < 1) {
+						clearInterval(timer);
+						this.codeTime = 0
+					}
+				}, 1000)
+			},
+			 summit() {
 
 
 			}
 		},
-		onLoad() {
 
-		}
+	onLoad() {
+
+	}
 	};
 </script>
 
@@ -86,6 +114,7 @@
 				width: 530upx;
 
 				.item {
+					position: relative;
 					width: 100%;
 					height: 110upx;
 					display: flex;
@@ -100,6 +129,30 @@
 
 					input {
 						font-size: 28upx;
+					}
+
+					.vertifylink {
+						font-size: 28upx;
+						color: #5481EA;
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						width: 184upx;
+						border-left: 1px solid #5481EA;
+						text-align: center;
+						right: 0;
+					}
+
+					.vertifylinkactive {
+						font-size: 28upx;
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						width: 184upx;
+						text-align: center;
+						right: 0;
+						border-left: 1px solid #909090;
+						color: #909090;
 					}
 				}
 
@@ -123,6 +176,7 @@
 					font-size: 28upx;
 					border: 1px solid #5481EA;
 				}
+
 				button:first-child {}
 
 				button:last-child {

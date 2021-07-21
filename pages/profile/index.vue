@@ -173,7 +173,8 @@
 <style lang="scss" scoped>
 	.pages_profile_tab {
 		width: 100%;
-		height: calc(100vh - 173upx);
+		// height: calc(100vh - 173upx);
+		height: 100vh;
 		display: flex;
 		flex-direction: column;
 

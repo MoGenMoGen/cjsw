@@ -3,15 +3,13 @@
 		<view class="container">
 			<!-- 头部切换栏 开始 -->
 			<!-- 隐藏滚动条 -->
-			<view class="nav">
 
-				<view class="hidden">
-					<view class="head_switch">
-						<text class="switch_item" v-for="(item,index) in switchList" :key="index"
-							@click="switchHead(index)" :class="{activeheader:index==currentheaderindex}">
-							{{item}}
-						</text>
-					</view>
+			<view class="hidden">
+				<view class="head_switch">
+					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
+						@click="switchHead(item.id)" :class="{activeheader:item.id==currentheaderID}">
+						{{item.dictValue}}
+					</text>
 				</view>
 			</view>
 			<!-- 头部切换栏 结束 -->
@@ -42,20 +40,20 @@
 			<!-- 内容列表 开始 -->
 			<view class="wrapper_list">
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
-					<view class="wrapper_item_title">
-						{{item1.title}}
-						<image :src="item1.arrow" mode="widthFix" class="arrow" @click='toogle(index1)'></image>
+					<view class="wrapper_item_title" @click='toogle(index1)'>
+						{{item1.dictValue}}
+						<image :src="item1.arrow" mode="widthFix" class="arrow"></image>
 					</view>
 					<view class="wrapper_item_container" v-show="item1.toogleflag">
-						<view class="wrapper_item_item" v-for="(item2,index2) in item1.innerList" :key="index2">
+						<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
 							<view class="line1 line">
-								{{item2.line1}}
+								{{item2.name}}
 							</view>
 							<view class="line2 line">
-								{{item2.line2}}
+								{{item2.val}}
 							</view>
 							<view class="line3 line">
-								{{item2.line3}}
+								{{item2.unit}}
 							</view>
 						</view>
 					</view>
@@ -76,9 +74,36 @@
 		data() {
 			return {
 
-				switchList: ['涂装线', '供漆', '机器人', '废弃处理', '冰水机房', '空压机', '安全环保'],
+				switchList: [{
+						dictValue: '涂装线',
+						id: '1'
+					},
+					{
+						dictValue: '供漆',
+						id: '2'
+					}, {
+						dictValue: '机器人',
+						id: '3'
+					},
+					{
+						dictValue: '废弃处理',
+						id: '4'
+					},
+					{
+						dictValue: '冰水机房',
+						id: '5'
+					},
+					{
+						dictValue: '空压机',
+						id: '6'
+					},
+					{
+						dictValue: '安全环保',
+						id: '6'
+					}
+				],
 				// 当前head状态栏下标
-				currentheaderindex: 0,
+				currentheaderID: '1',
 				banner1,
 				banner2,
 				banner3,
@@ -111,89 +136,27 @@
 					}
 				],
 				wrapperList1: [{
-						title: "前处理预脱",
+						dictValue: "前处理预脱",
 						toogleflag: false,
 						arrow: '../../static/downarrow.png',
-						innerList: [{
-								line1: '1.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'Bar'
+						sites: [{
+								name: '1.喷淋管道压力',
+								val: '浮点数',
+								unit: 'Bar'
 							},
 							{
-								line1: '2.频率',
-								line2: '浮点数',
-								line3: 'Hz'
+								name: '2.频率',
+								val: '浮点数',
+								unit: 'Hz'
 							},
 							{
-								line1: '3.电机温度',
-								line2: '浮点数',
-								line3: 'A'
-							},
-						]
-					},
-					{
-						title: "前处理主脱",
-						toogleflag: false,
-						arrow: '../../static/downarrow.png',
-						innerList: [{
-								line1: '1.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'Bar'
-							},
-							{
-								line1: '2.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'Hz'
-							},
-							{
-								line1: '3.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'A'
-							},
-						]
-					},
-					{
-						title: "前处理主脱",
-						toogleflag: false,
-						arrow: '../../static/downarrow.png',
-						innerList: [{
-								line1: '1.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'Bar'
-							},
-							{
-								line1: '2.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'Hz'
-							},
-							{
-								line1: '3.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'A'
-							},
-						]
-					},
-					{
-						title: "前处理主脱",
-						toogleflag: false,
-						arrow: '../../static/downarrow.png',
-						innerList: [{
-								line1: '1.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'Bar'
-							},
-							{
-								line1: '2.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'Hz'
-							},
-							{
-								line1: '3.喷淋管道压力',
-								line2: '浮点数',
-								line3: 'A'
+								name: '3.电机温度',
+								val: '浮点数',
+								unit: 'A'
 							},
 						]
 					}
+					
 				]
 
 			}
@@ -210,19 +173,47 @@
 			// }
 		},
 		methods: {
-			switchHead(index) {
-				if (this.currentheaderindex != index)
-					this.currentheaderindex = index
+			switchHead(id) {
+				if (this.currentheaderID != id)
+					this.currentheaderID = id
+				this.getwrapperList(this.currentheaderID)	
 			},
 			toogle(index) {
 				this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
 				this.wrapperList1[index].arrow = this.wrapperList1[index].toogleflag ? '../../static/uparrow.png' :
 					'../../static/downarrow.png'
+			},
+			// 获取内容列表
+			async getwrapperList(id){
+				let wraplist=await this.api.getwrapperList({
+					id
+				})
+				// 为每项添加一个折叠状态和图标
+				for(let item of wraplist){
+					item.toogleflag= false;
+					item.arrow= '../../static/downarrow.png';
+				}
+				wraplist.push()
+				this.wrapperList1=wraplist
+				console.log({
+					wraplist:this.wrapperList1
+				});
 			}
+			
 		},
 		components: {
 			pagecom
 		},
+		async onLoad() {
+			// 轮播图
+			let banners = await this.api.getbanner()
+			this.swiperList = banners.records.map(item => item.img)
+			// 头部切换栏列表
+			this.switchList = await this.api.getheadswitchList()
+
+			this.getwrapperList('1')
+			
+		}
 
 	}
 </script>
@@ -236,68 +227,63 @@
 		.container {
 			width: 100%;
 
-			.nav {
-				background-color: #2957C4;
-				// padding-bottom: calc(var(--status-bar-height) + 10upx);
-				position: fixed;   
+			.hidden {
+				top: 0;
+				position: fixed;
 				z-index: 100;
-				top:var(--status-bar-height);
+				background-color: #2957C4;
+				height: calc(var(--status-bar-height) +86upx);
+				// overflow: hidden;
+				width: 100%;
 
-				.hidden {
+				.head_switch {
+					// position: fixed;
+					margin-top: calc(var(--status-bar-height) + 10upx);
+					// z-index: 100;
 					background-color: #2957C4;
+					width: 100%;
 					height: 76upx;
-					overflow: hidden;
+					// padding-bottom: 12upx;
+					overflow-x: scroll;
+					// display: flex;
+					// align-items: center;
+					white-space: nowrap;
 
+					.switch_item {
+						padding: 18upx 23upx;
+						font-size: 28upx;
+						font-weight: 600;
+						// color: #ecf0f1;
+						color: #fff;
+						opacity: 0.64;
+					}
 
-					.head_switch {
-						// position: fixed;
-						// top:calc(var(--status-bar-height) + 10upx);
-						// z-index: 100;
-						// background-color: #2957C4;
-						width: 100%;
-						height: 76upx;
-						padding-bottom: 12upx;
-						overflow-x: scroll;
-						display: flex;
-						align-items: center;
-						white-space: nowrap;
+					.activeheader {
+						position: relative;
+						font-size: 28upx;
+						font-weight: 600;
+						color: #fff;
+						opacity: 1;
+						transition: 0.3s;
+					}
 
-						.switch_item {
-							padding: 18upx 23upx;
-							font-size: 28upx;
-							font-weight: 600;
-							// color: #ecf0f1;
-							color: #fff;
-							opacity: 0.64;
-						}
-
-						.activeheader {
-							position: relative;
-							font-size: 28upx;
-							font-weight: 600;
-							color: #fff;
-							opacity: 1;
-							transition: 0.3s;
-						}
-
-						.activeheader::after {
-							position: absolute;
-							bottom: 8upx;
-							left: 50%;
-							transform: translateX(-50%);
-							content: "";
-							width: 50upx;
-							height: 6upx;
-							background: #fff;
-							opacity: 1;
-							border-radius: 6upx;
-						}
+					.activeheader::after {
+						position: absolute;
+						bottom: 8upx;
+						left: 50%;
+						transform: translateX(-50%);
+						content: "";
+						width: 50upx;
+						height: 6upx;
+						background: #fff;
+						opacity: 1;
+						border-radius: 6upx;
 					}
 				}
 			}
 
 			.swiper {
-				margin-top: calc(var(--status-bar-height) + 10upx);
+				margin-top: calc(var(--status-bar-height) + 84upx);
 				width: 750upx;
 				height: 400upx;
 
@@ -390,15 +376,15 @@
 
 							.line {
 								color: #333333;
-								font-size: 28upx;
+								font-size: 32upx;
 							}
 
 							.line1 {
-								flex: 2;
+								flex: 3;
 							}
 
 							.line2 {
-								flex: 2;
+								flex: 1;
 							}
 
 							.line3 {
