@@ -22,20 +22,20 @@
 			</swiper>
 			<!-- 轮播图 结束 -->
 			<!-- 机器运行状态 开始 -->
-			<view class="flexspace">
+			<!-- <view class="flexspace">
 				<view class="flex_item" v-for="(item,index) in statusList" :key="index"
 					:style="{color:'#000',fontSize:28 + 'upx',backgroundColor:'#fff'}">
 					<image :src="item.icon" mode="widthFix"></image>
 					{{item.title}}
 				</view>
-			</view>
+			</view> -->
 			<!-- 机器运行状态 结束 -->
 			<!-- 产线 开始 -->
-			<view class="flexspace">
+			<!-- 	<view class="flexspace">
 				<view class="flex_item" v-for="(item,index) in prolineList" :key="index">
 					{{item}}
 				</view>
-			</view>
+			</view> -->
 			<!-- 产线 结束 -->
 			<!-- 内容列表 开始 -->
 			<view class="wrapper_list">
@@ -49,7 +49,7 @@
 							<view class="line1 line">
 								{{item2.name}}
 							</view>
-							<view class="line2 line">
+						<view class="line2 line" :style="{color:item2.color}">
 								{{item2.val}}
 							</view>
 							<view class="line3 line">
@@ -66,7 +66,6 @@
 </template>
 
 <script>
-	import pagecom from 'components/pagecom.vue'
 	import banner1 from "static/banner1.png"
 	import banner2 from "static/banner2.png"
 	import banner3 from "static/banner3.png"
@@ -156,7 +155,7 @@
 							},
 						]
 					}
-					
+
 				]
 
 			}
@@ -174,9 +173,13 @@
 		},
 		methods: {
 			switchHead(id) {
-				if (this.currentheaderID != id)
+				if (this.currentheaderID != id) {
 					this.currentheaderID = id
-				this.getwrapperList(this.currentheaderID)	
+					uni.setStorageSync("currentheaderID", this.currentheaderID)
+					this.getwrapperList(this.currentheaderID)
+				}
+
+
 			},
 			toogle(index) {
 				this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
@@ -184,27 +187,33 @@
 					'../../static/downarrow.png'
 			},
 			// 获取内容列表
-			async getwrapperList(id){
-				let wraplist=await this.api.getwrapperList({
-					id
-				})
-				// 为每项添加一个折叠状态和图标
-				for(let item of wraplist){
-					item.toogleflag= false;
-					item.arrow= '../../static/downarrow.png';
-				}
-				wraplist.push()
-				this.wrapperList1=wraplist
-				console.log({
-					wraplist:this.wrapperList1
-				});
+			getwrapperList(id) {
+				// setInterval(() => {
+					this.api.getwrapperList({
+						id
+					}).then(wraplist => {
+						// 为每项添加一个折叠状态和图标
+						for (let item of wraplist) {
+							item.toogleflag = false;
+							item.arrow = '../../static/downarrow.png';
+						}
+						wraplist.push()
+						this.wrapperList1 = wraplist
+						console.log({
+							wraplist: this.wrapperList1
+						});
+						})
+
+				// },1000)
+
 			}
-			
+
 		},
-		components: {
-			pagecom
-		},
+		components: {},
 		async onLoad() {
+			// 缓存头部切换栏选中id,在趋势中共享
+			uni.setStorageSync("currentheaderID", this.currentheaderID)
+
 			// 轮播图
 			let banners = await this.api.getbanner()
 			this.swiperList = banners.records.map(item => item.img)
@@ -212,7 +221,7 @@
 			this.switchList = await this.api.getheadswitchList()
 
 			this.getwrapperList('1')
-			
+
 		}
 
 	}

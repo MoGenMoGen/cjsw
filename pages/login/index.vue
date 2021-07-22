@@ -10,7 +10,7 @@
 			<view class="login_form">
 				<view class="form_phone">
 					<image :src="phoneimg" mode="widthFix" />
-					<input type="text" placeholder="请输入手机号码" maxlength="11" placeholder-style="color:#909090"
+					<input type="text" placeholder="请输入账号" maxlength="11" placeholder-style="color:#909090"
 						v-model="info.username" />
 				</view>
 				<view class="form_password">

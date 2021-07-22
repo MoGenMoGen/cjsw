@@ -146,6 +146,7 @@
 			},
 			// 退出
 			exit() {
+				uni.clearStorageSync()
 				uni.reLaunch({
 					url: '/pages/login/index'
 				});
