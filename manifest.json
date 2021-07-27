@@ -5,6 +5,10 @@
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
+	"networkTimeout":{
+		"uploadFile":15000,
+		"request":15000
+	},
     /* 5+App特有相关 */
     "app-plus" : {
         "usingComponents" : true,
@@ -73,19 +77,25 @@
     "h5" : {
         // "title" : "嘉兴敏华",
         // 跨域设置
-        "devServer" : {
-            "https" : false,
-            "port" : 8080,
-            "proxy" : {
-                "/web" : {
-                    "target" : "http://10086.jinkworld.com/api/",
-                    "changeOrigin" : true,
-                    "secure" : false,
-                    "pathRewrite" : {
-                        "^/web" : ""
-                    }
-                }
-            }
-        }
+        // "devServer" : {
+        //     "https" : true,
+        //     "port" : 8080,
+        //     "proxy" : {
+        //         "/web" : {
+        //             "target" : "http://10086.jinkworld.com/api/",
+        //             "changeOrigin" : true,
+        //             "secure" : false,  
+        //             "pathRewrite" : {
+        //                 "^/web" : ""
+        //             }
+        //         }
+        //     }
+        // },
+        "router" : {
+            "mode" : "history",
+            "base" : "/h5/"
+        },
+        "title" : "车间上位",
+        "domain" : "http://127.0.0.1"
     }
 }

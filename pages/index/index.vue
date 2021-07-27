@@ -42,9 +42,12 @@
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
 						{{item1.dictValue}}
-						<image :src="item1.arrow" mode="widthFix" class="arrow"></image>
+					<view class="arrow">详情
+					<image src="../../static/arrow2.png" mode="widthFix"></image>
+					</view>	
+						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
 					</view>
-					<view class="wrapper_item_container" v-show="item1.toogleflag">
+					<view class="wrapper_item_container">
 						<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
 							<view class="line1 line">
 								{{item2.name}}
@@ -98,7 +101,7 @@
 					},
 					{
 						dictValue: '安全环保',
-						id: '6'
+						id: '7'
 					}
 				],
 				// 当前head状态栏下标
@@ -136,7 +139,7 @@
 				],
 				wrapperList1: [{
 						dictValue: "前处理预脱",
-						toogleflag: false,
+						// toogleflag: false,
 						arrow: '../../static/downarrow.png',
 						sites: [{
 								name: '1.喷淋管道压力',
@@ -182,29 +185,28 @@
 
 			},
 			toogle(index) {
-				this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
-				this.wrapperList1[index].arrow = this.wrapperList1[index].toogleflag ? '../../static/uparrow.png' :
-					'../../static/downarrow.png'
+				// this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
+				// this.wrapperList1[index].arrow = this.wrapperList1[index].toogleflag ? '../../static/uparrow.png' :
+				// 	'../../static/downarrow.png'
 			},
 			// 获取内容列表
 			getwrapperList(id) {
-				// setInterval(() => {
 					this.api.getwrapperList({
 						id
-					}).then(wraplist => {
+					})
+					.then(wraplist => {
 						// 为每项添加一个折叠状态和图标
-						for (let item of wraplist) {
-							item.toogleflag = false;
-							item.arrow = '../../static/downarrow.png';
-						}
-						wraplist.push()
+						// for (let item of wraplist) {
+						// 	item.toogleflag = false;
+						// 	item.arrow = '../../static/downarrow.png';
+						// }
+						// wraplist.push()
 						this.wrapperList1 = wraplist
 						console.log({
 							wraplist: this.wrapperList1
 						});
 						})
 
-				// },1000)
 
 			}
 
@@ -347,19 +349,31 @@
 
 					.wrapper_item_title {
 						width: 100%;
-						box-sizing: border-box;
+						// box-sizing: border-box;
 						border-left: 8upx solid #5481EA;
 						color: #5481EA;
 						padding-left: 20upx;
 						margin-bottom: 40upx;
-						position: relative;
-
+						// position: relative;
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						height: 50upx;
+						font-size: 32upx;
 						.arrow {
-							position: absolute;
-							right: 26upx;
-							top: 50%;
-							transform: translateY(-50%);
-							width: 34upx;
+							padding-right:20upx;
+							width: 100upx;
+							color: #5481EA;
+							font-size: 32upx;
+							position: relative;
+							
+							image{
+								position: absolute;
+								top:50%;
+								transform: translateY(-50%);
+								display: inline-block;
+								width: 28upx;
+							}
 						}
 					}
 

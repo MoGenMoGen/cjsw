@@ -25,6 +25,7 @@ function get(url, data, header) {
 			method: "get",
 			header: myheader,
 			url: config.serverURL + url,
+			timeout:15000,
 			success: function(res) {
 				console.log('get success', res)
 				// 登录失效重新登录
@@ -92,6 +93,7 @@ function post(url, data, header) {
 			header: myheader,
 			method: "post",
 			url: config.serverURL + url,
+			timeout:15000,
 			success: function(res) {
 				console.log('post success', res)
 				// 登录失效重新登录
@@ -152,6 +154,7 @@ function loginpost(url, data, header) {
 			header,
 			method: "post",
 			url: config.serverURL + url,
+			timeout:15000,
 			success: function(res) {
 				console.log('post success', res)
 				// 400账号或密码错误

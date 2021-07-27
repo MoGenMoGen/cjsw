@@ -1,6 +1,6 @@
 <template>
-	<view>
-		
+	<view style="border: 1px solid red; position:fixed;top:88upx">
+		hhh
 	</view>
 </template>
 
