@@ -52,8 +52,8 @@
 			return {
 				currentaddr: "00", //当前点位编号
 				// site:"CCF_FAN_VT",
-				st: '2021-07-21 00:00:00',
-				et: '2021-07-21 23:00:00',
+				st: '',
+				et: '',
 				dataList: [],
 				wrapperList1: [{
 						dictValue: "前处理预脱",
@@ -82,50 +82,56 @@
 
 				],
 				option: {
-					tooltip: {
-						trigger: 'axis',
-						position: function(pt) {
-							return [pt[0], '10%'];
-						}
-					},
 					title: {
 						left: 'center',
 						text: '趋势分析图',
 					},
-					// toolbox: {
-					//     feature: {
-					//         dataZoom: {
-					//             yAxisIndex: 'none'
-					//         },
-					//         restore: {},
-					//         saveAsImage: {}
-					//     }
-					// },
+					tooltip: {
+						trigger: 'axis',
+						 axisPointer: {
+						    animation: false
+						 }
+					},	
+					toolbox: {
+					    feature: {
+					        dataZoom: {
+					            yAxisIndex: 'none'
+					        },
+					        restore: {},
+					        saveAsImage: {}
+					    }
+					},
 					xAxis: {
-						type: 'time',
+						type: 'category',
 						boundaryGap: false,
-						show: false
+						show: false,
+						splitLine: {
+						   show: false
+						},
+						data: []
 					},
 					yAxis: {
 						type: 'value',
-						boundaryGap: [0, '100%']
+						boundaryGap: [0, '100%'],
+						splitLine: {
+						            show: false
+						}
 					},
-					// dataZoom: [{
-					// 	type: 'inside',
-					// 	start: 0,
-					// 	end: 1
-					// },
-					// {
-					// 	start: 0,
-					// 	end: 20
-					// },
-					// ],
+					dataZoom: [{
+						type: 'inside',
+						start: 0,
+						end: 0.1
+					},
+					{
+						start: 0,
+						end: 0.1
+					},
+					],
 					series: [{
 						name: '数值',
 						type: 'line',
-						smooth: true,
 						symbol: 'none',
-						areaStyle: {},
+						sampling: 'lttb',
 						data: []
 					}]
 				},
@@ -177,21 +183,12 @@
 					st: this.st,
 					et: this.et
 				})
-				// this.chartsDataLine1.categories=siteValList.date
-				siteValList.data = siteValList.data.map(item => Number(item))
-				for (let item of siteValList.date) {
-					this.dataList.push([item])
-				}
-				for (let i = 0; i < siteValList.data.length; i++) {
-					for (let j = 0; j < this.dataList.length; j++) {
-						if (i == j) {
-							this.dataList[j].push(siteValList.data[i])
-						}
-					}
-				}
-				this.dataList.push()
-				this.option.series[0].data = this.dataList
-				console.log(12344543, this.dataList,this.option.series[0].data);
+				
+				console.log(siteValList.date)
+				console.log(siteValList.data)
+
+				this.option.series[0].data = siteValList.data;
+				this.option.xAxis.data = siteValList.date;
 			}
 
 
