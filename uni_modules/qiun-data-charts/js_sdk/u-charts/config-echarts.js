@@ -128,63 +128,128 @@ module.exports = {
 		},
 	},
 	"line": {
-		"color": color,
-		"title": {
-			"text": ''
-		},
-		"tooltip": {
-			"trigger": 'axis'
-		},
-		"grid": {
-			"top": 30,
-			"bottom": 50,
-			"right": 15,
-			"left": 40
-		},
-		"legend": {
-			"bottom": 'left',
-		},
-		"toolbox": {
-			"show": false,
-		},
-		"xAxis": {
-			"type": 'category',
-			"axisLabel": {
-				"color": '#666666'
-			},
-			"axisLine": {
-				"lineStyle": {
-					"color": '#CCCCCC'
-				}
-			},
-			"boundaryGap": true,
-			"data": []
-		},
-		"yAxis": {
-			"type": 'value',
-			"axisTick": {
-				"show": false,
-			},
-			"axisLabel": {
-				"color": '#666666'
-			},
-			"axisLine": {
-				"lineStyle": {
-					"color": '#CCCCCC'
-				}
-			},
-		},
-		"seriesTemplate": {
-			"name": '',
-			"type": 'line',
-			"data": [],
-			"barwidth": 20,
-			"label": {
-				"show": true,
-        "color": "#666666",
-				"position": 'top',
-			},
-		},
+		  title: {
+		        left: 'center',
+		        text: '触屏 tooltip 和 dataZoom 示例',
+		        subtext: '"tootip" and "dataZoom" on mobile device',
+		    },
+		    legend: {
+		        top: 'bottom',
+		        data: ['意向']
+		    },
+		    tooltip: {
+		        triggerOn: 'none',
+		        position: function (pt) {
+		            return [pt[0], 130];
+		        }
+		    },
+		    toolbox: {
+		        left: 'center',
+		        itemSize: 25,
+		        top: 55,
+		        feature: {
+		            dataZoom: {
+		                yAxisIndex: 'none'
+		            },
+		            restore: {}
+		        }
+		    },
+		    xAxis: {
+		        type: 'time',
+		        // boundaryGap: [0, 0],
+		        axisPointer: {
+		            value: '2016-10-7',
+		            snap: true,
+		            lineStyle: {
+		                color: '#7581BD',
+		                width: 2
+		            },
+		            label: {
+		                show: true,
+		                formatter: function (params) {
+		                    return echarts.format.formatTime('yyyy-MM-dd', params.value);
+		                },
+		                backgroundColor: '#7581BD'
+		            },
+		            handle: {
+		                show: true,
+		                color: '#7581BD'
+		            }
+		        },
+		        splitLine: {
+		            show: false
+		        }
+		    },
+		    yAxis: {
+		        type: 'value',
+		        axisTick: {
+		            inside: true
+		        },
+		        splitLine: {
+		            show: false
+		        },
+		        axisLabel: {
+		            inside: true,
+		            formatter: '{value}\n'
+		        },
+		        z: 10
+		    },
+		    grid: {
+		        top: 110,
+		        left: 15,
+		        right: 15,
+		        height: 160
+		    },
+		    dataZoom: [{
+		        type: 'inside',
+		        throttle: 50
+		    }],
+			series: [
+			      {
+			          name: '模拟数据',
+			          type: 'line',
+			          smooth: true,
+			          symbol: 'circle',
+			          symbolSize: 5,
+			          sampling: 'average',
+			          itemStyle: {
+			              color: '#0770FF'
+			          },
+			          stack: 'a',
+			          areaStyle: {
+			              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+			                  offset: 0,
+			                  color: 'rgba(58,77,233,0.8)'
+			              }, {
+			                  offset: 1,
+			                  color: 'rgba(58,77,233,0.3)'
+			              }])
+			          },
+			          data: [['2020-01-01',55],['2020-01-02',66]]
+			      },
+			      {
+			          name: '模拟数据',
+			          type: 'line',
+			          smooth: true,
+			          stack: 'a',
+			          symbol: 'circle',
+			          symbolSize: 5,
+			          sampling: 'average',
+			          itemStyle: {
+			              color: '#F2597F'
+			          },
+			          areaStyle: {
+			              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+			                  offset: 0,
+			                  color: 'rgba(213,72,120,0.8)'
+			              }, {
+			                  offset: 1,
+			                  color: 'rgba(213,72,120,0.3)'
+			              }])
+			          },
+			         data: [['2020-01-01',655],['2020-01-02',200]]
+			      }
+			  ]
 	},
 	"area": {
 		"color": color,

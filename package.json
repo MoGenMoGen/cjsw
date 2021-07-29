@@ -60,6 +60,7 @@
     "@dcloudio/uni-stat": "^2.0.0-31920210514002",
     "@vue/shared": "^3.0.0",
     "core-js": "^3.6.5",
+    "echarts": "^5.1.2",
     "flyio": "^0.6.2",
     "moment": "^2.29.1",
     "node-sass": "^6.0.0",

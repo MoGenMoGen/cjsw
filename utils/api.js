@@ -24,7 +24,8 @@ function get(url, data, header) {
 			data: data,
 			method: "get",
 			header: myheader,
-			url: config.serverURL + url,
+			// url: config.serverURL + url,
+			url: '/api' + url,
 			timeout:15000,
 			success: function(res) {
 				console.log('get success', res)
@@ -92,7 +93,9 @@ function post(url, data, header) {
 			data: data,
 			header: myheader,
 			method: "post",
-			url: config.serverURL + url,
+			// url: config.serverURL + url,
+			url: '/api' + url,
+			
 			timeout:15000,
 			success: function(res) {
 				console.log('post success', res)
@@ -153,7 +156,8 @@ function loginpost(url, data, header) {
 			data: data,
 			header,
 			method: "post",
-			url: config.serverURL + url,
+			// url: config.serverURL + url,
+			url: '/api' + url,
 			timeout:15000,
 			success: function(res) {
 				console.log('post success', res)

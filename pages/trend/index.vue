@@ -1,32 +1,43 @@
 <template>
 
-	<view>
+	<view class="pages_trend">
 		<view class="fixed">
+			<!-- 控制折线图的下拉框 -->
+			<view class="pickers">
+				<picker mode="selector" :range="categories" @change="handleChangeCategory">
+					<text v-if="index1<0">按类别</text>
+					<text v-else>{{categories[index1]}}</text>
+					<image src="../../static/downarrow.png" mode="widthFix" style="width:20upx; margin-left:20upx">
+					</image>
+				</picker>
 
-			<view class="" style="width:750upx">
+				<picker mode="selector" :range="crafts" @change="handleChangecraft">
+					<text v-if="index2<0">按工艺</text>
+					<text v-else>{{crafts[index2]}}</text>
+					<image src="../../static/downarrow.png" mode="widthFix" style="width:20upx; margin-left:20upx">
+					</image>
+				</picker>
+			</view>
+			<view style="width:750upx">
 				<choosedate @func="getdateA"></choosedate>
 			</view>
-			<view class="content">
-				<!-- #ifdef APP-PLUS || H5 -->
-				<view @click="echarts.onClick" :prop="option" :change:prop="echarts.updateEcharts" id="echarts"
-					class="echarts"></view>
-				<!-- <button @click="changeOption">更新数据</button> -->
-				<!-- #endif -->
-				<!-- #ifndef APP-PLUS || H5 -->
-				<view>非 APP、H5 环境不支持</view>
-				<!-- #endif -->
+			<view style="height: 750rpx">
+				<l-echart ref="chart"></l-echart>
 			</view>
 		</view>
 
+		<!-- 与首页相同的内容区域 -->
 		<view class="wrapper_list">
 			<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
-				<view class="wrapper_item_title" @click='toogle(index1)'>
+				<view class="wrapper_item_title">
 					{{item1.dictValue}}
-					<image :src="item1.arrow" mode="widthFix" class="arrow"></image>
+					<view class="arrow">详情
+						<image src="../../static/arrow2.png" mode="widthFix"></image>
+					</view>
 				</view>
-				<view class="wrapper_item_container" v-show="item1.toogleflag">
-					<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2"
-						:class="{active:item2.addr==currentaddr}" @click="active(item2.addr,item2.name)">
+				<view class="wrapper_item_container">
+					<view class="wrapper_item_item" v-for="(item2,index3) in item1.sites" :key="index3"
+						@click="active(item2.addr,item2.name)">
 						<view class="line1 line">
 							{{item2.name}}
 						</view>
@@ -42,22 +53,27 @@
 		</view>
 		<!-- 内容列表 结束 -->
 	</view>
-</template>
+</template>   
+
+
+
+
 
 <script>
 	import choosedate from "../../components/choosedate.vue"
+	import * as echarts from '@/uni_modules/lime-echart/components/l-echart/echarts';
 	import moment from "moment";
 	export default {
 		data() {
 			return {
-				currentaddr: "00", //当前点位编号
-				// site:"CCF_FAN_VT",
+				categories: ['温度类', '压力类', '温度类', '压力类', '温度类', '压力类'],
+				index1: -1,
+				index2: -5,
+				crafts: ['前处理预脱', '前处理主脱', '前处理水洗'],
 				st: '',
 				et: '',
-				dataList: [],
 				wrapperList1: [{
 						dictValue: "前处理预脱",
-						toogleflag: false,
 						arrow: '../../static/downarrow.png',
 						sites: [{
 								name: '1.喷淋管道压力',
@@ -81,142 +97,197 @@
 					}
 
 				],
-				option: {
-					title: {
-						left: 'center',
-						text: '趋势分析图',
-					},
-					tooltip: {
-						trigger: 'axis',
-						 axisPointer: {
-						    animation: false
-						 }
-					},	
-					toolbox: {
-					    feature: {
-					        dataZoom: {
-					            yAxisIndex: 'none'
-					        },
-					        restore: {},
-					        saveAsImage: {}
-					    }
-					},
-					xAxis: {
-						type: 'category',
-						boundaryGap: false,
-						show: false,
-						splitLine: {
-						   show: false
-						},
-						data: []
-					},
-					yAxis: {
-						type: 'value',
-						boundaryGap: [0, '100%'],
-						splitLine: {
-						            show: false
-						}
-					},
-					dataZoom: [{
-						type: 'inside',
-						start: 0,
-						end: 0.1
-					},
-					{
-						start: 0,
-						end: 0.1
-					},
-					],
-					series: [{
-						name: '数值',
-						type: 'line',
-						symbol: 'none',
-						sampling: 'lttb',
-						data: []
-					}]
-				},
+
+	option : {
+	    title: {
+	        left: 'center',
+	        text: '触屏 tooltip 和 dataZoom 示例',
+	        subtext: '"tootip" and "dataZoom" on mobile device',
+	    },
+	    legend: {
+	        top: 'bottom',
+	        data: ['意向']
+	    },
+	    tooltip: {
+	        triggerOn: 'none',
+	        position: function (pt) {
+	            return [pt[0], 130];
+	        }
+	    },
+	    toolbox: {
+	        left: 'center',
+	        itemSize: 25,
+	        top: 55,
+	        feature: {
+	            dataZoom: {
+	                yAxisIndex: 'none'
+	            },
+	            restore: {}
+	        }
+	    },
+	    xAxis: {
+	        type: 'time',
+			show:true,
+	        // boundaryGap: [0, 0],
+	        axisPointer: {
+	            value: '2020-01-01',
+	            snap: true,
+	            lineStyle: {
+	                color: '#7581BD',
+	                width: 2
+	            },
+	            label: {
+	                show: true,
+	                formatter: function (params) {
+	                    return echarts.format.formatTime('yyyy-MM-dd', params.value);
+	                },
+	                backgroundColor: '#7581BD'
+	            },
+	            handle: {
+	                show: true,
+	                color: '#7581BD'
+	            }
+	        },
+	        splitLine: {
+	            show: false
+	        }
+	    },
+	    yAxis: {
+	        type: 'value',
+	        axisTick: {
+	            inside: true
+	        },
+	        splitLine: {
+	            show: false
+	        },
+	        axisLabel: {
+	            inside: true,
+	            formatter: '{value}\n'
+	        },
+	        z: 10
+	    },
+	    grid: {
+	        top: 110,
+	        left: 15,
+	        right: 15,
+	        height: 160
+	    },
+	    dataZoom: [{
+	        type: 'inside',
+	        throttle: 50
+	    }],
+	    series: [
+	        {
+	            name: '模拟数据',
+	            type: 'line',
+	            smooth: true,
+	            symbol: 'circle',
+	            symbolSize: 5,
+	            sampling: 'average',
+	            itemStyle: {
+	                color: '#0770FF'
+	            },
+	            stack: 'a',
+	            areaStyle: {
+	                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+	                    offset: 0,
+	                    color: 'rgba(58,77,233,0.8)'
+	                }, {
+	                    offset: 1,
+	                    color: 'rgba(58,77,233,0.3)'
+	                }])
+	            },
+	            data: [['2020-01-01',115],['2020-01-02',200]]
+	        },
+	        {
+	            name: '模拟数据',
+	            type: 'line',
+	            smooth: true,
+	            stack: 'a',
+	            symbol: 'circle',
+	            symbolSize: 5,
+	            sampling: 'average',
+	            itemStyle: {
+	                color: '#F2597F'
+	            },
+	            areaStyle: {
+	                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+	                    offset: 0,
+	                    color: 'rgba(213,72,120,0.8)'
+	                }, {
+	                    offset: 1,
+	                    color: 'rgba(213,72,120,0.3)'
+	                }])
+	            },
+	            data:[['2020-01-01',55],['2020-01-02',60]]
+	        }
+	    ]
+	}
+
+
+
 			}
 		},
+
 		methods: {
-			async active(addr, name) {
-				console.log(addr, this.currentaddr);
-					this.currentaddr = addr
-					// 获取折线图数据
-					this.option.title.text = name
-					this.getsiteValList()
+			// 按类别下拉框修改下标
+			handleChangeCategory(e) {
+				this.index1 = e.target.value;
 			},
-			toogle(index) {
-				this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
-				this.wrapperList1[index].arrow = this.wrapperList1[index].toogleflag ? '../../static/uparrow.png' :
-					'../../static/downarrow.png'
+			handleChangecraft(e) {
+				this.index2 = e.target.value;
 			},
 			getdateA(a) {
 				this.st = a.startDate;
 				this.et = a.endDate;
-				this.getsiteValList()
+				// this.getsiteValList()
 			},
 			// 获取内容列表
 			async getwrapperList(id) {
 				let wraplist = await this.api.getwrapperList({
 					id: id
 				})
-				// 为每项添加一个折叠状态和图标
-				for (let item of wraplist) {
-					item.toogleflag = false;
-					item.arrow = '../../static/downarrow.png';
-				}
-				wraplist.push()
-				this.wrapperList1 = wraplist
-				console.log({
-					wraplist: this.wrapperList1
-				});
-				// this.chartsDataLine1.series[0].name=wraplist[0].sites[0].name
-				// 返回第一项第一行的编号，用于初始化折线图
-				return {addr:wraplist[0].sites[0].addr,name:wraplist[0].sites[0].name};
 			},
 			// 获取折线图数据
-			async getsiteValList() {
-				// let siteValList=await this.api.getsiteValList({site:'CCF_FAN_VT',st:'2021-06-21 00:00:00',et:'2021-07-21 23:00:00'})
-				this.dataList=[];
-				let siteValList = await this.api.getsiteValList({
-					site: this.currentaddr,
-					st: this.st,
-					et: this.et
-				})
-				
-				console.log(siteValList.date)
-				console.log(siteValList.data)
+			// async getsiteValList() {
+			// let siteValList=await this.api.getsiteValList({site:'CCF_FAN_VT',st:'2021-06-21 00:00:00',et:'2021-07-21 23:00:00'})
+			// 	this.dataList = [];
+			// 	let siteValList = await this.api.getsiteValList({
+			// 		sites: this.currentaddr,
+			// 		st: this.st,
+			// 		et: this.et
+			// 	})
 
-				this.option.series[0].data = siteValList.data;
-				this.option.xAxis.data = siteValList.date;
-			}
+			// 	console.log(siteValList.date)
+			// 	console.log(siteValList.data)
+
+			// 	this.option.series[0].data = siteValList.data;
+			// 	this.option.xAxis.data = siteValList.date;
+			// }
 
 
 		},
 		components: {
 			choosedate
 		},
+		mounted() {
+			this.$refs.chart.init(config => {
+				const { canvas } = config;
+				const chart = echarts.init(canvas, null, config);
+				chart.setOption(this.option);
+				return chart;
+			});
+		},
 		async onLoad() {
 			this.st = `${moment().format("YYYY-MM-DD")} 00:00:00`
 			this.et = moment().format("YYYY-MM-DD HH:mm:ss")
-
-			// this.option.series[0].data = this.dataList
-
-
-
-			// 获取内容列表
-			let sets = await this.getwrapperList(uni.getStorageSync("currentheaderID"))
-			this.currentaddr = sets.addr;
-			this.option.title.text=sets.name?sets.name:'趋势图分析';
-			this.getsiteValList()
-			console.log(234324, this.currentaddr);
-
 		},
 		onShow() {
 			this.getwrapperList(uni.getStorageSync("currentheaderID"))
 		}
 	}
 </script>
+
 
 <script module="echarts" lang="renderjs">
 	let myChart
@@ -228,7 +299,7 @@
 				// 动态引入较大类库避免影响页面展示
 				const script = document.createElement('script')
 				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
-				script.src = 'static/echarts.js'
+				script.src = '../../static/echarts.js'
 				script.onload = this.initEcharts.bind(this)
 				document.head.appendChild(script)
 			}
@@ -252,104 +323,138 @@
 		}
 	}
 </script>
+
 <style lang="scss" scoped>
-	.fixed {
-		background-color: #FFF;
-		width: 100%;
-		position: fixed;
-		top: 0;
-		// height: 600upx;
-		z-index: 100;
-
-		.content {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
+	.pages_trend {
+	width:100%;
+		.fixed {
+			background-color: #FFF;
 			width: 100%;
+			position: fixed;
+			top: var(--window-top);
+			// height: 600upx;
+			z-index: 100;
 
-			.echarts {
-				margin-top: 20upx;
+			.pickers {
+				display: flex;
+				justify-content: center;
+
+				picker {
+					padding: 2upx;
+					display: inline-block;
+					border: 1px solid rgba(200, 200, 200, .5);
+					margin: 10upx;
+					border-radius: 20upx;
+					display: flex;
+					align-items: center;
+
+					image {
+						padding: 2upx;
+					}
+				}
+			}
+
+			.content {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
 				width: 100%;
-				height: 470upx;
+				.echarts {
+					margin-top: 20upx;
+					width: 100%;
+					height: 470upx;
+				}
 			}
 		}
-	}
 
 
-	.wrapper_list {
-		padding-top: 700upx;
-		width: 690upx;
-		box-sizing: border-box;
-		margin: 30upx;
-
-		.wrapper_item {
+		.wrapper_list {
+			padding-top: 1100upx;
 			width: 690upx;
-			margin-bottom: 40upx;
+			box-sizing: border-box;
+			margin: 30upx;
 
-			.wrapper_item_title {
-				width: 100%;
-				box-sizing: border-box;
-				border-left: 8upx solid #5481EA;
-				color: #5481EA;
-				padding-left: 20upx;
+			.wrapper_item {
+				width: 690upx;
 				margin-bottom: 40upx;
-				position: relative;
 
-				.arrow {
-					position: absolute;
-					right: 26upx;
-					top: 50%;
-					transform: translateY(-50%);
-					width: 34upx;
-				}
-			}
-
-
-
-			.wrapper_item_container {
-				background: #fff;
-				width: 100%;
-				box-sizing: border-box;
-				// padding: 0 20upx;
-
-				.wrapper_item_item:nth-child(odd) {
-					background-color: #F1F1F1;
-				}
-
-				.wrapper_item_item:nth-child(even) {
-					background-color: #F9F9F9;
-				}
-
-				.wrapper_item_item {
+				.wrapper_item_title {
+					width: 100%;
+					// box-sizing: border-box;
+					border-left: 8upx solid #5481EA;
+					color: #5481EA;
+					padding-left: 20upx;
+					margin-bottom: 40upx;
+					// position: relative;
 					display: flex;
-					padding: 10upx 20upx;
+					align-items: center;
+					justify-content: space-between;
+					height: 50upx;
+					font-size: 32upx;
 
-					.line {
-						color: #333333;
+					.arrow {
+						padding-right: 20upx;
+						width: 100upx;
+						color: #5481EA;
 						font-size: 32upx;
-					}
+						position: relative;
 
-					.line1 {
-						flex: 3;
-					}
-
-					.line2 {
-						flex: 1;
-					}
-
-					.line3 {
-						flex: 1;
+						image {
+							position: absolute;
+							top: 50%;
+							transform: translateY(-50%);
+							display: inline-block;
+							width: 28upx;
+						}
 					}
 				}
 
-				.active {
-					box-shadow: 0 0 10upx rgba(0, 0, 0, .5);
+
+				.wrapper_item_container {
+					background: #fff;
+					width: 100%;
+					box-sizing: border-box;
+					// padding: 0 20upx;
+
+					.wrapper_item_item:nth-child(odd) {
+						background-color: #F1F1F1;
+					}
+
+					.wrapper_item_item:nth-child(even) {
+						background-color: #F9F9F9;
+					}
+
+					.wrapper_item_item {
+						display: flex;
+						padding: 10upx 20upx;
+
+						.line {
+							color: #333333;
+							font-size: 32upx;
+						}
+
+						.line1 {
+							flex: 3;
+						}
+
+						.line2 {
+							flex: 1;
+						}
+
+						.line3 {
+							flex: 1;
+						}
+					}
+
+					.active {
+						box-shadow: 0 0 10upx rgba(0, 0, 0, .5);
+					}
 				}
+
+
+
 			}
-
-
-
 		}
 	}
 </style>

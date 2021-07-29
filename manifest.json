@@ -75,22 +75,22 @@
         "enable" : false
     },
     "h5" : {
-        // "title" : "嘉兴敏华",
-        // 跨域设置
-        // "devServer" : {
-        //     "https" : true,
-        //     "port" : 8080,
-        //     "proxy" : {
-        //         "/web" : {
-        //             "target" : "http://10086.jinkworld.com/api/",
-        //             "changeOrigin" : true,
-        //             "secure" : false,  
-        //             "pathRewrite" : {
-        //                 "^/web" : ""
-        //             }
-        //         }
-        //     }
-        // },
+			"title" : "嘉兴敏华",
+			// 跨域设置
+			"devServer" : {
+				"https" : false,
+				"port" : 8080,
+				"proxy" : {
+					"/api" : {
+						"target" : "http://10086.jinkworld.com/api/",
+						"changeOrigin" : true,
+						"secure" : false,  
+						"pathRewrite" : {
+							"^/api" : ""
+						}
+					}
+				}
+			},
         "router" : {
             "mode" : "history",
             "base" : "/h5/"
