@@ -213,16 +213,16 @@
 		},
 		components: {},
 		async onLoad() {
-			// 缓存头部切换栏选中id,在趋势中共享
-			uni.setStorageSync("currentheaderID", this.currentheaderID)
+			
 
 			// 轮播图
 			let banners = await this.api.getbanner()
 			this.swiperList = banners.records.map(item => item.img)
 			// 头部切换栏列表
 			this.switchList = await this.api.getheadswitchList()
-
-			this.getwrapperList('1')
+// 缓存头部切换栏选中id,在趋势中共享
+			uni.setStorageSync("currentheaderID", this.switchList[0].id)
+			this.getwrapperList(this.switchList[0].id)
 
 		}
 

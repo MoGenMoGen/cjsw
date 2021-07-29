@@ -28,8 +28,9 @@
             "path" : "pages/reportform/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "报表",
-                "enablePullDownRefresh": false
+                // "navigationBarTitleText": "报表",
+                // "enablePullDownRefresh": false
+				"navigationStyle": "custom"
             }
             
         }
@@ -37,8 +38,9 @@
             "path" : "pages/policeinfo/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "报警信息",
-                "enablePullDownRefresh": false
+                // "navigationBarTitleText": "报警信息",
+                // "enablePullDownRefresh": false
+				"navigationStyle": "custom"
             }
             
         }
@@ -46,8 +48,9 @@
             "path" : "pages/trend/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "趋势",
-                "enablePullDownRefresh": false
+                // "navigationBarTitleText": "趋势",
+                // "enablePullDownRefresh": false
+				"navigationStyle": "custom"
             }
             
         }
@@ -55,8 +58,9 @@
             "path" : "pages/login/forgetpass",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "忘记密码",
-                "enablePullDownRefresh": false
+                // "navigationBarTitleText": "忘记密码",
+                // "enablePullDownRefresh": false
+				"navigationStyle": "custom"
             }
             
         }
@@ -64,8 +68,9 @@
             "path" : "pages/profile/modifypass",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "修改密码",
-                "enablePullDownRefresh": false
+                // "navigationBarTitleText": "修改密码",
+                // "enablePullDownRefresh": false
+				"navigationStyle": "custom"
             }
             
         }

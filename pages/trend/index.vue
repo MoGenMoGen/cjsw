@@ -21,7 +21,7 @@
 			<view style="width:750upx">
 				<choosedate @func="getdateA"></choosedate>
 			</view>
-			<view style="height: 750rpx">
+			<view style="height: 630upx">
 				<l-echart ref="chart"></l-echart>
 			</view>
 		</view>
@@ -52,8 +52,10 @@
 			</view>
 		</view>
 		<!-- 内容列表 结束 -->
+		
+		
 	</view>
-</template>   
+</template>
 
 
 
@@ -98,131 +100,168 @@
 
 				],
 
-	option : {
-	    title: {
-	        left: 'center',
-	        text: '触屏 tooltip 和 dataZoom 示例',
-	        subtext: '"tootip" and "dataZoom" on mobile device',
-	    },
-	    legend: {
-	        top: 'bottom',
-	        data: ['意向']
-	    },
-	    tooltip: {
-	        triggerOn: 'none',
-	        position: function (pt) {
-	            return [pt[0], 130];
-	        }
-	    },
-	    toolbox: {
-	        left: 'center',
-	        itemSize: 25,
-	        top: 55,
-	        feature: {
-	            dataZoom: {
-	                yAxisIndex: 'none'
-	            },
-	            restore: {}
-	        }
-	    },
-	    xAxis: {
-	        type: 'time',
-			show:true,
-	        // boundaryGap: [0, 0],
-	        axisPointer: {
-	            value: '2020-01-01',
-	            snap: true,
-	            lineStyle: {
-	                color: '#7581BD',
-	                width: 2
-	            },
-	            label: {
-	                show: true,
-	                formatter: function (params) {
-	                    return echarts.format.formatTime('yyyy-MM-dd', params.value);
-	                },
-	                backgroundColor: '#7581BD'
-	            },
-	            handle: {
-	                show: true,
-	                color: '#7581BD'
-	            }
-	        },
-	        splitLine: {
-	            show: false
-	        }
-	    },
-	    yAxis: {
-	        type: 'value',
-	        axisTick: {
-	            inside: true
-	        },
-	        splitLine: {
-	            show: false
-	        },
-	        axisLabel: {
-	            inside: true,
-	            formatter: '{value}\n'
-	        },
-	        z: 10
-	    },
-	    grid: {
-	        top: 110,
-	        left: 15,
-	        right: 15,
-	        height: 160
-	    },
-	    dataZoom: [{
-	        type: 'inside',
-	        throttle: 50
-	    }],
-	    series: [
-	        {
-	            name: '模拟数据',
-	            type: 'line',
-	            smooth: true,
-	            symbol: 'circle',
-	            symbolSize: 5,
-	            sampling: 'average',
-	            itemStyle: {
-	                color: '#0770FF'
-	            },
-	            stack: 'a',
-	            areaStyle: {
-	                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-	                    offset: 0,
-	                    color: 'rgba(58,77,233,0.8)'
-	                }, {
-	                    offset: 1,
-	                    color: 'rgba(58,77,233,0.3)'
-	                }])
-	            },
-	            data: [['2020-01-01',115],['2020-01-02',200]]
-	        },
-	        {
-	            name: '模拟数据',
-	            type: 'line',
-	            smooth: true,
-	            stack: 'a',
-	            symbol: 'circle',
-	            symbolSize: 5,
-	            sampling: 'average',
-	            itemStyle: {
-	                color: '#F2597F'
-	            },
-	            areaStyle: {
-	                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-	                    offset: 0,
-	                    color: 'rgba(213,72,120,0.8)'
-	                }, {
-	                    offset: 1,
-	                    color: 'rgba(213,72,120,0.3)'
-	                }])
-	            },
-	            data:[['2020-01-01',55],['2020-01-02',60]]
-	        }
-	    ]
-	}
+				option: {
+					title: {
+						left: 'center',
+						// text: '趋势分析图',
+						// subtext: '"tootip" and "dataZoom" on mobile device',
+					},
+					legend: {
+						top: 'bottom',
+						data: ['意向']
+					},
+					tooltip: {
+						triggerOn: 'none',
+						position:['50%',250]
+						// position: function(pt) {
+						// 	return [pt[0], 10];
+						// }
+					},
+					// toolbox: {
+					//     left: 'center',
+					//     itemSize: 25,
+					//     top: 55,
+					//     feature: {
+					//         dataZoom: {
+					//             yAxisIndex: 'none'
+					//         },
+					//         restore: {}
+					//     }
+					// },
+					xAxis: {
+						type: 'time',
+						show: true,
+						// boundaryGap: [0, 0],+
+						axisLabel: {
+							interval: 0, // 坐标轴刻度标签的显示间隔
+							rotate: 40, // 标签倾斜的角度
+							show: false,
+						},
+
+						axisPointer: {
+							value: '2020-01-03',
+							snap: true,
+							lineStyle: {
+								color: '#7581BD',
+								width: 2
+							},
+							label: {
+								show: true,
+								formatter: function(params) {
+									return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
+								},
+								backgroundColor: '#7581BD'
+							},
+							handle: {
+								show: true,
+								color: '#7581BD'
+							}
+						},
+						splitLine: {
+							show: false
+						}
+					},
+					yAxis: {
+						type: 'value',
+						axisTick: {
+							inside: true
+						},
+						splitLine: {
+							show: false
+						},
+						axisLabel: {
+							inside: true,
+							formatter: '{value}\n'
+						},
+						z: 10
+					},
+					grid: {
+						top: 30,
+						left: 15,
+						right: 15,
+						height: 160
+					},
+					  dataZoom: [{
+					        type: 'inside',
+					        start: 0,
+					        end: 10
+					    }, {
+					        start: 0,
+					        end: 10
+					    }],
+					// dataZoom: [{
+					// 	type: 'inside',
+					// 	throttle: 50
+					// }],
+					series: [
+						// {
+						// 	name: '模拟数据',
+						// 	type: 'line',
+						// 	smooth: true,
+						// 	symbol: 'circle',
+						// 	symbolSize: 5,
+						// 	sampling: 'average',
+						// 	itemStyle: {
+						// 		color: '#0770FF'
+						// 	},
+						// 	stack: 'a',
+						// 	areaStyle: {
+						// 		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						// 			offset: 0,
+						// 			color: 'rgba(58,77,233,0.8)'
+						// 		}, {
+						// 			offset: 1,
+						// 			color: 'rgba(58,77,233,0.3)'
+						// 		}])
+						// 	},
+						// 	data: [
+						// 		['2020-01-01 10:00', 95],
+						// 		['2020-01-02 10:00', 45],
+						// 		['2020-01-03 10:00', 30],
+						// 		['2020-01-04 10:00', 60],
+						// 		['2020-01-05 10:00', 100],
+						// 		['2020-01-06 10:00', 195],
+						// 		['2020-01-07 10:00', 425],
+						// 		['2020-01-08 10:00', 320],
+						// 		['2020-01-09 10:00', 330],
+						// 		['2020-01-10 10:00', 430]
+						// 	]
+						// },
+						// {
+						// 	name: '模拟数据',
+						// 	type: 'line',
+						// 	smooth: true,
+						// 	stack: 'a',
+						// 	symbol: 'circle',
+						// 	symbolSize: 5,
+						// 	sampling: 'average',
+						// 	itemStyle: {
+						// 		color: '#F2597F'
+						// 	},
+						// 	areaStyle: {
+						// 		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						// 			offset: 0,
+						// 			color: 'rgba(213,72,120,0.8)'
+						// 		}, {
+						// 			offset: 1,
+						// 			color: 'rgba(213,72,120,0.3)'
+						// 		}])
+						// 	},
+						// 	data: [
+						// 		['2020-01-01 10:00', 55],
+						// 		['2020-01-02 10:00', 75],
+						// 		['2020-01-03 10:00', 10],
+						// 		['2020-01-04 10:00', 90],
+						// 		['2020-01-05 10:00', 60],
+						// 		['2020-01-06 10:00', 155],
+						// 		['2020-01-07 10:00', 175],
+						// 		['2020-01-08 10:00', 110],
+						// 		['2020-01-09 10:00', 190],
+						// 		['2020-01-10 10:00', 160],
+						// 	]
+						// }
+					]
+				}
 
 
 
@@ -244,26 +283,32 @@
 			},
 			// 获取内容列表
 			async getwrapperList(id) {
-				let wraplist = await this.api.getwrapperList({
+				this.wrapperList1 = await this.api.getwrapperList({
 					id: id
 				})
+				
 			},
 			// 获取折线图数据
-			// async getsiteValList() {
-			// let siteValList=await this.api.getsiteValList({site:'CCF_FAN_VT',st:'2021-06-21 00:00:00',et:'2021-07-21 23:00:00'})
-			// 	this.dataList = [];
-			// 	let siteValList = await this.api.getsiteValList({
-			// 		sites: this.currentaddr,
-			// 		st: this.st,
-			// 		et: this.et
-			// 	})
+			 getsiteValList() {
+			 this.api.getsiteValList({sites:'CCF_FAN_VT,CCF_FILTER_DPT1',st:'2021-07-20 18:00:00',et:'2021-07-20 19:00:00'}).then(res=>{
+				this.option.series = res;
+				this.$refs.chart.setOption(this.option)
+			console.log(1111111111111111111,this.option.series);
+			
+			})
+			
+				// let siteValList = await this.api.getsiteValList({
+				// 	sites: this.currentaddr,
+				// 	st: this.st,
+				// 	et: this.et
+				// })
 
-			// 	console.log(siteValList.date)
-			// 	console.log(siteValList.data)
+				// console.log(siteValList.date)
+				// console.log(siteValList.data)
 
-			// 	this.option.series[0].data = siteValList.data;
-			// 	this.option.xAxis.data = siteValList.date;
-			// }
+				// this.option.series[0].data = siteValList.data;
+				// this.option.xAxis.data = siteValList.date;
+			}
 
 
 		},
@@ -272,11 +317,15 @@
 		},
 		mounted() {
 			this.$refs.chart.init(config => {
-				const { canvas } = config;
+				const {
+					canvas
+				} = config;
 				const chart = echarts.init(canvas, null, config);
 				chart.setOption(this.option);
 				return chart;
 			});
+			this.getsiteValList()
+			
 		},
 		async onLoad() {
 			this.st = `${moment().format("YYYY-MM-DD")} 00:00:00`
@@ -326,7 +375,8 @@
 
 <style lang="scss" scoped>
 	.pages_trend {
-	width:100%;
+		width: 100%;
+
 		.fixed {
 			background-color: #FFF;
 			width: 100%;
@@ -360,6 +410,7 @@
 				align-items: center;
 				justify-content: center;
 				width: 100%;
+
 				.echarts {
 					margin-top: 20upx;
 					width: 100%;
