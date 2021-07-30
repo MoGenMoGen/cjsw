@@ -106,6 +106,8 @@
 				],
 				// 当前head状态栏下标
 				currentheaderID: '1',
+				// 计时器
+				timer:'',
 				banner1,
 				banner2,
 				banner3,
@@ -140,7 +142,6 @@
 				wrapperList1: [{
 						dictValue: "前处理预脱",
 						// toogleflag: false,
-						arrow: '../../static/downarrow.png',
 						sites: [{
 								name: '1.喷淋管道压力',
 								val: '浮点数',
@@ -176,9 +177,11 @@
 		},
 		methods: {
 			switchHead(id) {
+				console.log('switchhead');
 				if (this.currentheaderID != id) {
 					this.currentheaderID = id
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
+					clearInterval(this.timer)
 					this.getwrapperList(this.currentheaderID)
 				}
 
@@ -190,25 +193,28 @@
 				// 	'../../static/downarrow.png'
 			},
 			// 获取内容列表
-			getwrapperList(id) {
+				getwrapperList(id) {
 					this.api.getwrapperList({
-						id
+						id: id
+					}).then(res=>{
+						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						this.wrapperList1 = res
 					})
-					.then(wraplist => {
-						// 为每项添加一个折叠状态和图标
-						// for (let item of wraplist) {
-						// 	item.toogleflag = false;
-						// 	item.arrow = '../../static/downarrow.png';
-						// }
-						// wraplist.push()
-						this.wrapperList1 = wraplist
-						console.log({
-							wraplist: this.wrapperList1
-						});
-						})
+					// 10s轮询
+					this.timer=setInterval(()=>{
+						this.api.getwrapperList({
+						id: id
+					}).then(res=>{
+						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						this.wrapperList1 = res
+					})
+					
+					},10000)
+					
+					
+				},
 
 
-			}
 
 		},
 		components: {},
@@ -222,9 +228,23 @@
 			this.switchList = await this.api.getheadswitchList()
 // 缓存头部切换栏选中id,在趋势中共享
 			uni.setStorageSync("currentheaderID", this.switchList[0].id)
-			this.getwrapperList(this.switchList[0].id)
+			
 
+		},
+		onShow(){
+			console.log('onshow');
+				this.getwrapperList(uni.getStorageSync("currentheaderID"))
+		},
+		onHide(){
+			console.log('onhide');
+			clearInterval(this.timer)
+		},
+		onUnload(){
+			clearInterval(this.timer)
+			console.log('onUnload');
 		}
+		
+		
 
 	}
 </script>

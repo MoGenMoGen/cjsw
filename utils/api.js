@@ -4,11 +4,14 @@ import Vue from 'vue'
 
 const hostUrl = config.serverURL;
 
-function get(url, data, header) {
+function get(url, data, header,loading) {
 	// console.log(url)
-	uni.showLoading({
+	if(loading!==false){
+		uni.showLoading({
 		title: "加载中"
 	});
+	}
+	
 	let BladeAuth = uni.getStorageSync("Blade-Auth")
 	let myheader = {
 		"Blade-Auth": BladeAuth
@@ -26,7 +29,7 @@ function get(url, data, header) {
 			header: myheader,
 			// url: config.serverURL + url,
 			url: '/api' + url,
-			timeout:15000,
+			timeout:30000,
 			success: function(res) {
 				console.log('get success', res)
 				// 登录失效重新登录
@@ -66,7 +69,8 @@ function get(url, data, header) {
 				reject(err);
 			},
 			complete: function() {
-				uni.hideLoading();
+				if(loading!==false){
+				uni.hideLoading();}
 			}
 		});
 	});
@@ -96,7 +100,7 @@ function post(url, data, header) {
 			// url: config.serverURL + url,
 			url: '/api' + url,
 			
-			timeout:15000,
+			timeout:60000,
 			success: function(res) {
 				console.log('post success', res)
 				// 登录失效重新登录
@@ -158,7 +162,7 @@ function loginpost(url, data, header) {
 			method: "post",
 			// url: config.serverURL + url,
 			url: '/api' + url,
-			timeout:15000,
+			timeout:60000,
 			success: function(res) {
 				console.log('post success', res)
 				// 400账号或密码错误
@@ -356,7 +360,7 @@ getwrapperList(data){
 	return new Promise((resolve, reject) => {
 		get("//blade-mh/site/siteByWorkShopId", data, {
 			'Content-Type': 'application/json'
-		}).then(res => {
+		},false).then(res => {
 			resolve(res.data);
 		});
 	})

@@ -7,7 +7,7 @@
     "transformPx" : false,
     "networkTimeout" : {
         "uploadFile" : 15000,
-        "request" : 15000
+        "request" : 60000
     },
     /* 5+App特有相关 */
     "app-plus" : {

@@ -21,7 +21,7 @@
 			<view style="width:750upx">
 				<choosedate @func="getdateA"></choosedate>
 			</view>
-			<view style="height: 630upx">
+			<view style="height:250px">
 				<l-echart ref="chart"></l-echart>
 			</view>
 		</view>
@@ -37,7 +37,7 @@
 				</view>
 				<view class="wrapper_item_container">
 					<view class="wrapper_item_item" v-for="(item2,index3) in item1.sites" :key="index3"
-						@click="active(item2.addr,item2.name)">
+						@click="active(item2.addr)">
 						<view class="line1 line">
 							{{item2.name}}
 						</view>
@@ -74,10 +74,13 @@
 				crafts: ['前处理预脱', '前处理主脱', '前处理水洗'],
 				st: '',
 				et: '',
+				sites:"",
+				timer:'',
+				// 编号选中条数
+				addrCount:0,
 				wrapperList1: [{
 						dictValue: "前处理预脱",
-						arrow: '../../static/downarrow.png',
-						sites: [{
+						sites: [{											
 								name: '1.喷淋管道压力',
 								val: '浮点数',
 								unit: 'Bar',
@@ -112,7 +115,7 @@
 					},
 					tooltip: {
 						triggerOn: 'none',
-						position:['50%',250]
+						position:['10%','20%']
 						// position: function(pt) {
 						// 	return [pt[0], 10];
 						// }
@@ -146,7 +149,7 @@
 								width: 2
 							},
 							label: {
-								show: true,
+								show: false,
 								formatter: function(params) {
 									return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
 								},
@@ -154,7 +157,9 @@
 							},
 							handle: {
 								show: true,
-								color: '#7581BD'
+								color: '#7581BD',
+								margin:20,
+								size:[30,30]
 							}
 						},
 						splitLine: {
@@ -176,7 +181,8 @@
 						z: 10
 					},
 					grid: {
-						top: 30,
+						// show:true,
+						top: 50,
 						left: 15,
 						right: 15,
 						height: 160
@@ -184,10 +190,11 @@
 					  dataZoom: [{
 					        type: 'inside',
 					        start: 0,
-					        end: 10
+					        end: 10,
 					    }, {
 					        start: 0,
-					        end: 10
+					        end: 10,
+							top:'3%'
 					    }],
 					// dataZoom: [{
 					// 	type: 'inside',
@@ -279,18 +286,43 @@
 			getdateA(a) {
 				this.st = a.startDate;
 				this.et = a.endDate;
-				// this.getsiteValList()
+				this.getsiteValList()
+			},
+			active(addr){
+				console.log({origin:this.sites});
+				if(!this.sites){
+					this.sites+=addr;
+				}
+				else 
+				this.sites+=`,${addr}`;
+				console.table([this.sites]);
+				this.getsiteValList()
 			},
 			// 获取内容列表
-			async getwrapperList(id) {
-				this.wrapperList1 = await this.api.getwrapperList({
-					id: id
-				})
-				
-			},
+				getwrapperList(id) {
+					this.api.getwrapperList({
+						id: id
+					}).then(res=>{
+						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						this.wrapperList1 = res
+					})
+					// 10s轮询
+					this.timer=setInterval(()=>{
+						this.api.getwrapperList({
+						id: id
+					}).then(res=>{
+						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						this.wrapperList1 = res
+					})
+					
+					},10000)
+					
+					
+				},
 			// 获取折线图数据
 			 getsiteValList() {
-			 this.api.getsiteValList({sites:'CCF_FAN_VT,CCF_FILTER_DPT1',st:'2021-07-20 18:00:00',et:'2021-07-20 19:00:00'}).then(res=>{
+			 // this.api.getsiteValList({sites:'CCF_FAN_VT,CCF_FILTER_DPT1',st:'2021-07-20 18:00:00',et:'2021-07-20 19:00:00'}).then(res=>{
+			 this.api.getsiteValList({sites:this.sites,st:this.st,et:this.et}).then(res=>{
 				this.option.series = res;
 				this.$refs.chart.setOption(this.option)
 			console.log(1111111111111111111,this.option.series);
@@ -315,7 +347,26 @@
 		components: {
 			choosedate
 		},
+		
+		async onLoad() {     
+			console.log('onload');
+			this.st = `${moment().format("YYYY-MM-DD")} 00:00:00`
+			this.et = moment().format("YYYY-MM-DD HH:mm:ss")
+		},
+		onShow(){
+			console.log('onshow');
+				this.getwrapperList(uni.getStorageSync("currentheaderID"))
+		},
+		onHide(){
+			console.log('onhide');
+			clearInterval(this.timer)
+		},
+		onUnload(){
+			clearInterval(this.timer)
+			console.log('onUnload');
+		},
 		mounted() {
+			console.log('mounted');
 			this.$refs.chart.init(config => {
 				const {
 					canvas
@@ -324,55 +375,10 @@
 				chart.setOption(this.option);
 				return chart;
 			});
-			this.getsiteValList()
 			
-		},
-		async onLoad() {
-			this.st = `${moment().format("YYYY-MM-DD")} 00:00:00`
-			this.et = moment().format("YYYY-MM-DD HH:mm:ss")
-		},
-		onShow() {
-			this.getwrapperList(uni.getStorageSync("currentheaderID"))
 		}
 	}
 </script>
-
-
-<script module="echarts" lang="renderjs">
-	let myChart
-	export default {
-		mounted() {
-			if (typeof window.echarts === 'function') {
-				this.initEcharts()
-			} else {
-				// 动态引入较大类库避免影响页面展示
-				const script = document.createElement('script')
-				// view 层的页面运行在 www 根目录，其相对路径相对于 www 计算
-				script.src = '../../static/echarts.js'
-				script.onload = this.initEcharts.bind(this)
-				document.head.appendChild(script)
-			}
-		},
-		methods: {
-			initEcharts() {
-				myChart = echarts.init(document.getElementById('echarts'))
-				// 观测更新的数据在 view 层可以直接访问到
-				myChart.setOption(this.option)
-			},
-			updateEcharts(newValue, oldValue, ownerInstance, instance) {
-				// 监听 service 层数据变更
-				myChart.setOption(newValue)
-			},
-			onClick(event, ownerInstance) {
-				// 调用 service 层的方法
-				ownerInstance.callMethod('onViewClick', {
-					test: 'test'
-				})
-			}
-		}
-	}
-</script>
-
 <style lang="scss" scoped>
 	.pages_trend {
 		width: 100%;
@@ -382,6 +388,7 @@
 			width: 100%;
 			position: fixed;
 			top: var(--window-top);
+			// padding-bottom:30upx;
 			// height: 600upx;
 			z-index: 100;
 
@@ -421,7 +428,7 @@
 
 
 		.wrapper_list {
-			padding-top: 1100upx;
+			padding-top: calc(180upx + var(--status-bar-height) + 250px);
 			width: 690upx;
 			box-sizing: border-box;
 			margin: 30upx;

@@ -63,8 +63,8 @@
 					.valueOf()) {
 					this.date2 = e.target.value;
 					this.$emit('func', {
-						startDate1: `${this.date1} ${this.time1}:00`,
-						endDate1: `${this.date2} ${this.time2}:00`
+						startDate: `${this.date1} ${this.time1}:00`,
+						endDate: `${this.date2} ${this.time2}:00`
 					})
 				} else {
 					console.log(moment(`${this.date1} ${this.time1}`).valueOf(), moment(
@@ -81,8 +81,8 @@
 					.valueOf()) {
 					this.time1 = e.target.value;
 					this.$emit('func', {
-						startDate1: `${this.date1} ${this.time1}:00`,
-						endDate1: `${this.date2} ${this.time2}:00`
+						startDate: `${this.date1} ${this.time1}:00`,
+						endDate: `${this.date2} ${this.time2}:00`
 					})
 				} else {
 					console.log(moment(`${this.date1} ${e.target.value}`).valueOf(), moment(
@@ -99,8 +99,8 @@
 					.valueOf()) {
 					this.time2 = e.target.value;
 					this.$emit('func', {
-						startDate1: `${this.date1} ${this.time1}:00`,
-						endDate1: `${this.date2} ${this.time2}:00`
+						startDate: `${this.date1} ${this.time1}:00`,
+						endDate: `${this.date2} ${this.time2}:00`
 					})
 				} else {
 					console.log(moment(`${this.date1} ${this.time1}`).valueOf(), moment(
@@ -150,7 +150,7 @@
 	.uni-list-cell {
 		// width: 750upx;
 		// box-sizing: border-box;
-		margin: 30upx;
+		margin: 0upx 30upx;
 		display: flex;
 		white-space: nowrap;
 		// flex-wrap: nowrap;
