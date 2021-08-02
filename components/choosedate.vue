@@ -27,7 +27,12 @@
 <script>
 	import moment from "moment";
 	export default {
-		props: {},
+		props: {
+			CheckedCount:{
+				type:Number,
+				default:0
+			}
+		},
 		data() {
 			const currentDate = this.getDate({});
 			return {
@@ -40,14 +45,26 @@
 		},
 		methods: {
 			bindDateChange1: function(e) {
+				// 开始时间小于结束时间
 				if (moment(`${e.target.value} ${this.time1}`).valueOf() <= moment(`${this.date2} ${this.time2}`)
 					.valueOf()) {
+						// 总时间不超过36h
+						if((moment(`${this.date2} ${this.time2}`).valueOf() - moment(`${e.target.value} ${this.time1}`).valueOf()) * this.CheckedCount<=129600000){
 					this.date1 = e.target.value;
 					// console.log('日期变化',`${this.date1} ${this.time1}:00`);
 					this.$emit('func', {
 						startDate: `${this.date1} ${this.time1}:00`,
 						endDate: `${this.date2} ${this.time2}:00`
 					})
+					}
+					// 总时间超过了36h
+					else{
+						uni.showToast({
+							title: '总时间需小于36h',
+							icon: "none",
+							duration: 2000
+						})
+					}
 				} else {
 					console.log(moment(`${e.target.value} ${this.time1}`).valueOf(), moment(
 						`${this.date2} ${this.time2}`).valueOf());
@@ -61,11 +78,23 @@
 			bindDateChange2: function(e) {
 				if (moment(`${this.date1} ${this.time1}`).valueOf() <= moment(`${e.target.value} ${this.time2}`)
 					.valueOf()) {
+						// 总时间不超过36h
+						if((moment(`${e.target.value} ${this.time2}`).valueOf() - moment(`${this.date1} ${this.time1}`).valueOf()) * this.CheckedCount<=129600000){
 					this.date2 = e.target.value;
 					this.$emit('func', {
 						startDate: `${this.date1} ${this.time1}:00`,
 						endDate: `${this.date2} ${this.time2}:00`
 					})
+					}
+					// 总时间超过了36h
+					else{
+						uni.showToast({
+							title: '总时间需小于36h',
+							icon: "none",
+							duration: 2000
+						})
+					}
+					
 				} else {
 					console.log(moment(`${this.date1} ${this.time1}`).valueOf(), moment(
 						`${e.target.value} ${this.time2}`).valueOf());
@@ -79,11 +108,23 @@
 			bindTimeChange1: function(e) {
 				if (moment(`${this.date1} ${e.target.value}`).valueOf() <= moment(`${this.date2} ${this.time2}`)
 					.valueOf()) {
+						// 总时间不超过36h
+						if((moment(`${this.date2} ${this.time2}`).valueOf() - moment(`${this.date1} ${e.target.value}`).valueOf()) * this.CheckedCount<=129600000){
 					this.time1 = e.target.value;
 					this.$emit('func', {
 						startDate: `${this.date1} ${this.time1}:00`,
 						endDate: `${this.date2} ${this.time2}:00`
 					})
+					}
+					// 总时间超过了36h
+					else{
+						uni.showToast({
+							title: '总时间需小于36h',
+							icon: "none",
+							duration: 2000
+						})
+					}
+				
 				} else {
 					console.log(moment(`${this.date1} ${e.target.value}`).valueOf(), moment(
 						`${this.date2} ${this.time2}`).valueOf());
@@ -97,11 +138,23 @@
 			bindTimeChange2: function(e) {
 				if (moment(`${this.date1} ${this.time1}`).valueOf() <= moment(`${this.date2} ${e.target.value}`)
 					.valueOf()) {
+						// 总时间不超过36h
+						if((moment(`${this.date2} ${e.target.value}`).valueOf() - moment(`${this.date1} ${this.time1}`).valueOf()) * this.CheckedCount<=129600000){
 					this.time2 = e.target.value;
 					this.$emit('func', {
 						startDate: `${this.date1} ${this.time1}:00`,
 						endDate: `${this.date2} ${this.time2}:00`
 					})
+					}
+					// 总时间超过了36h
+					else{
+						uni.showToast({
+							title: '总时间需小于36h',
+							icon: "none",
+							duration: 2000
+						})
+					}
+					
 				} else {
 					console.log(moment(`${this.date1} ${this.time1}`).valueOf(), moment(
 						`${this.date2} ${e.target.value}`).valueOf());

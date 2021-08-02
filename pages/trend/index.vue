@@ -19,7 +19,7 @@
 				</picker>
 			</view>
 			<view style="width:750upx">
-				<choosedate @func="getdateA"></choosedate>
+				<choosedate @func="getdateA" :CheckedCount='AddrCheckedArray.length'></choosedate>
 			</view>
 			<view style="height:250px">
 				<l-echart ref="chart"></l-echart>
@@ -36,18 +36,19 @@
 					</view>
 				</view>
 				<view class="wrapper_item_container">
-					<view class="wrapper_item_item" v-for="(item2,index3) in item1.sites" :key="index3"
-						@click="active(item2.addr)">
-						<view class="line1 line">
+					<block v-for="(item2,index3) in item1.sites" :key="index3">
+					<view class="wrapper_item_item" @click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}">
+						<view class="line1 line" :style="{'color':(item2.checked?'#fff':'#333')}">
 							{{item2.name}}
 						</view>
-						<view class="line2 line" :style="{color:item2.color}">
+						<view class="line2 line" :style="{'color':(item2.checked?'#fff':item2.color)}">
 							{{item2.val}}
 						</view>
-						<view class="line3 line">
+						<view class="line3 line"  :style="{'color':(item2.checked?'#fff':'#333')}">
 							{{item2.unit}}
 						</view>
 					</view>
+					</block>
 				</view>
 			</view>
 		</view>
@@ -76,8 +77,8 @@
 				et: '',
 				sites:"",
 				timer:'',
-				// 编号选中条数
-				addrCount:0,
+				// 选中编号数组
+				AddrCheckedArray:[],
 				wrapperList1: [{
 						dictValue: "前处理预脱",
 						sites: [{											
@@ -289,14 +290,37 @@
 				this.getsiteValList()
 			},
 			active(addr){
-				console.log({origin:this.sites});
-				if(!this.sites){
-					this.sites+=addr;
+				
+				// 判断数组中是否有该编号
+				let flag=false;
+			for(let item of this.AddrCheckedArray){
+				if(item==addr){
+					flag=true;
+					break;
 				}
-				else 
-				this.sites+=`,${addr}`;
-				console.table([this.sites]);
-				this.getsiteValList()
+			}
+			// 取消选中
+			if(flag){
+				// 1.删除选中数组中该编号
+				this.AddrCheckedArray=this.AddrCheckedArray.filter(item=>item!=addr)	
+			}
+			else{
+				// 最多不能超过十条
+				if(this.AddrCheckedArray.length==10){
+					uni.showToast({
+						title: '最多不超过10条',
+						icon: "none",
+						duration: 2000
+					})
+					return false;
+				}
+				// 选中，向选中编号的数组中添加该编号
+				this.AddrCheckedArray.push(addr)
+			}
+			// 请求中的sites重新赋值为数组的','分割字符串
+			this.sites=this.AddrCheckedArray.join(',')
+			this.getsiteValList()
+				
 			},
 			// 获取内容列表
 				getwrapperList(id) {
