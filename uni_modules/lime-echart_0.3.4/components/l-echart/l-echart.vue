@@ -42,7 +42,7 @@
 <script>
 // #ifndef APP-NVUE
 import Canvas from './canvas';
-import * as echarts from './echarts';
+import * as echarts from './echarts.min';
 import { compareVersion, wrapTouch, devicePixelRatio } from './utils';
 // #endif
 // #ifdef APP-NVUE
@@ -211,18 +211,18 @@ export default {
 			}
 			// #endif
 		},
-		async setOption(val) {
+		async setOption() {
 			await this.enabled()
 			// #ifndef APP-NVUE
 			if (!this.chart || !this.chart.setOption) {
 				console.warn(`组件还未初始化`)
 			} else {
-				this.chart.setOption(val);
+				this.chart.setOption(...arguments);
 			}
 			// #endif
 			// #ifdef APP-NVUE
-			if(val) {
-				this.$refs.webview.evalJs(`setOption(${JSON.stringify(val)}`);
+			if(arguments) {
+				this.$refs.webview.evalJs(`setOption(${JSON.stringify(arguments)})`);
 			}
 			// #endif
 		},

@@ -64,10 +64,10 @@
 
 <script>
 	import choosedate from "../../components/choosedate.vue"
-	import * as echarts from '@/uni_modules/lime-echart/components/l-echart/echarts';
+	import * as echarts from '@/uni_modules/lime-echart_0.3.4/components/l-echart/echarts.min';
 	import moment from "moment";
 	export default {
-		data() {
+		data() {  
 			return {
 				categories: ['温度类', '压力类', '温度类', '压力类', '温度类', '压力类'],
 				index1: -1,
@@ -302,7 +302,14 @@
 			// 取消选中
 			if(flag){
 				// 1.删除选中数组中该编号
-				this.AddrCheckedArray=this.AddrCheckedArray.filter(item=>item!=addr)	
+				this.AddrCheckedArray=this.AddrCheckedArray.filter(item=>item!=addr)
+				
+				// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
+				// 先清空定时器
+				this.getwrapperList(uni.getStorageSync("currentheaderID"))
+				// 请求中的sites重新赋值为数组的','分割字符串
+				this.sites=this.AddrCheckedArray.join(',')
+				this.getsiteValList(true)
 			}
 			else{
 				// 最多不能超过十条
@@ -314,20 +321,42 @@
 					})
 					return false;
 				}
-				// 选中，向选中编号的数组中添加该编号
+				// 选中且不差过10条，向选中编号的数组中添加该编号
 				this.AddrCheckedArray.push(addr)
+				
+				// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
+				// 先清空定时器
+				this.getwrapperList(uni.getStorageSync("currentheaderID"))
+				// 请求中的sites重新赋值为数组的','分割字符串
+				this.sites=this.AddrCheckedArray.join(',')
+				this.getsiteValList()
 			}
-			// 请求中的sites重新赋值为数组的','分割字符串
-			this.sites=this.AddrCheckedArray.join(',')
-			this.getsiteValList()
+			
 				
 			},
 			// 获取内容列表
 				getwrapperList(id) {
+					clearInterval(this.timer)
+					console.log('获取内容列表');
 					this.api.getwrapperList({
 						id: id
 					}).then(res=>{
+						if(this.AddrCheckedArray.length>0){
+							// 用选中数组中的编号中的checked去替换响应数据中的checked
+							for(let itemCk of this.AddrCheckedArray){
+								for(let itemtask of res){
+									itemtask.sites=itemtask.sites.map(itemaddr=>{
+										if(itemCk==itemaddr.addr)
+										{
+											itemaddr.checked=true;
+										}
+										return itemaddr;
+									})
+								}
+							}
+						}
 						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						
 						this.wrapperList1 = res
 					})
 					// 10s轮询
@@ -335,7 +364,22 @@
 						this.api.getwrapperList({
 						id: id
 					}).then(res=>{
+						if(this.AddrCheckedArray.length>0){
+							// 用选中数组中的编号中的checked去替换响应数据中的checked
+							for(let itemCk of this.AddrCheckedArray){
+								for(let itemtask of res){
+									itemtask.sites=itemtask.sites.map(itemaddr=>{
+										if(itemCk==itemaddr.addr)
+										{
+											itemaddr.checked=true;
+										}
+										return itemaddr;
+									})
+								}
+							}
+						}
 						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						
 						this.wrapperList1 = res
 					})
 					
@@ -344,12 +388,18 @@
 					
 				},
 			// 获取折线图数据
-			 getsiteValList() {
+			 getsiteValList(flag) {
 			 // this.api.getsiteValList({sites:'CCF_FAN_VT,CCF_FILTER_DPT1',st:'2021-07-20 18:00:00',et:'2021-07-20 19:00:00'}).then(res=>{
 			 this.api.getsiteValList({sites:this.sites,st:this.st,et:this.et}).then(res=>{
+				 // console.log({res});
 				this.option.series = res;
+				this.option.series.push()
+				// console.log({option:this.option});
+				// 是否不跟之前设置的 option 进行合并。默认为 false。即表示合并
+				if(flag)
+				this.$refs.chart.setOption(this.option,true)
+				else
 				this.$refs.chart.setOption(this.option)
-			console.log(1111111111111111111,this.option.series);
 			
 			})
 			
@@ -378,16 +428,18 @@
 			this.et = moment().format("YYYY-MM-DD HH:mm:ss")
 		},
 		onShow(){
-			console.log('onshow');
+			console.log('onshow2');
 				this.getwrapperList(uni.getStorageSync("currentheaderID"))
 		},
 		onHide(){
-			console.log('onhide');
+			console.log('onhide1');
 			clearInterval(this.timer)
+			console.log('timer',this.timer);
 		},
 		onUnload(){
-			clearInterval(this.timer)
 			console.log('onUnload');
+			clearInterval(this.timer)
+			console.log('timer',this.timer);
 		},
 		mounted() {
 			console.log('mounted');

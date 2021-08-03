@@ -140,6 +140,9 @@
 					.valueOf()) {
 						// 总时间不超过36h
 						if((moment(`${this.date2} ${e.target.value}`).valueOf() - moment(`${this.date1} ${this.time1}`).valueOf()) * this.CheckedCount<=129600000){
+					
+					console.log('时间戳为',(moment(`${this.date2} ${e.target.value}`).valueOf() - moment(`${this.date1} ${this.time1}`).valueOf()) * this.CheckedCount);
+					
 					this.time2 = e.target.value;
 					this.$emit('func', {
 						startDate: `${this.date1} ${this.time1}:00`,

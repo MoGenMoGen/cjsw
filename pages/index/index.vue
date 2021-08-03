@@ -181,7 +181,6 @@
 				if (this.currentheaderID != id) {
 					this.currentheaderID = id
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
-					clearInterval(this.timer)
 					this.getwrapperList(this.currentheaderID)
 				}
 
@@ -194,6 +193,7 @@
 			},
 			// 获取内容列表
 				getwrapperList(id) {
+					clearInterval(this.timer)
 					this.api.getwrapperList({
 						id: id
 					}).then(res=>{
