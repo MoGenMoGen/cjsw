@@ -336,7 +336,10 @@
 			},
 			// 获取内容列表
 				getwrapperList(id) {
-					clearInterval(this.timer)
+					  if(this.timer) {  
+					        clearInterval(this.timer);  
+					        this.timer = null;  
+					    }  
 					console.log('获取内容列表');
 					this.api.getwrapperList({
 						id: id
@@ -432,14 +435,16 @@
 				this.getwrapperList(uni.getStorageSync("currentheaderID"))
 		},
 		onHide(){
-			console.log('onhide1');
-			clearInterval(this.timer)
-			console.log('timer',this.timer);
+		  if(this.timer) {  
+		        clearInterval(this.timer);  
+		        this.timer = null;  
+		    }  
 		},
 		onUnload(){
-			console.log('onUnload');
-			clearInterval(this.timer)
-			console.log('timer',this.timer);
+		  if(this.timer) {  
+		        clearInterval(this.timer);  
+		        this.timer = null;  
+		    }  
 		},
 		mounted() {
 			console.log('mounted');

@@ -42,9 +42,9 @@
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
 						{{item1.dictValue}}
-					<view class="arrow">详情
-					<image src="../../static/arrow2.png" mode="widthFix"></image>
-					</view>	
+						<view class="arrow">详情
+							<image src="../../static/arrow2.png" mode="widthFix"></image>
+						</view>
 						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
 					</view>
 					<view class="wrapper_item_container">
@@ -52,7 +52,7 @@
 							<view class="line1 line">
 								{{item2.name}}
 							</view>
-						<view class="line2 line" :style="{color:item2.color}">
+							<view class="line2 line" :style="{color:item2.color}">
 								{{item2.val}}
 							</view>
 							<view class="line3 line">
@@ -107,7 +107,7 @@
 				// 当前head状态栏下标
 				currentheaderID: '1',
 				// 计时器
-				timer:'',
+				timer: '',
 				banner1,
 				banner2,
 				banner3,
@@ -192,59 +192,70 @@
 				// 	'../../static/downarrow.png'
 			},
 			// 获取内容列表
-				getwrapperList(id) {
-					clearInterval(this.timer)
+			getwrapperList(id) {
+				  if(this.timer) {  
+				        clearInterval(this.timer);  
+				        this.timer = null;  
+				    }  
+				this.api.getwrapperList({
+					id: id
+				}).then(res => {
+					res[0].sites[0].val = res[0].sites[0].val * Math.random() * 100
+					this.wrapperList1 = res
+				})
+				// 10s轮询
+				this.timer = setInterval(() => {
 					this.api.getwrapperList({
 						id: id
-					}).then(res=>{
-						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+					}).then(res => {
+						res[0].sites[0].val = res[0].sites[0].val * Math.random() * 100
 						this.wrapperList1 = res
 					})
-					// 10s轮询
-					this.timer=setInterval(()=>{
-						this.api.getwrapperList({
-						id: id
-					}).then(res=>{
-						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
-						this.wrapperList1 = res
-					})
-					
-					},10000)
-					
-					
-				},
+
+				}, 10000)
+
+
+			},
 
 
 
 		},
 		components: {},
-		async onLoad() {
-			
+		onLoad() {
 
 			// 轮播图
-			let banners = await this.api.getbanner()
-			this.swiperList = banners.records.map(item => item.img)
+			this.api.getbanner()
+				.then(banners => {
+					this.swiperList = banners.records.map(item => item.img)
+				})
 			// 头部切换栏列表
-			this.switchList = await this.api.getheadswitchList()
-// 缓存头部切换栏选中id,在趋势中共享
-			uni.setStorageSync("currentheaderID", this.switchList[0].id)
-			
+			this.api.getheadswitchList()
+				.then(res => {
+					this.switchList = res
+					// 缓存头部切换栏选中id,在趋势中共享
+					uni.setStorageSync("currentheaderID", this.switchList[0].id)
+					this.getwrapperList(uni.getStorageSync("currentheaderID"))
+				})
 
 		},
-		onShow(){
-			console.log('onshow');
-				this.getwrapperList(uni.getStorageSync("currentheaderID"))
+		async onShow() {
+			this.getwrapperList(uni.getStorageSync("currentheaderID"))
+			console.log('onshow', uni.getStorageSync("currentheaderID"));
 		},
-		onHide(){
-			console.log('onhide');
-			clearInterval(this.timer)
+		onHide() {
+			  if(this.timer) {  
+			        clearInterval(this.timer);  
+			        this.timer = null;  
+			    }  
 		},
-		onUnload(){
-			clearInterval(this.timer)
-			console.log('onUnload');
+		onUnload() {
+			  if(this.timer) {  
+			        clearInterval(this.timer);  
+			        this.timer = null;  
+			    }  
 		}
-		
-		
+
+
 
 	}
 </script>
@@ -380,16 +391,17 @@
 						justify-content: space-between;
 						height: 50upx;
 						font-size: 32upx;
+
 						.arrow {
-							padding-right:20upx;
+							padding-right: 20upx;
 							width: 100upx;
 							color: #5481EA;
 							font-size: 32upx;
 							position: relative;
-							
-							image{
+
+							image {
 								position: absolute;
-								top:50%;
+								top: 50%;
 								transform: translateY(-50%);
 								display: inline-block;
 								width: 28upx;

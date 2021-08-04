@@ -28,7 +28,9 @@
 </template>
 
 <script>
-	import {md5} from '../../utils/md5.js';
+	import {
+		md5
+	} from '../../utils/md5.js';
 	import bg from "static/banner1.png";
 	import phoneimg from "static/loginPhone.png";
 	import passimg from "static/loginPass.png";
@@ -43,13 +45,13 @@
 					username: "",
 					password: "",
 					tenantId: "000000",
-					grant_type:"password"
+					grant_type: "password"
 				}, //用户信息
 			};
 		},
 		methods: {
 			async summit() {
-				if ( !this.info.username) {
+				if (!this.info.username) {
 					uni.showToast({
 						icon: "loading",
 						title: "请输入账号",
@@ -62,40 +64,43 @@
 						duration: 1000,
 					});
 				} else {
-					let data=await this.api.login({
+
+					let data = await this.api.login({
 						username: this.info.username,
-						password: md5(this.info.password,32),
+						password: md5(this.info.password, 32),
 						tenantId: "000000",
-						grant_type:"password"
+						grant_type: "password"
 					})
-					console.log(data);
-					
-					// uni.setStorageSync("loginType", Number(res.post_id));
-					// 后台需要的token缓存
-					uni.setStorageSync(
-						"Blade-Auth",
-						`${data.token_type} ${data.refresh_token}`
-					);
-					// 用户信息缓存
-					uni.setStorageSync("userinfo", data)
-									
-					uni.switchTab({
-						url: "/pages/index/index",
-					});
-					
+					console.log(11111111111,data);
+					if (!data.error_code) {
+
+						// uni.setStorageSync("loginType", Number(res.post_id));
+						// 后台需要的token缓存
+						uni.setStorageSync(
+							"Blade-Auth",
+							`${data.token_type} ${data.refresh_token}`
+						);
+						// 用户信息缓存
+						uni.setStorageSync("userinfo", data)
+
+						uni.switchTab({
+							url: "/pages/index/index",
+						});
+
+					}
 				}
-				
-				
-				
-				
-			},   
+
+
+
+
+			},
 			forget() {
 				uni.navigateTo({
-					url:"/pages/login/forgetpass"
+					url: "/pages/login/forgetpass"
 				})
 			}
 		}
-		
+
 
 	};
 </script>
