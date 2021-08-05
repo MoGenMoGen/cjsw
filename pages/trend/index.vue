@@ -5,16 +5,16 @@
 			<!-- 控制折线图的下拉框 -->
 			<view class="pickers">
 				<picker mode="selector" :range="categories" @change="handleChangeCategory">
-					<text v-if="index1<0">按类别</text>
+					<text v-if="index1<0" style="color:#C0C4CC">按类别</text>
 					<text v-else>{{categories[index1]}}</text>
-					<image src="../../static/downarrow.png" mode="widthFix" style="width:20upx; margin-left:20upx">
+					<image src="../../static/downarrow.png" mode="widthFix" style="width:24upx; margin-left:20upx">
 					</image>
 				</picker>
 
 				<picker mode="selector" :range="crafts" @change="handleChangecraft">
-					<text v-if="index2<0">按工艺</text>
+					<text v-if="index2<0" style="color:#C0C4CC">按工艺</text>
 					<text v-else>{{crafts[index2]}}</text>
-					<image src="../../static/downarrow.png" mode="widthFix" style="width:20upx; margin-left:20upx">
+					<image src="../../static/downarrow.png" mode="widthFix" style="width:24upx; margin-left:20upx">
 					</image>
 				</picker>
 			</view>
@@ -35,21 +35,36 @@
 						<image src="../../static/arrow2.png" mode="widthFix"></image>
 					</view>
 				</view>
-				<view class="wrapper_item_container">
-					<block v-for="(item2,index3) in item1.sites" :key="index3">
-					<view class="wrapper_item_item" @click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}">
-						<view class="line1 line" :style="{'color':(item2.checked?'#fff':'#333')}">
-							{{item2.name}}
-						</view>
-						<view class="line2 line" :style="{'color':(item2.checked?'#fff':item2.color)}">
-							{{item2.val}}
-						</view>
-						<view class="line3 line"  :style="{'color':(item2.checked?'#fff':'#333')}">
-							{{item2.unit}}
-						</view>
+			<view class="wrapper_item_container">
+				<view class="th">
+					<view class="line1 line">
+						项目
 					</view>
-					</block>
+					<view class="line2 line">
+					浮点数
+					</view>
+					<view class="line3 line">
+					要求范围
+					</view>
+					<view class="line4 line">
+					单位
+					</view>
 				</view>
+				<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2" @click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}">
+					<view class="line1 line" :style="{'color':(item2.checked?'#fff':'#333')}">
+						{{item2.name}}
+					</view>
+					<view class="line2 line" :style="{'color':(item2.checked?'#fff':item2.color)}">
+						{{item2.val}}
+					</view>
+					<view class="line3 line" :style="{'color':(item2.checked?'#fff':'#333')}">
+						(XX~XX)
+					</view>
+					<view class="line4 line" :style="{'color':(item2.checked?'#fff':'#333')}">
+						{{item2.unit}}
+					</view>
+				</view>
+			</view>
 			</view>
 		</view>
 		<!-- 内容列表 结束 -->
@@ -76,7 +91,7 @@
 				st: '',
 				et: '',
 				sites:"",
-				timer:'',
+				timer:null,
 				// 选中编号数组
 				AddrCheckedArray:[],
 				wrapperList1: [{
@@ -358,7 +373,7 @@
 								}
 							}
 						}
-						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
 						
 						this.wrapperList1 = res
 					})
@@ -381,7 +396,7 @@
 								}
 							}
 						}
-						res[0].sites[0].val=res[0].sites[0].val * Math.random() * 100
+						res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
 						
 						this.wrapperList1 = res
 					})
@@ -480,14 +495,17 @@
 				picker {
 					padding: 2upx;
 					display: inline-block;
-					border: 1px solid rgba(200, 200, 200, .5);
 					margin: 10upx;
+					width: 150upx;
+					height: 60upx;
+					border: 2upx solid #1989FA;
+					opacity: 1;
 					border-radius: 20upx;
 					display: flex;
 					align-items: center;
 
 					image {
-						padding: 2upx;
+						// padding: 2upx;
 					}
 				}
 			}
@@ -550,42 +568,55 @@
 				}
 
 
+				
 				.wrapper_item_container {
 					background: #fff;
 					width: 100%;
 					box-sizing: border-box;
 					// padding: 0 20upx;
-
+					.th{
+						display: flex;
+						padding: 10upx 20upx;
+						background: #C7E3FF;
+						color: #5481EA;
+					}
 					.wrapper_item_item:nth-child(odd) {
 						background-color: #F1F1F1;
 					}
-
+				
 					.wrapper_item_item:nth-child(even) {
 						background-color: #F9F9F9;
 					}
-
+				
 					.wrapper_item_item {
 						display: flex;
 						padding: 10upx 20upx;
-
-						.line {
-							color: #333333;
-							font-size: 32upx;
-						}
-
-						.line1 {
-							flex: 3;
-						}
-
-						.line2 {
-							flex: 1;
-						}
-
-						.line3 {
-							flex: 1;
-						}
+				
 					}
-
+					
+					.line {
+						color: #333333;
+						font-size: 30upx;
+					}
+					
+					.line1 {
+						flex: 2;
+					}
+					
+					.line2 {
+						flex: 1;
+						text-align: center;
+					}
+					
+					.line3 {
+						flex: 1;
+						text-align: center;
+					}
+					
+					.line4 {
+						flex:1;
+						text-align: center;
+					}
 					.active {
 						box-shadow: 0 0 10upx rgba(0, 0, 0, .5);
 					}

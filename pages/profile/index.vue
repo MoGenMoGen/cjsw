@@ -5,7 +5,7 @@
 
 			<!-- 个人中心头部背景部分 开始 -->
 			<view class="profile_info_bg">
-				<view class="profile_info" @click="goToperson(userinfo.user_id)">
+				<view class="profile_info" @click="goToperson(userdata.user_id)">
 					<view style="display: flex">
 						<view class="avatar" @click.stop="changeAvatar">
 							<image :src="userdata.avatar?userdata.avatar:avatar" mode="aspectFill" />
@@ -18,13 +18,13 @@
 							<view class="film_name">{{ userdata.deptName }}</view>
 						</view>
 					</view>
-					
+					<image src="../../static/arrow.png" mode="widthFix" style="width: 32upx" />
 				</view>
 			</view>
 			<!-- 个人中心头部背景部分 结束 -->
 			<!-- 功能列表 开始 -->
 			<view class="list">
-				<view class="item" @click="goTopersoninfo">
+				<!-- <view class="item"  @click="goToperson(userinfo.user_id)">
 					<view class="item_icon">
 						<image :src="personinfo" mode="widthFix" />
 						<text>个人信息</text>
@@ -32,23 +32,32 @@
 					<view class="righticon">
 						<image :src="arrow2" mode="widthFix" />
 					</view>
-				</view>
+				</view> -->
 				<view class="item" >
 					<view class="item_icon">
 						<image :src="phone" mode="widthFix" />
 						<text>联系电话</text>
 					</view>
 					<view class="righticon">
+						<text>{{userdata.phone}}</text>
 						<image :src="arrow2" mode="widthFix" />
 					</view>
 				</view>
-				<view class="item" >
+				<view class="item" @click="toReport">
+					<view class="item_icon">
+						<image src="../../static/report.png" mode="widthFix" />
+						<text>我的报表</text>
+					</view>
+					<view class="righticon">
+						<image :src="arrow2" mode="widthFix" />
+					</view>
+				</view>
+				<view class="item" @click="toMessage">
 					<view class="item_icon">
 						<image :src="mymessage" mode="widthFix" />
 						<text>我的消息</text>
 					</view>
 					<view class="righticon">
-						<text>{{userdata.phone}}</text>
 						<image :src="arrow2" mode="widthFix" />
 					</view>
 				</view>
@@ -95,6 +104,7 @@
 				userinfo: {},
 				// 用户基本信息
 				userdata: {
+					user_id:'1',
 					avatar,
 					realName: "摩根",
 					phone: "15182612784",
@@ -108,8 +118,10 @@
 		},
 		methods: {
 			// 进入个人中心
-			goToperson() {
-				
+			goToperson(id){
+				uni.navigateTo({
+					url:`/pages/profile/personinfo?id=${id}`
+				})
 			},
 			
 			// 进入修改密码
@@ -118,6 +130,20 @@
 					url: '/pages/profile/modifypass'
 				});
 			},
+			// 进入我的报表
+			
+			toReport(){
+				uni.navigateTo({
+					url:'/pages/myreport/index'
+				})
+			},
+			//进入我的消息
+			toMessage(){
+				uni.navigateTo({
+					url:'/pages/message/index'
+				})
+			},
+			 
 			// 更换头像
 			changeAvatar() {
 				// 图片上传接口

@@ -39,7 +39,7 @@
 			<!-- 产线 结束 -->
 			<!-- 内容列表 开始 -->
 			<view class="wrapper_list">
-				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
+				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1" @click="toDetail(item1.id)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
 						{{item1.dictValue}}
 						<view class="arrow">详情
@@ -48,6 +48,20 @@
 						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
 					</view>
 					<view class="wrapper_item_container">
+						<view class="th">
+							<view class="line1 line">
+								项目
+							</view>
+							<view class="line2 line">
+							浮点数
+							</view>
+							<view class="line3 line">
+							要求范围
+							</view>
+							<view class="line4 line">
+							单位
+							</view>
+						</view>
 						<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
 							<view class="line1 line">
 								{{item2.name}}
@@ -56,6 +70,9 @@
 								{{item2.val}}
 							</view>
 							<view class="line3 line">
+								(XX~XX)
+							</view>
+							<view class="line4 line">
 								{{item2.unit}}
 							</view>
 						</view>
@@ -107,7 +124,7 @@
 				// 当前head状态栏下标
 				currentheaderID: '1',
 				// 计时器
-				timer: '',
+				timer: null,
 				banner1,
 				banner2,
 				banner3,
@@ -200,7 +217,7 @@
 				this.api.getwrapperList({
 					id: id
 				}).then(res => {
-					res[0].sites[0].val = res[0].sites[0].val * Math.random() * 100
+					res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
 					this.wrapperList1 = res
 				})
 				// 10s轮询
@@ -208,7 +225,7 @@
 					this.api.getwrapperList({
 						id: id
 					}).then(res => {
-						res[0].sites[0].val = res[0].sites[0].val * Math.random() * 100
+						res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
 						this.wrapperList1 = res
 					})
 
@@ -216,6 +233,11 @@
 
 
 			},
+			toDetail(id){
+				uni.navigateTo({
+					url:`/pages/index/detail?id=${id}`
+				})
+			}
 
 
 
@@ -416,7 +438,12 @@
 						width: 100%;
 						box-sizing: border-box;
 						// padding: 0 20upx;
-
+						.th{
+							display: flex;
+							padding: 10upx 20upx;
+							background: #C7E3FF;
+							color: #5481EA;
+						}
 						.wrapper_item_item:nth-child(odd) {
 							background-color: #F1F1F1;
 						}
@@ -429,22 +456,30 @@
 							display: flex;
 							padding: 10upx 20upx;
 
-							.line {
-								color: #333333;
-								font-size: 32upx;
-							}
-
-							.line1 {
-								flex: 3;
-							}
-
-							.line2 {
-								flex: 1;
-							}
-
-							.line3 {
-								flex: 1;
-							}
+						}
+						
+						.line {
+							color: #333333;
+							font-size: 30upx;
+						}
+						
+						.line1 {
+							flex: 2;
+						}
+						
+						.line2 {
+							flex: 1;
+							text-align: center;
+						}
+						
+						.line3 {
+							flex: 1;
+							text-align: center;
+						}
+						
+						.line4 {
+							flex:1;
+							text-align: center;
 						}
 					}
 

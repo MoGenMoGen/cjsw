@@ -54,7 +54,7 @@
 				if (!this.info.username) {
 					uni.showToast({
 						icon: "loading",
-						title: "请输入账号",
+						title: "请输入工号",
 						duration: 1000,
 					});
 				} else if (!this.info.password) {
