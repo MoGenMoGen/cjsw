@@ -38,8 +38,9 @@
 			</view> -->
 			<!-- 产线 结束 -->
 			<!-- 内容列表 开始 -->
-			<view class="wrapper_list">
-				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1" @click="toDetail(item1.id)">
+			<view class="wrapper_list" v-if='!ismonitor'>
+				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
+					@click="toDetail(item1.id)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
 						{{item1.dictValue}}
 						<view class="arrow">详情
@@ -53,13 +54,13 @@
 								项目
 							</view>
 							<view class="line2 line">
-							浮点数
+								浮点数
 							</view>
 							<view class="line3 line">
-							要求范围
+								要求范围
 							</view>
 							<view class="line4 line">
-							单位
+								单位
 							</view>
 						</view>
 						<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
@@ -80,6 +81,19 @@
 				</view>
 			</view>
 			<!-- 内容列表 结束 -->
+			<!-- 视频监控开始 -->
+			<view class="monitor_list" v-else>
+				<view class="monitor_item" v-for="(item,index) in monitorList" :key='index'>
+					<view class="pic">
+						<image class="monitor_cover" :src="item.src" mode="aspectFill"></image>
+						<image class="btn_play" src="../../static/btn_play.png" mode="widthFix"></image>
+					</view>
+					<view class="monitor_title">{{item.title}}</view>
+					<view class="monitor_date">{{item.date}}</view>
+
+				</view>
+			</view>
+			<!-- 视频监控结束 -->
 		</view>
 	</view>
 
@@ -121,6 +135,7 @@
 						id: '7'
 					}
 				],
+				ismonitor: true,
 				// 当前head状态栏下标
 				currentheaderID: '1',
 				// 计时器
@@ -177,8 +192,53 @@
 						]
 					}
 
+				],
+				monitorList: [{
+						src: '../../static/banner1.png',
+						title: '监控视频监控视频监控视频监控视频监控视频监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner2.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner1.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner1.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner2.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner1.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner1.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner2.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
+					{
+						src: '../../static/banner1.png',
+						title: '监控视频',
+						date: '2020-01-02'
+					},
 				]
-
 			}
 		},
 
@@ -210,10 +270,10 @@
 			},
 			// 获取内容列表
 			getwrapperList(id) {
-				  if(this.timer) {  
-				        clearInterval(this.timer);  
-				        this.timer = null;  
-				    }  
+				if (this.timer) {
+					clearInterval(this.timer);
+					this.timer = null;
+				}
 				this.api.getwrapperList({
 					id: id
 				}).then(res => {
@@ -233,9 +293,9 @@
 
 
 			},
-			toDetail(id){
+			toDetail(id) {
 				uni.navigateTo({
-					url:`/pages/index/detail?id=${id}`
+					url: `/pages/index/detail?id=${id}`
 				})
 			}
 
@@ -253,6 +313,7 @@
 			// 头部切换栏列表
 			this.api.getheadswitchList()
 				.then(res => {
+					
 					this.switchList = res
 					// 缓存头部切换栏选中id,在趋势中共享
 					uni.setStorageSync("currentheaderID", this.switchList[0].id)
@@ -265,16 +326,18 @@
 			console.log('onshow', uni.getStorageSync("currentheaderID"));
 		},
 		onHide() {
-			  if(this.timer) {  
-			        clearInterval(this.timer);  
-			        this.timer = null;  
-			    }  
+			if (this.timer) {
+				clearInterval(this.timer);
+				this.timer = null;
+			}
+			console.log('index onhide');
 		},
 		onUnload() {
-			  if(this.timer) {  
-			        clearInterval(this.timer);  
-			        this.timer = null;  
-			    }  
+			if (this.timer) {
+				clearInterval(this.timer);
+				this.timer = null;
+			}
+			console.log('index onUnload');
 		}
 
 
@@ -437,13 +500,15 @@
 						background: #fff;
 						width: 100%;
 						box-sizing: border-box;
+
 						// padding: 0 20upx;
-						.th{
+						.th {
 							display: flex;
 							padding: 10upx 20upx;
 							background: #C7E3FF;
 							color: #5481EA;
 						}
+
 						.wrapper_item_item:nth-child(odd) {
 							background-color: #F1F1F1;
 						}
@@ -457,34 +522,91 @@
 							padding: 10upx 20upx;
 
 						}
-						
+
 						.line {
 							color: #333333;
 							font-size: 30upx;
 						}
-						
+
 						.line1 {
 							flex: 2;
 						}
-						
+
 						.line2 {
 							flex: 1;
 							text-align: center;
 						}
-						
+
 						.line3 {
 							flex: 1;
 							text-align: center;
 						}
-						
+
 						.line4 {
-							flex:1;
+							flex: 1;
 							text-align: center;
 						}
 					}
 
 
 
+				}
+			}
+
+			.monitor_list {
+				padding: 20upx;
+				box-sizing: border-box;
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				align-content: center;
+
+				.monitor_item {
+					width: 316upx;
+					height: 360upx;
+					margin: 19upx;
+					box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+					.pic {
+						position: relative;
+
+						.monitor_cover {
+							width: 316upx;
+							height: 228upx;
+							border-radius: 20upx 20upx 0upx 0upx;
+						}
+
+						.btn_play {
+							width: 116upx;
+							position: absolute;
+							left: 0;
+							bottom: 0;
+							transform: translateY(50%);
+						}
+					}
+
+					.monitor_title {
+						width: 100%;
+						box-sizing: border-box;
+						font-size: 28upx;
+						font-weight: 500;
+						// line-height: 16upx;
+						color: #606060;
+						height: 40upx;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						margin-top:38upx;
+						padding-left:20upx;
+
+					}
+
+					.monitor_date {
+						font-size: 24upx;
+						font-weight: 400;
+						// line-height: 16upx;
+						color: #999999;
+						padding-left:20upx;
+					}
 				}
 			}
 

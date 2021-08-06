@@ -446,7 +446,7 @@
 			this.et = moment().format("YYYY-MM-DD HH:mm:ss")
 		},
 		onShow(){
-			console.log('onshow2');
+			console.log('trend onshow');
 				this.getwrapperList(uni.getStorageSync("currentheaderID"))
 		},
 		onHide(){
@@ -454,12 +454,14 @@
 		        clearInterval(this.timer);  
 		        this.timer = null;  
 		    }  
+			console.log('trend onhide');
 		},
 		onUnload(){
 		  if(this.timer) {  
 		        clearInterval(this.timer);  
 		        this.timer = null;  
 		    }  
+			console.log('trend onunload');
 		},
 		mounted() {
 			console.log('mounted');
