@@ -7,7 +7,7 @@
 			<view class="hidden">
 				<view class="head_switch">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
-						@click="switchHead(item.id)" :class="{activeheader:item.id==currentheaderID}">
+						@click="switchHead(item.id,item.isChild)" :class="{activeheader:item.id==currentheaderID}">
 						{{item.dictValue}}
 					</text>
 				</view>
@@ -37,8 +37,19 @@
 				</view>
 			</view> -->
 			<!-- 产线 结束 -->
+			
+			<!-- 子列表 开始 -->
+			<view class="child_hidden" v-if='isChild'>
+				<view class="child_switch">
+					<text class="child_switch_item" v-for="(item,index) in ChildListTitle" :key="index"
+						@click="switchChildList(index)" :class="{active_child:index == currentChildIndex}">
+						{{item}}
+					</text>
+				</view>
+			</view>
+			<!-- 子列表 结束 -->
 			<!-- 内容列表 开始 -->
-			<view class="wrapper_list" v-if='!ismonitor'>
+			<view class="wrapper_list" v-if='!ismonitor' :style="{'padding-top':(isChild ? '100upx' : '0px')}">
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
 					@click="toDetail(item1.id)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
@@ -135,9 +146,16 @@
 						id: '7'
 					}
 				],
-				ismonitor: true,
+				// 监控项
+				ismonitor: false,
+				// 是否有子列表
+				isChild:false,//负责子列表的显示与隐藏
+				// 子列表标题
+				ChildListTitle: [],
 				// 当前head状态栏下标
 				currentheaderID: '1',
+				// 当前子列表下标
+				currentChildIndex:0,
 				// 计时器
 				timer: null,
 				banner1,
@@ -253,15 +271,20 @@
 			// }
 		},
 		methods: {
-			switchHead(id) {
+			switchHead(id, child) {
 				console.log('switchhead');
 				if (this.currentheaderID != id) {
 					this.currentheaderID = id
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
-					this.getwrapperList(this.currentheaderID)
+					this.isChild=child;
+					uni.setStorageSync("isChild",child)
+					this.getwrapperList(this.currentheaderID, child)
 				}
 
 
+			},
+			switchChildList(index){
+				this.currentChildIndex=index;
 			},
 			toogle(index) {
 				// this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
@@ -269,7 +292,7 @@
 				// 	'../../static/downarrow.png'
 			},
 			// 获取内容列表
-			getwrapperList(id) {
+			getwrapperList(id, child) {
 				if (this.timer) {
 					clearInterval(this.timer);
 					this.timer = null;
@@ -277,15 +300,17 @@
 				this.api.getwrapperList({
 					id: id
 				}).then(res => {
-					res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
-					this.wrapperList1 = res
+					if (child) {
+						this.ChildListTitle = res.map(item => item.dictValue)
+						
+					} else
+						this.wrapperList1 = res
 				})
 				// 10s轮询
 				this.timer = setInterval(() => {
 					this.api.getwrapperList({
 						id: id
 					}).then(res => {
-						res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
 						this.wrapperList1 = res
 					})
 
@@ -313,16 +338,22 @@
 			// 头部切换栏列表
 			this.api.getheadswitchList()
 				.then(res => {
-					
 					this.switchList = res
 					// 缓存头部切换栏选中id,在趋势中共享
 					uni.setStorageSync("currentheaderID", this.switchList[0].id)
-					this.getwrapperList(uni.getStorageSync("currentheaderID"))
+					uni.setStorageSync("isChild", res[0].isChild)
+					this.isChild=res[0].isChild
+					this.currentheaderID=res[0].id
+					this.getwrapperList(res[0].id, res[0].isChild)
 				})
 
 		},
 		async onShow() {
-			this.getwrapperList(uni.getStorageSync("currentheaderID"))
+			if (uni.getStorageSync("currentheaderID")) {
+				this.isChild=uni.getStorageSync("isChild")
+				this.currentheaderID=uni.getStorageSync("currentheaderID")
+				this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"))
+			}
 			console.log('onshow', uni.getStorageSync("currentheaderID"));
 		},
 		onHide() {
@@ -407,10 +438,10 @@
 						border-radius: 6upx;
 					}
 				}
-			}
+			}    
 
 			.swiper {
-				margin-top: calc(var(--status-bar-height) + 84upx);
+				padding-top: calc(var(--status-bar-height) + 94upx);
 				width: 750upx;
 				height: 400upx;
 
@@ -427,6 +458,68 @@
 					}
 				}
 			}
+
+
+	.child_hidden{
+				top: calc(var(--status-bar-height) + 486upx);
+				position: fixed;
+				z-index: 100;
+				background: #F9F9F9;
+				height: 100upx;
+				// overflow: hidden;
+				width: 100%;
+
+				.child_switch {
+					// position: fixed;
+					margin-top: 10upx;
+					// z-index: 100;
+					background: #F9F9F9;
+					width: 100%;
+					height: 100upx;
+					// padding-bottom: 12upx;
+					overflow-x: scroll;
+					// display: flex;
+					// align-items: center;
+					white-space: nowrap;
+
+					.child_switch_item {
+						display: inline-block;
+						padding: 0 23upx;
+						height:100upx;
+						line-height: 100upx;
+						font-size: 28upx;
+						font-weight: 400;
+						// color: #ecf0f1;
+						color: #999999;
+						opacity: 0.64;
+					}
+
+					.active_child {
+						position: relative;
+						font-size: 28upx;
+						height:100upx;
+						font-weight: 600;
+						color: #2957C4;
+						opacity: 1;
+						transition: 0.3s;
+					}
+
+					.active_child::after {
+						position: absolute;
+						bottom: 18upx;
+						left: 50%;
+						transform: translateX(-50%);
+						content: "";
+						width: 50upx;
+						height: 6upx;
+						background: #2957C4;
+						opacity: 1;
+						border-radius: 6upx;
+					}
+				}
+			}
+
+
 
 			.flexspace {
 				width: 100%;
@@ -566,6 +659,7 @@
 					height: 360upx;
 					margin: 19upx;
 					box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+
 					.pic {
 						position: relative;
 
@@ -595,8 +689,8 @@
 						overflow: hidden;
 						text-overflow: ellipsis;
 						white-space: nowrap;
-						margin-top:38upx;
-						padding-left:20upx;
+						margin-top: 38upx;
+						padding-left: 20upx;
 
 					}
 
@@ -605,7 +699,7 @@
 						font-weight: 400;
 						// line-height: 16upx;
 						color: #999999;
-						padding-left:20upx;
+						padding-left: 20upx;
 					}
 				}
 			}

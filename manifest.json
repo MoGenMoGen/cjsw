@@ -82,7 +82,7 @@
             "port" : 8080,
             "proxy" : {
                 "/api" : {
-                    "target" : "http://10086.jinkworld.com/api/",
+                    "target" : "http://hwnpoht.nat.ipyingshe.com",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
@@ -95,7 +95,7 @@
             "mode" : "history",
             "base" : "/h5/"
         },
-        "domain" : "http://10086.jinkworld.com/api/h5",
+        "domain" : "http://hwnpoht.nat.ipyingshe.com/api/h5",
         "template" : "index.html"
     }
 }
