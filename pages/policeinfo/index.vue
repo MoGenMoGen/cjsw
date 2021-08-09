@@ -1,5 +1,8 @@
 <template>
-	<view class="">
+	<view>
+		<view class="window">
+			
+		</view>
 	<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
 		<swiper-item v-for="(item,index) in swiperList" :key="index">
 			<view class="swiper-item">
@@ -27,7 +30,7 @@
 		<view class="text">
 			{{item.text}}
 		</view>
-		<view class="failPoint">
+		<view class="failPoint" @click="showWindow">
 			{{item.fail}}
 		</view>
 	</view>
@@ -37,6 +40,7 @@
 	export default {
 		data() {
 			return {
+				isShowWindow:false,
 				swiperList: [
 					"../../static/swiperitem.png",
 					"../../static/iconnormal.png"
@@ -76,7 +80,12 @@
 			}
 		},
 		methods: {
-
+			showWindow(){
+				this.isShowWindow=true
+				uni.showToast({
+					title:"qqweqweqw待结案私单简单哦IQ安定区hi哦哦我好奇啊hi殴打hi哦"
+				})
+			}
 		}
 	}
 </script>
