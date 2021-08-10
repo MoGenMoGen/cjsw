@@ -380,6 +380,16 @@ getwrapperList(data){
 			});
 		})
 	}
+//获取报警信息列表
+getapiList(data){
+	return new Promise((resolve, reject) => {
+		get("/blade-mh/errlog/apiList", data, {
+			'Content-Type': 'application/json'
+		}).then(res => {
+			resolve(res.data);
+		});
+	})
+}
 
 }
 export {

@@ -14,41 +14,33 @@
 				<view class="containerTitle">
 					{{item.title}}
 				</view>
-				<view class="inputIn">
-					<input v-model="number" type="text" value="" placeholder="请输入编号"
-						placeholder-class="placeholderIn" />
-					<input v-model="personOne" type="text" value="" placeholder="请输入责任人"
-						placeholder-class="placeholderIn" />
-					<input v-model="personTwo" type="text" value="" placeholder="请输入责任人"
-						placeholder-class="placeholderIn" />
-					<input v-model="instrumentName" type="text" value="" placeholder="请输入检测仪器名称"
-						placeholder-class="placeholderIn" />
-					<input v-model="instrumentModel" type="text" value="" placeholder="请输入检测仪器型号"
-						placeholder-class="placeholderIn" />
-					<input v-model="lineType" type="text" value="" placeholder="请输入线别"
-						placeholder-class="placeholderIn" />
-				</view>
-				<view class="table">
-					<view class="area">
-						<view class="head">
-							区域
-						</view>
+				<view class="containerList">
+					<view class="bodyList" v-for="(item1,index1) in item.body" :key="index1">
 						<view class="name">
-							除尘区
+							{{item1.name}}
+						</view>
+						<view class="content">
+							{{item1.content}}
 						</view>
 					</view>
-					<view class="number">
-						<view class="head">
-							NO
-						</view>
-						<view class="numberName">
-							<view class="name" v-for="(item1,index1) in item.list" :key="index1">
-								{{index1+1}}
+					<view class="" style="font-size:28upx;color:rgba(0, 0, 0, 0.9); ">
+						{{item.note}}
+					</view>
+					<view class="listInput" v-for="(item2,index2) in item.input" :key="index2">
+							<view class="name">
+							{{item2.name}}:
 							</view>
+							<view class="content">
+								<input type="text" value="" placeholder="保养标准: 干净无灰尘" placeholder-class="placeholderIn" />
+							</view>
+					</view>
+					<view class="abnormal">
+						<view class="name">
+							{{item.abnormalIn}}
 						</view>
 					</view>
-
 				</view>
+			
 			</view>
 		</view>
 	</view>
@@ -58,12 +50,6 @@
 	export default {
 		data() {
 			return {
-				number: '',
-				personOne: "",
-				personTwo: "",
-				instrumentName: "",
-				instrumentModel: "",
-				lineType: "",
 				switchList: [{
 						dictValue: '涂装线',
 						id: '1'
@@ -95,8 +81,63 @@
 				currentheaderID: '1',
 				surface: [{
 						title: "涂装离子风机保养记录表",
-						list: ["机体内壁", "铜针", "叶轮", "风鼓内侧", "进风口格栅", "出风口"]
+						body:[
+							{
+								name:"编号",
+								content:"007——WI-347"
+							},
+							{
+								name:"责任人",
+								content:"工艺人员"
+							},
+							{
+								name:"检测仪器",
+								content:"检测仪器名称"
+								
+							},
+							{
+								name:"仪器型号",
+								content:"检测仪器名称"
+							},
+							{
+								name:"线别",
+								content:"涂装七线"
+							},
+							{
+								name:"区域",
+								content:"除尘区"
+							},
+	
+						],
+						note:"保养项目（7月-保养周期/每月）",
+						input:[
+							{
+								name:"机体内壁"
+							},
+							{
+								name:"铜针"
+							},
+							{
+								name:"叶轮"
+							},
+							{
+								name:"风鼓内测"
+							},
+							{
+								name:"进风口格栅"
+							},
+							{
+								name:"出风口"
+							}
+							
+						],
+						abnormalIn:"异常记录"
+						
 					},
+					{
+						title:"静电检测记录表",
+					}
+					
 
 				]
 			}
@@ -180,6 +221,7 @@
 				margin-top: 100upx;
 				padding: 62upx 0 0 0;
 				box-sizing: border-box;
+				border-bottom: 30upx solid #FAFAFA;
 
 				.containerTitle {
 					text-align: center;
@@ -187,91 +229,59 @@
 					color: rgba(0, 0, 0, 0.9);
 					font-weight: 600;
 				}
-
-				.inputIn {
-					margin-top: 96upx;
-
-					input {
-						width: 600upx;
-						height: 78upx;
-						border: 2upx solid #DCDFE6;
-						opacity: 1;
-						border-radius: 8upx;
-						margin: 0 auto;
-						margin-top: 20upx;
-						padding: 20upx 30upx;
-						box-sizing: border-box;
-
-						.placeholderIn {
+				.containerList{
+					margin-top: 60upx;
+					padding: 0 0 0 40upx;
+					box-sizing: border-box;  
+					.bodyList{
+						display: flex;
+						margin-bottom: 25upx;
+						.name{
+							position: relative;
+							width: 150upx;
+							display: inline-block;
+							text-align-last: justify;
 							font-size: 28upx;
-							color: #C0C4CC;
-
+							color: rgba(0, 0, 0, 0.9);
+							
+						}
+						.name::after{
+							content: ":";
+							position: absolute;
+							right: -20upx;
+							
+							
+						}
+						.content{
+							margin-left: 50upx;
+							font-size: 28upx;
+							color: rgba(0, 0, 0, 0.9);
 						}
 					}
-				}
-
-				.table {
-					margin-top: 96upx;
-					padding: 0 12upx;
-
-					.area {
-						width: 100%;
-						height: 54upx;
+					.listInput{
+			
+						margin-top: 30upx;
 						display: flex;
-
-						.head {
-							width: 104upx;
-							height: 54upx;
-							text-align: center;
-							line-height: 54upx;
-							background: #0082CB;
-							border: 2upx solid #FFFFFF;
-							opacity: 1;
+						.name{
+							width: 150upx;
+							font-size: 28upx;
+							line-height: 78upx;
 						}
-
-						.name {
-							flex: 1;
-							width: 622upx;
-							height: 100%;
-							text-align: center;
-							line-height: 54upx;
-							background: #0082CB;
-							border: 2upx solid #FFFFFF;
+						.content{
+							margin-left: 20upx;
+							font-size: 28upx;
+							width: 480upx;
+							height: 78upx;
+							border: 2upx solid #DCDFE6;
 							opacity: 1;
-						}
-					}
-
-					.number {
-						display: flex;
-						width: 100%;
-						// height: 54upx;
-						// overflow-x: scroll;
-
-						.head {
-							width: 104upx;
-							height: 56upx;
-							background: #B0C8E2;
-							border: 2upx solid #FFFFFF;
-							opacity: 1;
-							text-align: center;
-							line-height: 56upx;
-						}
-						.numberName{
-							flex: 1;
-							display: flex;
-							overflow-x: scroll;
-							// overflow-y: hidden;
-							.name{
-								width: 200upx; 
-								height: 56upx;
-								background: #B0C8E2;
-								border: 2upx solid #FFFFFF;
-								opacity: 1;
-								text-align: center;
-								line-height: 56upx;
+							border-radius: 8upx;
+							padding: 20upx;
+							box-sizing: border-box;
+							line-height: 78upx;
+							.placeholderIn{
+								font-size: 28upx;
 							}
 						}
-						
 					}
 				}
 			}
