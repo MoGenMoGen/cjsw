@@ -37,7 +37,7 @@
 				</view>
 			</view> -->
 			<!-- 产线 结束 -->
-			
+
 			<!-- 子列表 开始 -->
 			<view class="child_hidden" v-if='isChild'>
 				<view class="child_switch">
@@ -149,13 +149,15 @@
 				// 监控项
 				ismonitor: false,
 				// 是否有子列表
-				isChild:false,//负责子列表的显示与隐藏
+				isChild: 0, //负责子列表的显示与隐藏
 				// 子列表标题
 				ChildListTitle: [],
 				// 当前head状态栏下标
 				currentheaderID: '1',
 				// 当前子列表下标
-				currentChildIndex:0,
+				currentChildIndex: 0,
+				// 子列表内容
+				ChildList: [],
 				// 计时器
 				timer: null,
 				banner1,
@@ -276,15 +278,20 @@
 				if (this.currentheaderID != id) {
 					this.currentheaderID = id
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
-					this.isChild=child;
-					uni.setStorageSync("isChild",child)
+					this.isChild = child;
+					uni.setStorageSync("isChild", child)
 					this.getwrapperList(this.currentheaderID, child)
 				}
 
 
 			},
-			switchChildList(index){
-				this.currentChildIndex=index;
+			switchChildList(index) {
+				if (this.currentChildIndex != index)
+				{
+					this.currentChildIndex = index;
+					this.getwrapperList(this.currentheaderID, this.isChild) 
+				}
+				
 			},
 			toogle(index) {
 				// this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
@@ -294,15 +301,16 @@
 			// 获取内容列表
 			getwrapperList(id, child) {
 				if (this.timer) {
+					console.log(this.timer)
 					clearInterval(this.timer);
-					this.timer = null;
 				}
 				this.api.getwrapperList({
 					id: id
 				}).then(res => {
 					if (child) {
 						this.ChildListTitle = res.map(item => item.dictValue)
-						
+						this.wrapperList1 = res[this.currentChildIndex].children
+						console.log("wrapList",this.wrapperList1);
 					} else
 						this.wrapperList1 = res
 				})
@@ -311,7 +319,11 @@
 					this.api.getwrapperList({
 						id: id
 					}).then(res => {
-						this.wrapperList1 = res
+						if (child) {
+							this.ChildListTitle = res.map(item => item.dictValue)
+							this.wrapperList1 = res[this.currentChildIndex].children
+						} else
+							this.wrapperList1 = res
 					})
 
 				}, 10000)
@@ -335,38 +347,33 @@
 				.then(banners => {
 					this.swiperList = banners.records.map(item => item.img)
 				})
+			
+
+		},
+		async onShow() {
+			
 			// 头部切换栏列表
 			this.api.getheadswitchList()
 				.then(res => {
 					this.switchList = res
-					// 缓存头部切换栏选中id,在趋势中共享
-					uni.setStorageSync("currentheaderID", this.switchList[0].id)
-					uni.setStorageSync("isChild", res[0].isChild)
-					this.isChild=res[0].isChild
-					this.currentheaderID=res[0].id
-					this.getwrapperList(res[0].id, res[0].isChild)
+					if (!uni.getStorageSync("currentheaderID")) {
+						uni.setStorageSync("currentheaderID", this.switchList[0].id)
+						uni.setStorageSync("isChild", res[0].isChild)
+					}
+					this.currentheaderID = uni.getStorageSync("currentheaderID")
+					this.isChild = uni.getStorageSync("isChild")
+					this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"))
 				})
-
-		},
-		async onShow() {
-			if (uni.getStorageSync("currentheaderID")) {
-				this.isChild=uni.getStorageSync("isChild")
-				this.currentheaderID=uni.getStorageSync("currentheaderID")
-				this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"))
-			}
-			console.log('onshow', uni.getStorageSync("currentheaderID"));
 		},
 		onHide() {
 			if (this.timer) {
 				clearInterval(this.timer);
-				this.timer = null;
 			}
 			console.log('index onhide');
 		},
 		onUnload() {
 			if (this.timer) {
 				clearInterval(this.timer);
-				this.timer = null;
 			}
 			console.log('index onUnload');
 		}
@@ -403,7 +410,7 @@
 					height: 76upx;
 					// padding-bottom: 12upx;
 					overflow-x: scroll;
-					// display: flex;
+					overflow-y: hidden; // display: flex;
 					// align-items: center;
 					white-space: nowrap;
 
@@ -438,7 +445,11 @@
 						border-radius: 6upx;
 					}
 				}
-			}    
+
+				.head_switch::-webkit-scrollbar {
+					display: none;
+				}
+			}
 
 			.swiper {
 				padding-top: calc(var(--status-bar-height) + 94upx);
@@ -460,7 +471,7 @@
 			}
 
 
-	.child_hidden{
+			.child_hidden {
 				top: calc(var(--status-bar-height) + 486upx);
 				position: fixed;
 				z-index: 100;
@@ -478,6 +489,7 @@
 					height: 100upx;
 					// padding-bottom: 12upx;
 					overflow-x: scroll;
+					overflow-y: hidden;
 					// display: flex;
 					// align-items: center;
 					white-space: nowrap;
@@ -485,7 +497,7 @@
 					.child_switch_item {
 						display: inline-block;
 						padding: 0 23upx;
-						height:100upx;
+						height: 100upx;
 						line-height: 100upx;
 						font-size: 28upx;
 						font-weight: 400;
@@ -497,7 +509,7 @@
 					.active_child {
 						position: relative;
 						font-size: 28upx;
-						height:100upx;
+						height: 100upx;
 						font-weight: 600;
 						color: #2957C4;
 						opacity: 1;
@@ -516,6 +528,10 @@
 						opacity: 1;
 						border-radius: 6upx;
 					}
+				}
+
+				.child_switch::-webkit-scrollbar {
+					display: none;
 				}
 			}
 

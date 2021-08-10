@@ -50,12 +50,14 @@ function get(url, data, header,loading) {
 				} else if (res.data.code == '200')
 					resolve(res.data);
 				else {
-					uni.showToast({
-						title: '服务器错误',
+					if(!loading){
+						uni.showToast({
+						title: res.data.msg,
 						duration: 2000,
 						icon: 'loading'
-
 					})
+					}
+					
 				}
 			},
 			fail: function(err) {
@@ -77,11 +79,12 @@ function get(url, data, header,loading) {
 	return promise;
 }
 
-function post(url, data, header) {
-	// console.log(url)
-	uni.showLoading({
+function post(url, data, header,loading) {
+	if(loading!==false){
+		uni.showLoading({
 		title: "加载中"
 	});
+	}
 
 	let BladeAuth = uni.getStorageSync("Blade-Auth")
 	let myheader = {
@@ -119,12 +122,13 @@ function post(url, data, header) {
 				} else if (res.data.code == '200')
 					resolve(res.data);
 				else {
+					if(!loading){
 					uni.showToast({
-						title: '服务器错误',
+						title: res.data.msg,
 						duration: 2000,
 						icon: 'loading'
 					})
-				}
+				}}
 
 			},
 			fail: function(err) {
@@ -179,7 +183,7 @@ function loginpost(url, data, header) {
 				} else {
 					console.log("dfsjfjglskdfgjdklsgj")
 					uni.showToast({
-						title: '服务器错误',
+						title: res.data.msg,
 						duration: 2000,
 						icon: 'loading'
 					})
@@ -358,7 +362,7 @@ class api {
 // 获取首页内容列表
 getwrapperList(data){
 	return new Promise((resolve, reject) => {
-		get("//blade-mh/site/siteByWorkShopId", data, {
+		post("//blade-mh/site/siteByWorkShopId", data, {
 			'Content-Type': 'application/json'
 		},false).then(res => {
 			resolve(res.data);
