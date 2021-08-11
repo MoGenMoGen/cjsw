@@ -40,7 +40,7 @@
             "style" :                                                                                    
             {
                 // "navigationBarTitleText": "报警信息",
-                // "enablePullDownRefresh": false
+                "enablePullDownRefresh": true, 
 				"navigationStyle": "custom"
             }
             

@@ -13,12 +13,12 @@
 			
 		</view> -->
 		<view class="detail" v-if="isShowWindow==true">
-			<image src="../../static/arrowright.png" mode=""></image>
+			<image src="../../static/arrowright.png" mode=""@click="showSwiper"></image>
 			<view class="title">
 				{{title}}
 			</view>
-			<view class="content">
-				{{detail}}
+			<view class="content" v-for="(item,index) in detail" :key="index">
+				{{item}}
 			</view>
 		</view>
 	<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" v-if="isShowWindow==false">
@@ -41,15 +41,15 @@
 		</view>
 	</view>
 		 
-	<view class="body" v-for="(item,index) in info" :key="index">
+	<view class="body" v-for="(item,index) in info" :key="index"  @click="showWindow(index)">
 		<view class="date">
-			{{item.date}} {{item.noon}}
+			{{item.time}} 
 		</view>
 		<view class="text">
-			{{item.text}}
+			{{item.msg}}
 		</view>
-		<view class="failPoint" @click="showWindow(index)">
-			{{item.fail}}
+		<view class="failPoint">
+			{{item.addr}}
 		</view>
 	</view>
 	</view>
@@ -60,10 +60,14 @@
 			return {
 				isShowWindow:false,
 				title:"",
-				detail:"",
+				detail:[],
+				total:"",
+				page:{
+					current:1,
+					size:10
+				},
 				swiperList: [
-					"../../static/swiperitem.png",
-					"../../static/iconnormal.png"
+					"../../static/yujingbcg.png"
 
 				],
 				info:[
@@ -104,8 +108,12 @@
 		methods: {
 		showWindow(index){
 			this.isShowWindow=true
-			this.title=this.info[index].fail
-			this.detail=this.info[index].detail
+			this.title=this.info[index].addr
+			this.detail=this.info[index].details
+			console.log(index);
+		},
+		showSwiper(){
+			this.isShowWindow=false
 		},
 		windowDelete(){
 			this.isShowWindow=false
@@ -116,9 +124,47 @@
 				current:1,
 				size:10
 			}
-			this.info=this.api.getapiList(page).then(
-			console.log(this.info)
-			)
+			this.api.getapiList(page).then(res=>{
+				this.info=res.records
+				this.total=res.total
+				console.log("111",this.total);
+				for(let i=0;i<this.info.length;i++){
+					this.info[i].details=this.info[i].details.split(",")
+				}
+			})
+		},
+		//下拉页面刷新
+		onPullDownRefresh() {
+			this.info=[]
+			let page={
+				current:1,
+				size:10
+			}
+			this.api.getapiList(page).then(res=>{
+				this.info=res.records
+				console.log("111",this.info);
+				for(let i=0;i<this.info.length;i++){
+					this.info[i].details=this.info[i].details.split(",")
+				}
+			})
+			setTimeout(function() {
+				uni.stopPullDownRefresh()
+			}, 1000)
+			
+			
+		},
+		//上拉触底加载更多数据
+		onReachBottom() {
+			console.log("触底");
+			if(this.total>this.info.length){
+				this.api.getapiList(page).then(res=>{
+					this.info=res.records
+					console.log("111",this.info);
+					for(let i=0;i<this.info.length;i++){
+						this.info[i].details=this.info[i].details.split(",")
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -155,6 +201,7 @@
 		padding: 36upx 80upx;
 		position: relative;
 		overflow-y: scroll;
+		transition: 0.5s;
 		image{
 	 		position: absolute;
 			top: 34upx;
@@ -180,7 +227,7 @@
 	.swiper {
 		width: 750upx;
 		height: 470upx;
-
+	    transition: 0.5s;
 		.swiper-item {
 			width: 100%;
 			height: 470upx;

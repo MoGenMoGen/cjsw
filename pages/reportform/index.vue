@@ -10,7 +10,14 @@
 					</text>
 				</view>
 			</view>
-			<view class="containerBody" v-for="(item,index) in surface" :key="index">
+			<view class="content">
+				<active-form :formDate.sync="formData" num></active-form>
+
+				<view class="subform" @click="sub">提交表单</view>
+			</view>
+
+
+			<!-- <view class="containerBody" v-for="(item,index) in surface" :key="index">
 				<view class="containerTitle">
 					{{item.title}}
 				</view>
@@ -38,18 +45,47 @@
 						<view class="name">
 							{{item.abnormalIn}}
 						</view>
+						<view class="content">
+							
+						</view>
 					</view>
 				</view>
 			
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
 
 <script>
+	import ActiveForm from "@/components/active-form/active-form.vue";
 	export default {
 		data() {
 			return {
+				formData: [{
+					id: "kjjns", //id必须唯一 可以是数字
+					placeholder: "输入名字",
+					label: "姓名", // 提示输入名
+					type: "text", //类型
+					rules: {
+						name: "realName", //字段名 即提交给后端的字段
+						value: "",
+						verify: true, //是否开启校验
+						errMess: "姓名未填写", //校验不通过的错误提示
+					},
+				},
+				    {
+				           id: "uisdfjks",
+				           placeholder: "请输入手机号",
+				           label: "手机",
+				           type: "phone",
+				           //   oneKeyPhone:true,
+				           rules: {
+				             name: "phone",
+				             value: "", //字段值
+				             verify: true,
+				             errMess: "手机号格式不正确",
+				           },
+				         },],
 				switchList: [{
 						dictValue: '涂装线',
 						id: '1'
@@ -81,63 +117,61 @@
 				currentheaderID: '1',
 				surface: [{
 						title: "涂装离子风机保养记录表",
-						body:[
-							{
-								name:"编号",
-								content:"007——WI-347"
+						body: [{
+								name: "编号",
+								content: "007——WI-347"
 							},
 							{
-								name:"责任人",
-								content:"工艺人员"
+								name: "责任人",
+								content: "工艺人员"
 							},
 							{
-								name:"检测仪器",
-								content:"检测仪器名称"
-								
+								name: "检测仪器",
+								content: "检测仪器名称"
+
 							},
 							{
-								name:"仪器型号",
-								content:"检测仪器名称"
+								name: "仪器型号",
+								content: "检测仪器名称"
 							},
 							{
-								name:"线别",
-								content:"涂装七线"
+								name: "线别",
+								content: "涂装七线"
 							},
 							{
-								name:"区域",
-								content:"除尘区"
+								name: "区域",
+								content: "除尘区"
 							},
-	
+
 						],
-						note:"保养项目（7月-保养周期/每月）",
-						input:[
-							{
-								name:"机体内壁"
+						note: "保养项目（7月-保养周期/每月）",
+						input: [{
+								name: "机体内壁"
 							},
 							{
-								name:"铜针"
+								name: "铜针"
 							},
 							{
-								name:"叶轮"
+								name: "叶轮"
 							},
 							{
-								name:"风鼓内测"
+								name: "风鼓内测"
 							},
 							{
-								name:"进风口格栅"
+								name: "进风口格栅"
 							},
 							{
-								name:"出风口"
+								name: "出风口"
 							}
-							
+
 						],
-						abnormalIn:"异常记录"
-						
+						abnormalIn: "异常记录"
+
 					},
 					{
-						title:"静电检测记录表",
+						title: "静电检测记录表",
 					}
-					
+
 
 				]
 			}
@@ -149,7 +183,16 @@
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
 					// this.getwrapperList(this.currentheaderID)
 				}
-			}
+			},
+			    sub() {
+			      this.$vervify(this.formData); //表单校验 成功会继续往下走 失败抛出异常
+			
+			      const res = this.$submitForm(this.formData); //校验成功 获取表单值
+			      console.log('表单对象 :>> ', res);
+			    },
+		},
+		components: {
+			ActiveForm,
 		}
 	}
 </script>
@@ -215,11 +258,23 @@
 					}
 				}
 			}
-
+			.content { 
+				 display: flex;
+				  flex-direction: column;
+				  margin-top: 100upx; 
+				  .subform{
+					  // width: 200upx;
+					    margin: 0 auto;
+					      padding: 20rpx 60rpx;
+						  text-align: center;
+					      border-radius: 18rpx;
+					      background-color: bisque;
+				  }
+			}
 			.containerBody {
 				width: 100%;
 				margin-top: 100upx;
-				padding: 62upx 0 0 0;
+				// padding: 62upx 0 0 0;
 				box-sizing: border-box;
 				border-bottom: 30upx solid #FAFAFA;
 
@@ -229,47 +284,54 @@
 					color: rgba(0, 0, 0, 0.9);
 					font-weight: 600;
 				}
-				.containerList{
+
+				.containerList {
 					margin-top: 60upx;
 					padding: 0 0 0 40upx;
-					box-sizing: border-box;  
-					.bodyList{
+					box-sizing: border-box;
+
+					.bodyList {
 						display: flex;
 						margin-bottom: 25upx;
-						.name{
+
+						.name {
 							position: relative;
 							width: 150upx;
 							display: inline-block;
 							text-align-last: justify;
 							font-size: 28upx;
 							color: rgba(0, 0, 0, 0.9);
-							
+
 						}
-						.name::after{
+
+						.name::after {
 							content: ":";
 							position: absolute;
 							right: -20upx;
-							
-							
+
+
 						}
-						.content{
+
+						.content {
 							margin-left: 50upx;
 							font-size: 28upx;
 							color: rgba(0, 0, 0, 0.9);
 						}
 					}
-					.listInput{
-			
+
+					.listInput {
+
 						margin-top: 30upx;
 						display: flex;
-						.name{
+
+						.name {
 							width: 150upx;
 							font-size: 28upx;
 							line-height: 78upx;
 						}
-						.content{
+
+						.content {
 							margin-left: 20upx;
-							font-size: 28upx;
 							width: 480upx;
 							height: 78upx;
 							border: 2upx solid #DCDFE6;
@@ -278,7 +340,12 @@
 							padding: 20upx;
 							box-sizing: border-box;
 							line-height: 78upx;
-							.placeholderIn{
+
+							input {
+								font-size: 28upx;
+							}
+
+							.placeholderIn {
 								font-size: 28upx;
 							}
 						}
