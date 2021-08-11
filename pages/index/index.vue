@@ -49,7 +49,7 @@
 			</view>
 			<!-- 子列表 结束 -->
 			<!-- 内容列表 开始 -->
-			<view class="wrapper_list" v-if='!ismonitor' :style="{'padding-top':(isChild ? '100upx' : '0px')}">
+			<view class="wrapper_list" v-if='!ismonitor' >
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
 					@click="toDetail(item1.id)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
@@ -91,21 +91,23 @@
 					</view>
 				</view>
 			</view>
-			<!-- 内容列表 结束 -->
-			<!-- 视频监控开始 -->
-			<view class="monitor_list" v-else>
-				<view class="monitor_item" v-for="(item,index) in monitorList" :key='index'>
-					<view class="pic">
-						<image class="monitor_cover" :src="item.src" mode="aspectFill"></image>
-						<image class="btn_play" src="../../static/btn_play.png" mode="widthFix"></image>
-					</view>
-					<view class="monitor_title">{{item.title}}</view>
-					<view class="monitor_date">{{item.date}}</view>
 
-				</view>
+	<!-- 内容列表 结束 -->
+	<!-- 视频监控开始 -->
+	<view class="monitor_list" v-else>
+		<view class="monitor_item" v-for="(item,index) in monitorList" :key='index'>
+			<view class="pic">
+				<image class="monitor_cover" :src="item.src" mode="aspectFill"></image>
+				<image class="btn_play" src="../../static/btn_play.png" mode="widthFix"></image>
 			</view>
-			<!-- 视频监控结束 -->
+			<view class="monitor_title">{{item.title}}</view>
+			<view class="monitor_date">{{item.date}}</view>
+
 		</view>
+	</view>
+	<!-- 视频监控结束 -->
+	
+	</view>
 	</view>
 
 </template>
@@ -286,12 +288,12 @@
 
 			},
 			switchChildList(index) {
-				if (this.currentChildIndex != index)
-				{
+				if (this.currentChildIndex != index) {
+					uni.setStorageSync("currentChildIndex", index)
 					this.currentChildIndex = index;
-					this.getwrapperList(this.currentheaderID, this.isChild) 
+					this.getwrapperList(this.currentheaderID, this.isChild)
 				}
-				
+
 			},
 			toogle(index) {
 				// this.wrapperList1[index].toogleflag = !this.wrapperList1[index].toogleflag;
@@ -308,9 +310,10 @@
 					id: id
 				}).then(res => {
 					if (child) {
+						console.log('child',this.currentChildIndex);
 						this.ChildListTitle = res.map(item => item.dictValue)
 						this.wrapperList1 = res[this.currentChildIndex].children
-						console.log("wrapList",this.wrapperList1);
+						console.log("wrapList", this.wrapperList1);
 					} else
 						this.wrapperList1 = res
 				})
@@ -330,7 +333,7 @@
 
 
 			},
-			toDetail(id) {
+			 toDetail(id) {
 				uni.navigateTo({
 					url: `/pages/index/detail?id=${id}`
 				})
@@ -347,11 +350,11 @@
 				.then(banners => {
 					this.swiperList = banners.records.map(item => item.img)
 				})
-			
+
 
 		},
 		async onShow() {
-			
+
 			// 头部切换栏列表
 			this.api.getheadswitchList()
 				.then(res => {
@@ -359,9 +362,13 @@
 					if (!uni.getStorageSync("currentheaderID")) {
 						uni.setStorageSync("currentheaderID", this.switchList[0].id)
 						uni.setStorageSync("isChild", res[0].isChild)
+						uni.setStorageSync("currentChildIndex", 0)
+						
 					}
 					this.currentheaderID = uni.getStorageSync("currentheaderID")
 					this.isChild = uni.getStorageSync("isChild")
+					this.currentChildIndex = uni.getStorageSync("currentChildIndex")
+					
 					this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"))
 				})
 		},
@@ -452,7 +459,7 @@
 			}
 
 			.swiper {
-				padding-top: calc(var(--status-bar-height) + 94upx);
+				padding-top: calc(var(--status-bar-height) + 86upx);
 				width: 750upx;
 				height: 400upx;
 
@@ -472,9 +479,9 @@
 
 
 			.child_hidden {
-				top: calc(var(--status-bar-height) + 486upx);
-				position: fixed;
-				z-index: 100;
+				top: calc(var(--status-bar-height) + 86upx);
+				position: sticky;
+				// z-index: 100;
 				background: #F9F9F9;
 				height: 100upx;
 				// overflow: hidden;

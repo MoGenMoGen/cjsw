@@ -2,77 +2,137 @@
 	<!-- 个人信息页面 -->
 	<view class="pages_personinfo">
 		<view class="container">
-			<view class="avatar">
-				<image :src="info.avatar" mode="aspectFill" />
+			<view class="avatarbox" @click="changeAvatar">
+				<view class="avatar">
+					<image :src="info.avatar" mode="aspectFill" />
+				</view>
+				<view class="avataredit">
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
+				</view>
+
 			</view>
 			<view class="list">
 				<view class="item">
 					<text class="title">真实姓名:</text>
-					<text class="content">{{ info.realName }}</text>
+					<input type="text" class="content" v-model="info.name" :disabled="!ifEdit"></input>
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
 					<text class="title">员工工号:</text>
-					<text class="content">{{ info.jNum }}</text>
+					<input type="text" class="content" v-model="info.account" :disabled="!ifEdit"></input>
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
 					<text class="title">部门名称:</text>
-					<text class="content">{{ info.deptName }}</text>
+					<input type="text" class="content" v-model="info.deptId" disabled="true"></input>
+					<!-- <image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image> -->
 				</view>
-				<view class="item">
+				<!-- <view class="item">
 					<text class="title">职位名称:</text>
 					<text class="content">{{ info.post }}</text>
-				</view>
+				</view> -->
 				<view class="item">
 					<text class="title">性别:</text>
-					<text class="content">{{ info.sex }}</text>
+					<picker class="content" mode="selector" :range="sexes" @change="handleChangeSex"
+						:disabled="!ifEdit">
+						<text>{{sexes[index1]}}</text>
+					</picker>
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
 					<text class="title">政治面貌:</text>
-					<text class="content">{{ info.status }}</text>
+					<picker mode="selector" :range="statuses" @change="handleChangeStatus" :disabled="!ifEdit">
+						<view>{{statuses[index2]}}</view>
+					</picker>
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
 					<text class="title">籍贯:</text>
-					<text class="content">{{ info.nativeplace }}</text>
+					<input type="text" class="content" v-model="info.place" :disabled="!ifEdit"></input>
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
 					<text class="title">联系电话:</text>
-					<text class="content">{{ info.phone }}</text>
+					<input type="number" maxlength="11" class="content" v-model="info.phone"
+						:disabled="!ifEdit"></input>
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
 					<text class="title">联系地址:</text>
-					<text class="content">{{ info.deptAddr }}</text>
+					<input type="text" class="content" v-model="info.addr" :disabled="!ifEdit"></input>
+					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
-			</view>
 
+
+			</view>
+			<button @click="ifEdit=true" v-show="!ifEdit">修改信息</button>
+			<button @click="save" v-show="ifEdit">保存信息</button>
 		</view>
+
 	</view>
 </template>
 
 <script>
 	import avatar from "static/avatar.png";
+	import pen from 'static/pen.png'
 	export default {
 		data() {
 			return {
 				avatar,
+				pen,
 				id: "",
+				ifEdit: false,
+				index1: 0, //性别
+				index2: 0, //政治面貌
+				statuses: ['群众', '党员', '团员'],
+				sexes: ['男', '女'],
 				info: {
 					avatar,
-					realName:'摩根',
-					jNum:'007',
-					deptName:'技术部',
-					post:'工程师',
-					sex:'男',
-					status:"党员",
-					nativeplace:'浙江宁波',
-					phone:"400-001-008",
-					deptAddr:"镇海329创业社区"
+
 				},
 			};
 		},
-		onLoad(e) {
-			this.id = e.id;
+		methods: {
+			// 更换头像
+			async changeAvatar() {
+				if (this.ifEdit) {
+					// 图片上传接口
+					let avatar = await this.api.chooseImages('', 1)
+					console.log(1111111);
+					let res = await this.api.upLoad(avatar[0])
+					this.info.avatar=res
+					
+				}
 
+			},
+			// 更改政治面貌
+			handleChangeStatus(e) {
+				this.index2 = e.target.value;
+				this.info.party = this.index2 + 1
+			},
+			handleChangeSex(e) {
+				this.index1 = e.target.value;
+				this.info.sex = this.index1 + 1
+			},
+			// 保存信息
+			save() {
+				this.ifEdit = false
+				console.log(this.info);
+				this.api.modidyPersoninfo(this.info).then(()=>{
+				  uni.showToast({
+				    title: '保存成功',
+				    icon: 'success',
+				    duration: 2000
+				  })
+				  this.ifEdit = false
+				})
 
+			},
+		},
+		async onLoad() {
+			this.info = await this.api.getPersoninfo()
+			this.index1 = Number(this.info.sex) - 1
+			this.index2 = Number(this.info.party) - 1
 
 		},
 		onShow() {
@@ -95,14 +155,19 @@
 </script>
 
 <style lang="scss" scoped>
+	.pen {
+		width: 30upx;
+	}
+
 	.pages_personinfo {
 		width: 100%;
-		height: 100vh;
+		// height: 100vh;
 		background: #fafafa;
 		box-sizing: border-box;
 		display: flex;
 		justify-content: center;
 		padding: 20upx;
+		padding-bottom: 100upx;
 
 		.container {
 			// height: calc(100vh - 88upx - 100upx);
@@ -112,17 +177,29 @@
 			flex-direction: column;
 			align-items: center;
 
-			.avatar {
-				margin-top: 100upx;
-				width: 134upx;
-				height: 134upx;
+			.avatarbox {
+				position: relative;
 
-				image {
-					width: 100%;
-					height: 100%;
-					border-radius: 50%;
+				.avatar {
+					margin-top: 100upx;
+					width: 134upx;
+					height: 134upx;
+
+					image {
+						width: 100%;
+						height: 100%;
+						border-radius: 50%;
+					}
 				}
+
+				.avataredit {
+					position: absolute;
+					bottom: 0;
+					right: 0;
+				}
+
 			}
+
 
 			.list {
 				margin-top: 100upx;
@@ -154,6 +231,11 @@
 			.code {
 				margin-top: 36upx;
 				width: 164upx;
+			}
+
+			button {
+				margin: 50upx 0;
+				border-radius: 25upx;
 			}
 		}
 	}

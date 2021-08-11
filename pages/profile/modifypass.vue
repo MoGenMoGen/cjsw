@@ -30,6 +30,9 @@
 <script>
 	import modifyPassCover from "static/modifyPassCover.png";
 	import passimg from "static/loginPass.png";
+	import {
+		md5
+	} from '../../utils/md5.js';
 	export default {
 		data() {
 			return {
@@ -42,17 +45,44 @@
 				},
 			};
 		},
-		methods: {  
-		summit(){
-			
+		methods: {
+			async summit() {
+				for (let i in this.info) {
+					if (this.info[i] == '') {
+						uni.showToast({
+							title: '请将数据填完整',
+							icon: 'loading'
+						})
+						return false;
+					}
+					
+
+				}
+				let formData = {
+					newPassword1: md5(this.info.newPassword1),
+					newPassword: md5(this.info.newPassword),
+					oldPassword: md5(this.info.oldPassword),
+				}
+				let data = await this.api.password(formData)
+				uni.showToast({
+					title:data.msg
+				})
+				setTimeout(()=>{
+					uni.clearStorageSync()
+					uni.reLaunch({
+					url:'/pages/login/index'
+				})
+				},1500)
+				
+			}
 		}
-	}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.pages_modify_pass {
 		width: 100%;
+
 		.wrapper {
 			width: 100%;
 			padding-top: 60rpx;

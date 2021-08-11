@@ -95,8 +95,21 @@
 
 			},
 			forget() {
-				uni.navigateTo({
-					url: "/pages/login/forgetpass"
+				// uni.navigateTo({
+				// 	url: "/pages/login/forgetpass"
+				// })
+				
+				uni.showModal({
+					content: '请联系管理员重置密码',
+					showCancel: false,
+					buttonText: '确定',
+					success: (res) => {
+						if (res.confirm) {
+							console.log('用户点击确定');
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
 				})
 			}
 		}

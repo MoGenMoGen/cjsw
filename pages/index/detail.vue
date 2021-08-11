@@ -59,6 +59,9 @@
 					},
 				]
 			};
+		},
+		async onLoad(e){
+			this.sites=await this.api.getsiteDetail({id:e.id})
 		}
 	}
 </script>
@@ -72,12 +75,12 @@
 		}
 
 		.wrapper_item_container {
-			margin-top:60upx;
+			// margin-top:60upx;
 			background: #fff;
 			width: 100%;
 			box-sizing: border-box;
-			padding:0 40upx;
-
+			padding:60upx 40upx 160upx;
+			// padding-bottom:160upx;
 			// padding: 0 20upx;
 			.th {
 				display: flex;

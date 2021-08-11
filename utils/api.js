@@ -4,14 +4,14 @@ import Vue from 'vue'
 
 const hostUrl = config.serverURL;
 
-function get(url, data, header,loading) {
+function get(url, data, header, loading) {
 	// console.log(url)
-	if(loading!==false){
+	if (loading !== false) {
 		uni.showLoading({
-		title: "加载中"
-	});
+			title: "加载中"
+		});
 	}
-	
+
 	let BladeAuth = uni.getStorageSync("Blade-Auth")
 	let myheader = {
 		"Blade-Auth": BladeAuth
@@ -29,7 +29,7 @@ function get(url, data, header,loading) {
 			header: myheader,
 			// url: config.serverURL + url,
 			url: '/api' + url,
-			timeout:30000,
+			timeout: 30000,
 			success: function(res) {
 				console.log('get success', res)
 				// 登录失效重新登录
@@ -50,14 +50,14 @@ function get(url, data, header,loading) {
 				} else if (res.data.code == '200')
 					resolve(res.data);
 				else {
-					if(!loading){
+					if (!loading) {
 						uni.showToast({
-						title: res.data.msg,
-						duration: 2000,
-						icon: 'loading'
-					})
+							title: res.data.msg,
+							duration: 2000,
+							icon: 'loading'
+						})
 					}
-					
+
 				}
 			},
 			fail: function(err) {
@@ -71,19 +71,20 @@ function get(url, data, header,loading) {
 				reject(err);
 			},
 			complete: function() {
-				if(loading!==false){
-				uni.hideLoading();}
+				if (loading !== false) {
+					uni.hideLoading();
+				}
 			}
 		});
 	});
 	return promise;
 }
 
-function post(url, data, header,loading) {
-	if(loading!==false){
+function post(url, data, header, loading) {
+	if (loading !== false) {
 		uni.showLoading({
-		title: "加载中"
-	});
+			title: "加载中"
+		});
 	}
 
 	let BladeAuth = uni.getStorageSync("Blade-Auth")
@@ -102,8 +103,8 @@ function post(url, data, header,loading) {
 			method: "post",
 			// url: config.serverURL + url,
 			url: '/api' + url,
-			
-			timeout:60000,
+
+			timeout: 60000,
 			success: function(res) {
 				console.log('post success', res)
 				// 登录失效重新登录
@@ -122,13 +123,14 @@ function post(url, data, header,loading) {
 				} else if (res.data.code == '200')
 					resolve(res.data);
 				else {
-					if(!loading){
-					uni.showToast({
-						title: res.data.msg,
-						duration: 2000,
-						icon: 'loading'
-					})
-				}}
+					if (!loading) {
+						uni.showToast({
+							title: res.data.msg,
+							duration: 2000,
+							icon: 'loading'
+						})
+					}
+				}
 
 			},
 			fail: function(err) {
@@ -166,7 +168,7 @@ function loginpost(url, data, header) {
 			method: "post",
 			// url: config.serverURL + url,
 			url: '/api' + url,
-			timeout:60000,
+			timeout: 60000,
 			success: function(res) {
 				console.log('post success', res)
 				// 400账号或密码错误
@@ -257,7 +259,7 @@ class api {
 	//设置新密码
 	password(data) {
 		return new Promise(resolve => {
-			post("/sys/user/uniUpdPassword", data).then(res => {
+			post("/blade-user/update-passwordV2", data).then(res => {
 				resolve(res)
 			})
 		})
@@ -273,7 +275,7 @@ class api {
 			uni.chooseImage({
 				count: max || 9, //一次最多可以选择的图片张数
 				sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-				sourceType: type || ['camera'], // 可以指定来源是相册还是相机，默认二者都有
+				sourceType: type || ['camera', 'album '], // 可以指定来源是相册还是相机，默认二者都有
 				// 可以指定来源是相册还是相机，默认二者都有
 
 				success: function(res) {
@@ -300,30 +302,35 @@ class api {
 		// if(!token){
 		//   token = await getToken2()
 		// }
-		console.log(imgPath)
+		console.log({
+			imgPath
+		})
 		return new Promise((resolve, reject) => {
 			let that = this
 			//上传文件
 			uni.uploadFile({
-				url: hostUrl + '/blade-resource/oss/endpoint/put-file',
+				url: '/api' + '/blade-resource/oss/endpoint/put-file',
 				filePath: imgPath,
 				name: 'file',
-				header: {
-					"Content-Type": "multipart/form-data",
-					"Blade-Auth": uni.getStorageSync("Blade-Auth")
-				},
+				// header: {
+				// 	"Content-Type": "multipart/form-data",
+
+				// },
+				// formData: {
+				// 	"Blade-Auth": uni.getStorageSync("Blade-Auth")
+				// },
 				success: function(res) {
 					uni.showLoading({
 						title: '上传成功',
 					})
 					console.log('================')
-					console.log(1111111111, res)
+					console.log(1111111111)
 					let img = JSON.parse(res.data).data.link;
 
 					resolve(img)
 				},
 				fail: function(res) {
-
+					console.log('上传失败', res);
 					uni.showModal({
 						title: '上传失败',
 						content: res.msg,
@@ -359,19 +366,19 @@ class api {
 			});
 		})
 	}
-// 获取首页内容列表
-getwrapperList(data){
-	return new Promise((resolve, reject) => {
-		post("//blade-mh/site/siteByWorkShopId", data, {
-			'Content-Type': 'application/json'
-		},false).then(res => {
-			resolve(res.data);
-		});
-	})
-}
+	// 获取首页内容列表
+	getwrapperList(data) {
+		return new Promise((resolve, reject) => {
+			post("//blade-mh/site/siteByWorkShopId", data, {
+				'Content-Type': 'application/json'
+			}, false).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
 
-//获取折线图数据
-	getsiteValList(data){
+	//获取折线图数据
+	getsiteValList(data) {
 		return new Promise((resolve, reject) => {
 			get("/blade-mh/site/siteValList", data, {
 				'Content-Type': 'application/json'
@@ -380,16 +387,78 @@ getwrapperList(data){
 			});
 		})
 	}
-//获取报警信息列表
-getapiList(data){
-	return new Promise((resolve, reject) => {
-		get("/blade-mh/errlog/apiList", data, {
-			'Content-Type': 'application/json'
-		}).then(res => {
-			resolve(res.data);
-		});
-	})
-}
+	//获取报警信息列表
+	getapiList(data) {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/errlog/apiList", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+
+	// 车间详情
+	getsiteDetail(data) {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/site/siteDetail", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	// 类别列表
+	getdictionary(data) {
+		return new Promise((resolve, reject) => {
+			get("blade-system/dict/dictionary", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	// 工艺列表
+	getcraftList(data) {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/site/craftList", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	// 个人面貌列表
+	getPartyList(data) {
+		return new Promise((resolve, reject) => {
+			get("/blade-system/dict/dictionary", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	
+	// 个人信息
+	getPersoninfo() {
+		return new Promise((resolve, reject) => {
+			get("/blade-user/myInfo", {}, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	// 修改个人信息
+	modidyPersoninfo(data) {
+		return new Promise((resolve, reject) => {
+			post("/blade-user/update-infoV2", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
 
 }
 export {

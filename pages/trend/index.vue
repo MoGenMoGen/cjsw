@@ -4,18 +4,23 @@
 		<view class="fixed">
 			<!-- 控制折线图的下拉框 -->
 			<view class="pickers">
-				<picker mode="selector" :range="categories" @change="handleChangeCategory">
-					<text v-if="index1<0" style="color:#C0C4CC">按类别</text>
-					<text v-else>{{categories[index1]}}</text>
-					<image src="../../static/downarrow.png" mode="widthFix" style="width:24upx; margin-left:20upx">
-					</image>
+				<picker mode="selector" :range="categories" @change="handleChangeCategory" range-key='dictValue'>
+					<view class="select">
+						<view v-if="index1<0" style="color:#C0C4CC">按类别</view>
+						<view v-else>{{categories[index1].dictValue}}</view>
+						<image src="../../static/downarrow.png" mode="widthFix" style="width:24upx;">
+						</image>
+					</view>
 				</picker>
 
-				<picker mode="selector" :range="crafts" @change="handleChangecraft">
-					<text v-if="index2<0" style="color:#C0C4CC">按工艺</text>
-					<text v-else>{{crafts[index2]}}</text>
-					<image src="../../static/downarrow.png" mode="widthFix" style="width:24upx; margin-left:20upx">
-					</image>
+				<picker  mode="selector" :range="crafts" @change="handleChangecraft"  range-key='dictValue'>
+					<view class="select">
+						<text v-if="index2<0" style="color:#C0C4CC">按工艺</text>
+						<text v-else>{{crafts[index2].dictValue}}</text>
+						<image src="../../static/downarrow.png" mode="widthFix" style="width:24upx;">
+						</image>
+					</view>
+
 				</picker>
 			</view>
 			<view style="width:750upx">
@@ -28,48 +33,49 @@
 
 		<!-- 与首页相同的内容区域 -->
 		<view class="wrapper_list">
-			<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
+			<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1" @click="toDetail(item1.id)">
 				<view class="wrapper_item_title">
 					{{item1.dictValue}}
 					<view class="arrow">详情
 						<image src="../../static/arrow2.png" mode="widthFix"></image>
 					</view>
 				</view>
-			<view class="wrapper_item_container">
-				<view class="th">
-					<view class="line1 line">
-						项目
+				<view class="wrapper_item_container">
+					<view class="th">
+						<view class="line1 line">
+							项目
+						</view>
+						<view class="line2 line">
+							浮点数
+						</view>
+						<view class="line3 line">
+							要求范围
+						</view>
+						<view class="line4 line">
+							单位
+						</view>
 					</view>
-					<view class="line2 line">
-					浮点数
-					</view>
-					<view class="line3 line">
-					要求范围
-					</view>
-					<view class="line4 line">
-					单位
+					<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2"
+						@click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}">
+						<view class="line1 line" :style="{'color':(item2.checked?'#fff':'#333')}">
+							{{item2.name}}
+						</view>
+						<view class="line2 line" :style="{'color':(item2.checked?'#fff':item2.color)}">
+							{{item2.val}}
+						</view>
+						<view class="line3 line" :style="{'color':(item2.checked?'#fff':'#333')}">
+							(XX~XX)
+						</view>
+						<view class="line4 line" :style="{'color':(item2.checked?'#fff':'#333')}">
+							{{item2.unit}}
+						</view>
 					</view>
 				</view>
-				<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2" @click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}">
-					<view class="line1 line" :style="{'color':(item2.checked?'#fff':'#333')}">
-						{{item2.name}}
-					</view>
-					<view class="line2 line" :style="{'color':(item2.checked?'#fff':item2.color)}">
-						{{item2.val}}
-					</view>
-					<view class="line3 line" :style="{'color':(item2.checked?'#fff':'#333')}">
-						(XX~XX)
-					</view>
-					<view class="line4 line" :style="{'color':(item2.checked?'#fff':'#333')}">
-						{{item2.unit}}
-					</view>
-				</view>
-			</view>
 			</view>
 		</view>
 		<!-- 内容列表 结束 -->
-		
-		
+
+
 	</view>
 </template>
 
@@ -82,7 +88,7 @@
 	import * as echarts from '@/uni_modules/lime-echart_0.3.4/components/l-echart/echarts.min';
 	import moment from "moment";
 	export default {
-		data() {  
+		data() {
 			return {
 				categories: ['温度类', '压力类', '温度类', '压力类', '温度类', '压力类'],
 				index1: -1,
@@ -90,13 +96,17 @@
 				crafts: ['前处理预脱', '前处理主脱', '前处理水洗'],
 				st: '',
 				et: '',
-				sites:"",
-				timer:null,
+				sites: "",
+				timer: null,
+				// 类别id
+				categoryID:'',
+				// 工艺id
+				craftID:'',
 				// 选中编号数组
-				AddrCheckedArray:[],
+				AddrCheckedArray: [],
 				wrapperList1: [{
 						dictValue: "前处理预脱",
-						sites: [{											
+						sites: [{
 								name: '1.喷淋管道压力',
 								val: '浮点数',
 								unit: 'Bar',
@@ -131,7 +141,7 @@
 					},
 					tooltip: {
 						triggerOn: 'none',
-						position:['10%','20%']
+						position: ['10%', '20%']
 						// position: function(pt) {
 						// 	return [pt[0], 10];
 						// }
@@ -174,8 +184,8 @@
 							handle: {
 								show: true,
 								color: '#7581BD',
-								margin:20,
-								size:[30,30]
+								margin: 20,
+								size: [30, 30]
 							}
 						},
 						splitLine: {
@@ -203,15 +213,15 @@
 						right: 15,
 						height: 160
 					},
-					  dataZoom: [{
-					        type: 'inside',
-					        start: 0,
-					        end: 10,
-					    }, {
-					        start: 0,
-					        end: 10,
-							top:'3%'
-					    }],
+					dataZoom: [{
+						type: 'inside',
+						start: 0,
+						end: 10,
+					}, {
+						start: 0,
+						end: 10,
+						top: '3%'
+					}],
 					// dataZoom: [{
 					// 	type: 'inside',
 					// 	throttle: 50
@@ -295,132 +305,150 @@
 			// 按类别下拉框修改下标
 			handleChangeCategory(e) {
 				this.index1 = e.target.value;
+				this.categoryID=this.categories[this.index1].id
+				this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
 			},
 			handleChangecraft(e) {
 				this.index2 = e.target.value;
+				this.craftID=this.crafts[this.index2].id
+				this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
 			},
 			getdateA(a) {
 				this.st = a.startDate;
 				this.et = a.endDate;
 				this.getsiteValList()
 			},
-			active(addr){
-				
+			toDetail(id) {
+				uni.navigateTo({
+					url: `/pages/index/detail?id=${id}`
+				})
+			},
+			// 选中编号
+			active(addr) {
+
 				// 判断数组中是否有该编号
-				let flag=false;
-			for(let item of this.AddrCheckedArray){
-				if(item==addr){
-					flag=true;
-					break;
+				let flag = false;
+				for (let item of this.AddrCheckedArray) {
+					if (item == addr) {
+						flag = true;
+						break;
+					}
 				}
-			}
-			// 取消选中
-			if(flag){
-				// 1.删除选中数组中该编号
-				this.AddrCheckedArray=this.AddrCheckedArray.filter(item=>item!=addr)
-				
-				// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
-				// 先清空定时器
-				this.getwrapperList(uni.getStorageSync("currentheaderID"))
-				// 请求中的sites重新赋值为数组的','分割字符串
-				this.sites=this.AddrCheckedArray.join(',')
-				this.getsiteValList(true)
-			}
-			else{
-				// 最多不能超过十条
-				if(this.AddrCheckedArray.length==10){
-					uni.showToast({
-						title: '最多不超过10条',
-						icon: "none",
-						duration: 2000
-					})
-					return false;
+				// 取消选中
+				if (flag) {
+					// 1.删除选中数组中该编号
+					this.AddrCheckedArray = this.AddrCheckedArray.filter(item => item != addr)
+
+					// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
+					// 先清空定时器
+					this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
+					// 请求中的sites重新赋值为数组的','分割字符串
+					this.sites = this.AddrCheckedArray.join(',')
+					this.getsiteValList(true)
+				} else {
+					// 最多不能超过十条
+					if (this.AddrCheckedArray.length == 10) {
+						uni.showToast({
+							title: '最多不超过10条',
+							icon: "none",
+							duration: 2000
+						})
+						return false;
+					}
+					// 选中且不差过10条，向选中编号的数组中添加该编号
+					this.AddrCheckedArray.push(addr)
+
+					// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
+					// 先清空定时器
+					this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
+					// 请求中的sites重新赋值为数组的','分割字符串
+					this.sites = this.AddrCheckedArray.join(',')
+					this.getsiteValList()
 				}
-				// 选中且不差过10条，向选中编号的数组中添加该编号
-				this.AddrCheckedArray.push(addr)
-				
-				// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
-				// 先清空定时器
-				this.getwrapperList(uni.getStorageSync("currentheaderID"))
-				// 请求中的sites重新赋值为数组的','分割字符串
-				this.sites=this.AddrCheckedArray.join(',')
-				this.getsiteValList()
-			}
-			
-				
+
+
 			},
 			// 获取内容列表
-				getwrapperList(id) {
-					  if(this.timer) {  
-					        clearInterval(this.timer);  
-					        this.timer = null;  
-					    }  
-					console.log('获取内容列表');
+			getwrapperList(id, child,categoryID,craftID) {
+				if (this.timer) {
+					clearInterval(this.timer);
+				}
+				console.log('获取内容列表');
+				this.api.getwrapperList({
+					id: id,
+					siteType:categoryID,
+					siteName:craftID
+				}).then(res => {
+					if (this.AddrCheckedArray.length > 0) {
+						// 用选中数组中的编号中的checked去替换响应数据中的checked
+						for (let itemCk of this.AddrCheckedArray) {
+							for (let itemtask of res) {
+								itemtask.sites = itemtask.sites.map(itemaddr => {
+									if (itemCk == itemaddr.addr) {
+										itemaddr.checked = true;
+									}
+									return itemaddr;
+								})
+							}
+						}
+					}
+					if (child) {
+						console.log('child', uni.getStorageSync('currentChildIndex'));
+						console.table(res[uni.getStorageSync('currentChildIndex')].children);
+						this.wrapperList1 = res[uni.getStorageSync('currentChildIndex')].children
+					} else
+						this.wrapperList1 = res
+				})
+				// 10s轮询
+				this.timer = setInterval(() => {
 					this.api.getwrapperList({
-						id: id
-					}).then(res=>{
-						if(this.AddrCheckedArray.length>0){
+						id: id,
+						siteType:categoryID,
+						siteName:craftID
+					}).then(res => {
+						if (this.AddrCheckedArray.length > 0) {
 							// 用选中数组中的编号中的checked去替换响应数据中的checked
-							for(let itemCk of this.AddrCheckedArray){
-								for(let itemtask of res){
-									itemtask.sites=itemtask.sites.map(itemaddr=>{
-										if(itemCk==itemaddr.addr)
-										{
-											itemaddr.checked=true;
+							for (let itemCk of this.AddrCheckedArray) {
+								for (let itemtask of res) {
+									itemtask.sites = itemtask.sites.map(itemaddr => {
+										if (itemCk == itemaddr.addr) {
+											itemaddr.checked = true;
 										}
 										return itemaddr;
 									})
 								}
 							}
 						}
-						res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
-						
-						this.wrapperList1 = res
+						if (child) {
+							this.wrapperList1 = res[uni.getStorageSync('currentChildIndex')].children
+						} else
+							this.wrapperList1 = res
 					})
-					// 10s轮询
-					this.timer=setInterval(()=>{
-						this.api.getwrapperList({
-						id: id
-					}).then(res=>{
-						if(this.AddrCheckedArray.length>0){
-							// 用选中数组中的编号中的checked去替换响应数据中的checked
-							for(let itemCk of this.AddrCheckedArray){
-								for(let itemtask of res){
-									itemtask.sites=itemtask.sites.map(itemaddr=>{
-										if(itemCk==itemaddr.addr)
-										{
-											itemaddr.checked=true;
-										}
-										return itemaddr;
-									})
-								}
-							}
-						}
-						res[0].sites[0].val = Math.ceil(res[0].sites[0].val * (Math.random() * 100))
-						
-						this.wrapperList1 = res
-					})
-					
-					},10000)
-					
-					
-				},
+
+				}, 10000)
+
+
+			},
 			// 获取折线图数据
-			 getsiteValList(flag) {
-			 // this.api.getsiteValList({sites:'CCF_FAN_VT,CCF_FILTER_DPT1',st:'2021-07-20 18:00:00',et:'2021-07-20 19:00:00'}).then(res=>{
-			 this.api.getsiteValList({sites:this.sites,st:this.st,et:this.et}).then(res=>{
-				 // console.log({res});
-				this.option.series = res;
-				this.option.series.push()
-				// console.log({option:this.option});
-				// 是否不跟之前设置的 option 进行合并。默认为 false。即表示合并
-				if(flag)
-				this.$refs.chart.setOption(this.option,true)
-				else
-				this.$refs.chart.setOption(this.option)
-			
-			})
-			
+			getsiteValList(flag) {
+				// this.api.getsiteValList({sites:'CCF_FAN_VT,CCF_FILTER_DPT1',st:'2021-07-20 18:00:00',et:'2021-07-20 19:00:00'}).then(res=>{
+				this.api.getsiteValList({
+					sites: this.sites,
+					st: this.st,
+					et: this.et
+				}).then(res => {
+					// console.log({res});
+					this.option.series = res;
+					this.option.series.push()
+					// console.log({option:this.option});
+					// 是否不跟之前设置的 option 进行合并。默认为 false。即表示合并
+					if (flag)
+						this.$refs.chart.setOption(this.option, true)
+					else
+						this.$refs.chart.setOption(this.option)
+
+				})
+
 				// let siteValList = await this.api.getsiteValList({
 				// 	sites: this.currentaddr,
 				// 	st: this.st,
@@ -439,28 +467,32 @@
 		components: {
 			choosedate
 		},
-		
-		async onLoad() {     
+
+		async onLoad() {
 			console.log('onload');
 			this.st = `${moment().format("YYYY-MM-DD")} 00:00:00`
 			this.et = moment().format("YYYY-MM-DD HH:mm:ss")
 		},
-		onShow(){
+		async onShow() {
 			console.log('trend onshow');
-				this.getwrapperList(uni.getStorageSync("currentheaderID"))
+			this.categories = await this.api.getdictionary({
+				code: 'site_type'
+			})
+			this.categories.unshift({dictValue:'全部'})
+			this.crafts=await this.api.getcraftList({pid:uni.getStorageSync('currentheaderID')})
+			this.crafts.unshift({dictValue:'全部'})
+			this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"))
 		},
-		onHide(){
-		  if(this.timer) {  
-		        clearInterval(this.timer);  
-		        this.timer = null;  
-		    }  
+		onHide() {
+			if (this.timer) {
+				clearInterval(this.timer);
+			}
 			console.log('trend onhide');
 		},
-		onUnload(){
-		  if(this.timer) {  
-		        clearInterval(this.timer);  
-		        this.timer = null;  
-		    }  
+		onUnload() {
+			if (this.timer) {
+				clearInterval(this.timer);
+			}
 			console.log('trend onunload');
 		},
 		mounted() {
@@ -473,7 +505,7 @@
 				chart.setOption(this.option);
 				return chart;
 			});
-			
+
 		}
 	}
 </script>
@@ -494,19 +526,21 @@
 				display: flex;
 				justify-content: center;
 
-				picker {
-					padding: 2upx;
-					display: inline-block;
+				.select {
+					padding: 10upx;
+					// display: inline-block;
 					margin: 10upx;
-					width: 150upx;
-					height: 60upx;
+					// width: 212upx;
+					// height: 60upx;
 					border: 2upx solid #1989FA;
 					opacity: 1;
 					border-radius: 20upx;
 					display: flex;
 					align-items: center;
+					// justify-content: space-around;
 
 					image {
+
 						// padding: 2upx;
 					}
 				}
@@ -570,55 +604,58 @@
 				}
 
 
-				
+
 				.wrapper_item_container {
 					background: #fff;
 					width: 100%;
 					box-sizing: border-box;
+
 					// padding: 0 20upx;
-					.th{
+					.th {
 						display: flex;
 						padding: 10upx 20upx;
 						background: #C7E3FF;
 						color: #5481EA;
 					}
+
 					.wrapper_item_item:nth-child(odd) {
 						background-color: #F1F1F1;
 					}
-				
+
 					.wrapper_item_item:nth-child(even) {
 						background-color: #F9F9F9;
 					}
-				
+
 					.wrapper_item_item {
 						display: flex;
 						padding: 10upx 20upx;
-				
+
 					}
-					
+
 					.line {
 						color: #333333;
 						font-size: 30upx;
 					}
-					
+
 					.line1 {
 						flex: 2;
 					}
-					
+
 					.line2 {
 						flex: 1;
 						text-align: center;
 					}
-					
+
 					.line3 {
 						flex: 1;
 						text-align: center;
 					}
-					
+
 					.line4 {
-						flex:1;
+						flex: 1;
 						text-align: center;
 					}
+
 					.active {
 						box-shadow: 0 0 10upx rgba(0, 0, 0, .5);
 					}

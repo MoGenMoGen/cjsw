@@ -5,17 +5,17 @@
 
 			<!-- 个人中心头部背景部分 开始 -->
 			<view class="profile_info_bg">
-				<view class="profile_info" @click="goToperson(userdata.user_id)">
+				<view class="profile_info" @click="goToperson()">
 					<view style="display: flex">
 						<view class="avatar" @click.stop="changeAvatar">
 							<image :src="userdata.avatar?userdata.avatar:avatar" mode="aspectFill" />
 						</view>
 						<view class="info_detail">
 							<view class="myinfo">
-								<text class="name">{{ userdata.realName }}</text>
+								<text class="name">{{ userdata.name }}</text>
 								<text class="tel">{{ userdata.phone }}</text>
 							</view>
-							<view class="film_name">{{ userdata.deptName }}</view>
+							<view class="film_name">{{ userdata.deptId }}</view>
 						</view>
 					</view>
 					<image src="../../static/arrow.png" mode="widthFix" style="width: 32upx" />
@@ -104,11 +104,10 @@
 				userinfo: {},
 				// 用户基本信息
 				userdata: {
-					user_id:'1',
 					avatar,
-					realName: "摩根",
-					phone: "15182612784",
-					deptName: "宁波聚联科技有限公司"
+					name: "摩根",
+					phone: "12345678901",
+					deptId: "宁波聚联科技有限公司"
 				},
 				
 			}
@@ -118,9 +117,9 @@
 		},
 		methods: {
 			// 进入个人中心
-			goToperson(id){
+			goToperson(){
 				uni.navigateTo({
-					url:`/pages/profile/personinfo?id=${id}`
+					url:'/pages/profile/personinfo'
 				})
 			},
 			
@@ -145,30 +144,20 @@
 			},
 			 
 			// 更换头像
-			changeAvatar() {
+			async changeAvatar() {
 				// 图片上传接口
-				// let avatar = await this.api.chooseImages('', 1)
-				// console.log(1111111);
-				// let res = await this.api.upLoad(avatar[0])
+				let avatar = await this.api.chooseImages('', 1)
+				console.log(1111111);
+				let res = await this.api.upLoad(avatar[0])
 				// 调用更换头像接口
-				// await this.api.changeavatar({
-				// 	avatar: res,
-				// 	id: this.userinfo.user_id
-				// })
+				await this.api.modidyPersoninfo({
+					avatar: res,
+				})
 				// 再次调取userinfo接口，重新赋值
-				// this.api.getuserInfo(this.userinfo.user_id).then(res1 => {
-				// 	this.userdata = res1
-				// 	this.logo = this.userdata.avatar
-
-
-
-					// this.$nextTick(function() {
-				// 		if (this.loginType == 1)
-				// 			this.$refs.yuanqiQRCode.make();
-				// 		else
-				// 			return false;
-				// 	})
-				// })
+				this.api.getPersoninfo().then(res1 => {
+					this.userdata = res1
+					this.logo = this.userdata.avatar
+				})
 			},
 			// 退出
 			exit() {
@@ -187,7 +176,9 @@
 			
 
 		},
-		
+		async onLoad(){
+			this.userdata = await this.api.getPersoninfo()
+		},
 		async onShow() {
 
 
