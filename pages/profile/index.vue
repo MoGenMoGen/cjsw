@@ -149,15 +149,17 @@
 				let avatar = await this.api.chooseImages('', 1)
 				console.log(1111111);
 				let res = await this.api.upLoad(avatar[0])
+				console.log({res});
+				this.userdata.avatar=res
 				// 调用更换头像接口
 				await this.api.modidyPersoninfo({
 					avatar: res,
 				})
 				// 再次调取userinfo接口，重新赋值
-				this.api.getPersoninfo().then(res1 => {
-					this.userdata = res1
-					this.logo = this.userdata.avatar
-				})
+				// this.api.getPersoninfo().then(res1 => {
+				// 	this.userdata = res1
+				// 	this.logo = this.userdata.avatar
+				// })
 			},
 			// 退出
 			exit() {
@@ -177,10 +179,9 @@
 
 		},
 		async onLoad(){
-			this.userdata = await this.api.getPersoninfo()
 		},
 		async onShow() {
-
+			this.userdata = await this.api.getPersoninfo()
 
 		},
 	};

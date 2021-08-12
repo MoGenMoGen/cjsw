@@ -2,6 +2,28 @@
 
 	<view class="pages_trend">
 		<view class="fixed">
+			<!-- 头部切换栏 开始 -->
+			<!-- 隐藏滚动条 -->
+
+			<view class="hidden">
+				<view class="head_switch">
+					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
+						@click="switchHead(index,item.isChild)" :class="{activeheader:index==currentheaderIndex}">
+						{{item.dictValue}}
+					</text>
+				</view>
+			</view>
+			<!-- 头部切换栏 结束 -->
+			<!-- 子列表 开始 -->
+			<view class="child_hidden" v-if='isChild'>
+				<view class="child_switch">
+					<text class="child_switch_item" v-for="(item,index) in ChildListTitle" :key="index"
+						@click="switchChildList(index)" :class="{active_child:index == currentChildIndex}">
+						{{item}}
+					</text>
+				</view>
+			</view>
+			<!-- 子列表 结束 -->
 			<!-- 控制折线图的下拉框 -->
 			<view class="pickers">
 				<picker mode="selector" :range="categories" @change="handleChangeCategory" range-key='dictValue'>
@@ -13,7 +35,7 @@
 					</view>
 				</picker>
 
-				<picker  mode="selector" :range="crafts" @change="handleChangecraft"  range-key='dictValue'>
+				<picker mode="selector" :range="crafts" @change="handleChangecraft" range-key='dictValue'>
 					<view class="select">
 						<text v-if="index2<0" style="color:#C0C4CC">按工艺</text>
 						<text v-else>{{crafts[index2].dictValue}}</text>
@@ -26,52 +48,61 @@
 			<view style="width:750upx">
 				<choosedate @func="getdateA" :CheckedCount='AddrCheckedArray.length'></choosedate>
 			</view>
-			<view style="height:250px">
-				<l-echart ref="chart"></l-echart>
+			<view class="chartBox" @click="showTotal" :class="{'total': isTotal}">
+				<l-echart ref="chart" class="ehcarts"></l-echart>
+				<view class="del" v-if='isTotal' @click.stop="closeTotal">
+					关闭
+				</view>
 			</view>
 		</view>
 
 		<!-- 与首页相同的内容区域 -->
-		<view class="wrapper_list">
-			<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1" @click="toDetail(item1.id)">
-				<view class="wrapper_item_title">
+		<view class="wrapper_list" :style="{'padding-top': (isChild?'calc(352upx  + 500upx)':'calc(252upx + 500upx)')}">
+			<checkbox-group @change="checkboxChange">
+			<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
+				<view class="wrapper_item_title" @click="toDetail(item1.id)">
 					{{item1.dictValue}}
 					<view class="arrow">详情
-						<image src="../../static/arrow2.png" mode="widthFix"></image>
+						<image src="../../static/arrow1.png" mode="widthFix"></image>
 					</view>
 				</view>
 				<view class="wrapper_item_container">
 					<view class="th">
-						<view class="line1 line">
+						<view class="line1 line" style="color:#5481EA">
 							项目
 						</view>
-						<view class="line2 line">
+						<view class="line2 line" style="color:#5481EA">
 							浮点数
 						</view>
-						<view class="line3 line">
+						<view class="line3 line" style="color:#5481EA">
 							要求范围
 						</view>
-						<view class="line4 line">
+						<view class="line4 line" style="color:#5481EA">
 							单位
 						</view>
 					</view>
-					<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2"
-						@click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}">
-						<view class="line1 line" :style="{'color':(item2.checked?'#fff':'#333')}">
-							{{item2.name}}
+						<!-- <view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2"
+						@click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}"> -->
+						<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
+							<view class="checkBox">
+								<checkbox :value="item2.addr" :checked="item2.checked" />
+							</view>
+							<view class="line1 line">
+								{{item2.name}}
+							</view>
+							<view class="line2 line">
+								{{item2.val}}
+							</view>
+							<view class="line3 line">
+								{{item2.lowVal}}~{{item2.faultVal}}
+							</view>
+							<view class="line4 line">
+								{{item2.unit}}
+							</view>
 						</view>
-						<view class="line2 line" :style="{'color':(item2.checked?'#fff':item2.color)}">
-							{{item2.val}}
-						</view>
-						<view class="line3 line" :style="{'color':(item2.checked?'#fff':'#333')}">
-							(XX~XX)
-						</view>
-						<view class="line4 line" :style="{'color':(item2.checked?'#fff':'#333')}">
-							{{item2.unit}}
-						</view>
-					</view>
 				</view>
 			</view>
+			</checkbox-group>
 		</view>
 		<!-- 内容列表 结束 -->
 
@@ -90,6 +121,7 @@
 	export default {
 		data() {
 			return {
+				isTotal: false,
 				categories: ['温度类', '压力类', '温度类', '压力类', '温度类', '压力类'],
 				index1: -1,
 				index2: -5,
@@ -99,11 +131,21 @@
 				sites: "",
 				timer: null,
 				// 类别id
-				categoryID:'',
+				categoryID: '',
 				// 工艺id
-				craftID:'',
+				craftID: '',
 				// 选中编号数组
 				AddrCheckedArray: [],
+				// 头部车间列表
+				switchList: [],
+				// 是否有子列表
+				isChild: 0, //负责子列表的显示与隐藏
+				// 子列表标题
+				ChildListTitle: [],
+				// 当前head状态栏下标
+				currentheaderIndex: 0,
+				// 当前子列表下标
+				currentChildIndex: 0,
 				wrapperList1: [{
 						dictValue: "前处理预脱",
 						sites: [{
@@ -302,16 +344,50 @@
 		},
 
 		methods: {
+
+			showTotal() {
+				console.log(11);
+				this.isTotal = true
+				uni.hideTabBar({
+
+				})
+				this.$refs.chart.setOption(this.option, true)
+			},
+			closeTotal() {
+				console.log(22);
+				this.isTotal = false;
+				uni.showTabBar({
+
+				})
+			},
+			switchHead(index, child) {
+				console.log('switchhead');
+				this.currentheaderIndex = index
+				this.isChild = child;
+				// 内容列表
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, child)
+				// 轮播图
+				this.swiperList = this.switchList[this.currentheaderIndex].img.split(',')
+
+
+			},
+			switchChildList(index) {
+				this.currentChildIndex = index;
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, 1)
+
+			},
 			// 按类别下拉框修改下标
 			handleChangeCategory(e) {
 				this.index1 = e.target.value;
-				this.categoryID=this.categories[this.index1].id
-				this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
+				this.categoryID = this.categories[this.index1].id
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild, this.categoryID, this
+					.craftID)
 			},
 			handleChangecraft(e) {
 				this.index2 = e.target.value;
-				this.craftID=this.crafts[this.index2].id
-				this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
+				this.craftID = this.crafts[this.index2].id
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild, this.categoryID, this
+					.craftID)
 			},
 			getdateA(a) {
 				this.st = a.startDate;
@@ -323,61 +399,93 @@
 					url: `/pages/index/detail?id=${id}`
 				})
 			},
-			// 选中编号
-			active(addr) {
+			checkboxChange: function(e) {
+				// console.log(e.detail.value);
+				//    var items = this.items,
+				//        values = e.detail.value;
+				//    for (var i = 0, lenI = items.length; i < lenI; ++i) {
+				//        const item = items[i]
+				//        if(values.includes(item.value)){
+				//            this.$set(item,'checked',true)
+				//        }else{
+				//            this.$set(item,'checked',false)
+				//        }
+				//    }
 
-				// 判断数组中是否有该编号
-				let flag = false;
-				for (let item of this.AddrCheckedArray) {
-					if (item == addr) {
-						flag = true;
-						break;
-					}
+
+				if (e.detail.value.length >= 10) {
+					uni.showToast({
+						title: '最多不超过10条',
+						icon: "none",
+						duration: 2000
+					})
+					return false;
 				}
-				// 取消选中
-				if (flag) {
-					// 1.删除选中数组中该编号
-					this.AddrCheckedArray = this.AddrCheckedArray.filter(item => item != addr)
-
-					// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
-					// 先清空定时器
-					this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
-					// 请求中的sites重新赋值为数组的','分割字符串
-					this.sites = this.AddrCheckedArray.join(',')
-					this.getsiteValList(true)
-				} else {
-					// 最多不能超过十条
-					if (this.AddrCheckedArray.length == 10) {
-						uni.showToast({
-							title: '最多不超过10条',
-							icon: "none",
-							duration: 2000
-						})
-						return false;
-					}
-					// 选中且不差过10条，向选中编号的数组中添加该编号
-					this.AddrCheckedArray.push(addr)
-
-					// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
-					// 先清空定时器
-					this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"),this.categoryID,this.craftID)
-					// 请求中的sites重新赋值为数组的','分割字符串
-					this.sites = this.AddrCheckedArray.join(',')
-					this.getsiteValList()
-				}
-
-
+				//所有选中的编号 
+				this.AddrCheckedArray = e.detail.value;
+				// 请求中的sites重新赋值为数组的','分割字符串
+				this.sites = this.AddrCheckedArray.join(',')
+				console.log(11111111,this.sites);
+				this.getsiteValList(true)
 			},
+
+
+
+			// // 选中编号
+			// active(addr) {
+
+			// 	// 判断数组中是否有该编号
+			// 	let flag = false;
+			// 	for (let item of this.AddrCheckedArray) {
+			// 		if (item == addr) {
+			// 			flag = true;
+			// 			break;
+			// 		}
+			// 	}
+			// 	// 取消选中
+			// 	if (flag) {
+			// 		// 1.删除选中数组中该编号
+			// 		this.AddrCheckedArray = this.AddrCheckedArray.filter(item => item != addr)
+
+			// 		// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
+			// 		// 先清空定时器
+			// 		this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild,this.categoryID,this.craftID)
+			// 		// 请求中的sites重新赋值为数组的','分割字符串
+			// 		this.sites = this.AddrCheckedArray.join(',')
+			// 		this.getsiteValList(true)
+			// 	} else {
+			// 		// 最多不能超过十条
+			// 		if (this.AddrCheckedArray.length == 10) {
+			// 			uni.showToast({
+			// 				title: '最多不超过10条',
+			// 				icon: "none",
+			// 				duration: 2000
+			// 			})
+			// 			return false;
+			// 		}
+			// 		// 选中且不差过10条，向选中编号的数组中添加该编号
+			// 		this.AddrCheckedArray.push(addr)
+
+			// 		// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
+			// 		// 先清空定时器
+			// 		this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild,this.categoryID,this.craftID)
+			// 		// 请求中的sites重新赋值为数组的','分割字符串
+			// 		this.sites = this.AddrCheckedArray.join(',')
+			// 		this.getsiteValList()
+			// 	}
+
+
+			// },
 			// 获取内容列表
-			getwrapperList(id, child,categoryID,craftID) {
+			getwrapperList(id, child, categoryID, craftID) {
 				if (this.timer) {
 					clearInterval(this.timer);
 				}
 				console.log('获取内容列表');
 				this.api.getwrapperList({
 					id: id,
-					siteType:categoryID,
-					siteName:craftID
+					siteType: categoryID,
+					siteName: craftID
 				}).then(res => {
 					if (this.AddrCheckedArray.length > 0) {
 						// 用选中数组中的编号中的checked去替换响应数据中的checked
@@ -393,9 +501,8 @@
 						}
 					}
 					if (child) {
-						console.log('child', uni.getStorageSync('currentChildIndex'));
-						console.table(res[uni.getStorageSync('currentChildIndex')].children);
-						this.wrapperList1 = res[uni.getStorageSync('currentChildIndex')].children
+						this.ChildListTitle = res.map(item => item.dictValue)
+						this.wrapperList1 = res[this.currentChildIndex].children
 					} else
 						this.wrapperList1 = res
 				})
@@ -403,8 +510,8 @@
 				this.timer = setInterval(() => {
 					this.api.getwrapperList({
 						id: id,
-						siteType:categoryID,
-						siteName:craftID
+						siteType: categoryID,
+						siteName: craftID
 					}).then(res => {
 						if (this.AddrCheckedArray.length > 0) {
 							// 用选中数组中的编号中的checked去替换响应数据中的checked
@@ -420,7 +527,8 @@
 							}
 						}
 						if (child) {
-							this.wrapperList1 = res[uni.getStorageSync('currentChildIndex')].children
+							this.ChildListTitle = res.map(item => item.dictValue)
+							this.wrapperList1 = res[this.currentChildIndex].children
 						} else
 							this.wrapperList1 = res
 					})
@@ -478,10 +586,22 @@
 			this.categories = await this.api.getdictionary({
 				code: 'site_type'
 			})
-			this.categories.unshift({dictValue:'全部'})
-			this.crafts=await this.api.getcraftList({pid:uni.getStorageSync('currentheaderID')})
-			this.crafts.unshift({dictValue:'全部'})
-			this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"))
+			this.categories.unshift({
+				dictValue: '全部'
+			})
+
+			// 头部切换栏列表
+			this.switchList = await this.api.getheadswitchList()
+			console.log(this.switchList);
+			// isChild赋值
+			this.isChild = this.switchList[0].isChild
+			this.crafts = await this.api.getcraftList({
+				pid: this.switchList[this.currentheaderIndex].id
+			})
+			this.crafts.unshift({
+				dictValue: '全部'
+			})
+			this.switchHead(0, this.isChild)
 		},
 		onHide() {
 			if (this.timer) {
@@ -503,6 +623,9 @@
 				} = config;
 				const chart = echarts.init(canvas, null, config);
 				chart.setOption(this.option);
+				window.onresize = () => {
+					chart.resize()
+				}
 				return chart;
 			});
 
@@ -514,6 +637,7 @@
 		width: 100%;
 
 		.fixed {
+
 			background-color: #FFF;
 			width: 100%;
 			position: fixed;
@@ -521,6 +645,125 @@
 			// padding-bottom:30upx;
 			// height: 600upx;
 			z-index: 100;
+
+			.hidden {
+				background-color: #2957C4;
+				height: calc(var(--status-bar-height) +86upx);
+				// overflow: hidden;
+				width: 100%;
+
+				.head_switch {
+					// position: fixed;
+					// margin-top: calc(var(--status-bar-height) + 10upx);
+					// z-index: 100;
+					background-color: #2957C4;
+					width: 100%;
+					padding: 20upx 0;
+					// height: 76upx;
+					// padding-bottom: 12upx;
+					overflow-x: scroll;
+					overflow-y: hidden; // display: flex;
+					// align-items: center;
+					white-space: nowrap;
+
+					.switch_item {
+						padding: 18upx 23upx;
+						font-size: 28upx;
+						font-weight: 600;
+						// color: #ecf0f1;
+						color: #fff;
+						opacity: 0.64;
+					}
+
+					.activeheader {
+						position: relative;
+						font-size: 28upx;
+						font-weight: 600;
+						color: #fff;
+						opacity: 1;
+						transition: 0.3s;
+					}
+
+					.activeheader::after {
+						position: absolute;
+						bottom: 8upx;
+						left: 50%;
+						transform: translateX(-50%);
+						content: "";
+						width: 50upx;
+						height: 6upx;
+						background: #fff;
+						opacity: 1;
+						border-radius: 6upx;
+					}
+				}
+
+				.head_switch::-webkit-scrollbar {
+					display: none;
+				}
+			}
+
+			.child_hidden {
+				// z-index: 100;
+				background: #F9F9F9;
+				height: 100upx;
+				// overflow: hidden;
+				width: 100%;
+
+				.child_switch {
+					// position: fixed;
+					// margin-top: 10upx;
+					// z-index: 100;
+					background: #F9F9F9;
+					width: 100%;
+					height: 100upx;
+					// padding-bottom: 12upx;
+					overflow-x: scroll;
+					overflow-y: hidden;
+					// display: flex;
+					// align-items: center;
+					white-space: nowrap;
+
+					.child_switch_item {
+						display: inline-block;
+						padding: 0 23upx;
+						height: 100upx;
+						line-height: 100upx;
+						font-size: 28upx;
+						font-weight: 400;
+						// color: #ecf0f1;
+						color: #999999;
+						opacity: 0.64;
+					}
+
+					.active_child {
+						position: relative;
+						font-size: 28upx;
+						height: 100upx;
+						font-weight: 600;
+						color: #2957C4;
+						opacity: 1;
+						transition: 0.3s;
+					}
+
+					.active_child::after {
+						position: absolute;
+						bottom: 18upx;
+						left: 50%;
+						transform: translateX(-50%);
+						content: "";
+						width: 50upx;
+						height: 6upx;
+						background: #2957C4;
+						opacity: 1;
+						border-radius: 6upx;
+					}
+				}
+
+				.child_switch::-webkit-scrollbar {
+					display: none;
+				}
+			}
 
 			.pickers {
 				display: flex;
@@ -546,6 +789,39 @@
 				}
 			}
 
+			.chartBox {
+				// width: 600upx;
+				height: 500upx;
+
+				.del {
+					position: absolute;
+					top: 10upx;
+					right: 10upx;
+					border: 1px solid #fff;
+					z-index: 199;
+				}
+			}
+
+			.total {
+
+				position: absolute;
+				top: -100vw;
+				transform-origin: bottom left;
+				width: 100vh !important;
+				height: 100vw !important;
+				transform: rotate(90deg);
+				transition: 0.5s;
+				background: #fff;
+				z-index: 100;
+
+				.ehcarts {
+					// transform: rotate(90deg);
+					// width: 100vh !important;
+					// height: 100vw !important;
+					z-index: 150;
+				}
+			}
+
 			.content {
 				display: flex;
 				flex-direction: column;
@@ -563,7 +839,8 @@
 
 
 		.wrapper_list {
-			padding-top: calc(180upx + var(--status-bar-height) + 250px);
+			// padding-top: calc(362upx + var(--status-bar-height) + 250px);
+			margin-top: var(--status-bar-height);
 			width: 690upx;
 			box-sizing: border-box;
 			margin: 30upx;
@@ -594,11 +871,12 @@
 						position: relative;
 
 						image {
-							position: absolute;
+							position: absolute !important;
 							top: 50%;
 							transform: translateY(-50%);
 							display: inline-block;
-							width: 28upx;
+							width: 13upx;
+							margin-left: 16upx
 						}
 					}
 				}
@@ -614,8 +892,15 @@
 					.th {
 						display: flex;
 						padding: 10upx 20upx;
+						padding-left: 70upx;
+
 						background: #C7E3FF;
 						color: #5481EA;
+
+						.line {
+							color: #333333;
+							font-size: 30upx;
+						}
 					}
 
 					.wrapper_item_item:nth-child(odd) {

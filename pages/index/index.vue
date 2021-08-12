@@ -7,7 +7,7 @@
 			<view class="hidden">
 				<view class="head_switch">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
-						@click="switchHead(item.id,item.isChild)" :class="{activeheader:item.id==currentheaderID}">
+						@click="switchHead(index,item.isChild)" :class="{activeheader:index==currentheaderIndex}">
 						{{item.dictValue}}
 					</text>
 				</view>
@@ -55,22 +55,22 @@
 					<view class="wrapper_item_title" @click='toogle(index1)'>
 						{{item1.dictValue}}
 						<view class="arrow">详情
-							<image src="../../static/arrow2.png" mode="widthFix"></image>
+							<image src="../../static/arrow1.png" mode="widthFix"></image>
 						</view>
 						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
 					</view>
 					<view class="wrapper_item_container">
 						<view class="th">
-							<view class="line1 line">
+							<view class="line1 line" style="color:#5481EA">
 								项目
 							</view>
-							<view class="line2 line">
+							<view class="line2 line" style="color:#5481EA">
 								浮点数
 							</view>
-							<view class="line3 line">
+							<view class="line3 line" style="color:#5481EA">
 								要求范围
 							</view>
-							<view class="line4 line">
+							<view class="line4 line" style="color:#5481EA">
 								单位
 							</view>
 						</view>
@@ -82,7 +82,7 @@
 								{{item2.val}}
 							</view>
 							<view class="line3 line">
-								(XX~XX)
+								{{item2.lowVal}}~{{item2.faultVal}}
 							</view>
 							<view class="line4 line">
 								{{item2.unit}}
@@ -119,7 +119,7 @@
 	export default {
 		data() {
 			return {
-
+				// 头部车间列表
 				switchList: [{
 						dictValue: '涂装线',
 						id: '1'
@@ -155,7 +155,7 @@
 				// 子列表标题
 				ChildListTitle: [],
 				// 当前head状态栏下标
-				currentheaderID: '1',
+				currentheaderIndex: 0,
 				// 当前子列表下标
 				currentChildIndex: 0,
 				// 子列表内容
@@ -275,24 +275,20 @@
 			// }
 		},
 		methods: {
-			switchHead(id, child) {
+			switchHead(index, child) {
 				console.log('switchhead');
-				if (this.currentheaderID != id) {
-					this.currentheaderID = id
-					uni.setStorageSync("currentheaderID", this.currentheaderID)
+					this.currentheaderIndex = index
 					this.isChild = child;
-					uni.setStorageSync("isChild", child)
-					this.getwrapperList(this.currentheaderID, child)
-				}
+					// 内容列表
+					this.getwrapperList(this.switchList[this.currentheaderIndex].id, child)
+					// 轮播图
+					this.swiperList=this.switchList[this.currentheaderIndex].img.split(',')
 
 
 			},
 			switchChildList(index) {
-				if (this.currentChildIndex != index) {
-					uni.setStorageSync("currentChildIndex", index)
 					this.currentChildIndex = index;
-					this.getwrapperList(this.currentheaderID, this.isChild)
-				}
+					this.getwrapperList(this.switchList[this.currentheaderIndex].id, 1)
 
 			},
 			toogle(index) {
@@ -343,34 +339,21 @@
 
 		},
 		components: {},
-		onLoad() {
+		async onLoad() {
 
 			// 轮播图
-			this.api.getbanner()
-				.then(banners => {
-					this.swiperList = banners.records.map(item => item.img)
-				})
-
-
+			// this.api.getbanner()
+			// 	.then(banners => {
+			// 		this.swiperList = banners.records.map(item => item.img)
+			// 	})
+			
 		},
 		async onShow() {
-
-			// 头部切换栏列表
-			this.api.getheadswitchList()
-				.then(res => {
-					this.switchList = res
-					if (!uni.getStorageSync("currentheaderID")) {
-						uni.setStorageSync("currentheaderID", this.switchList[0].id)
-						uni.setStorageSync("isChild", res[0].isChild)
-						uni.setStorageSync("currentChildIndex", 0)
-						
-					}
-					this.currentheaderID = uni.getStorageSync("currentheaderID")
-					this.isChild = uni.getStorageSync("isChild")
-					this.currentChildIndex = uni.getStorageSync("currentChildIndex")
-					
-					this.getwrapperList(uni.getStorageSync("currentheaderID"), uni.getStorageSync("isChild"))
-				})
+		// 头部切换栏列表
+		this.switchList=await this.api.getheadswitchList()
+		// isChild赋值
+		this.isChild=this.swiperList[0].isChild
+		this.switchHead(0,this.isChild)
 		},
 		onHide() {
 			if (this.timer) {
@@ -410,11 +393,12 @@
 
 				.head_switch {
 					// position: fixed;
-					margin-top: calc(var(--status-bar-height) + 10upx);
+					// margin-top: calc(var(--status-bar-height) + 10upx);
 					// z-index: 100;
 					background-color: #2957C4;
 					width: 100%;
-					height: 76upx;
+					padding:20upx 0;
+					// height: 76upx;
 					// padding-bottom: 12upx;
 					overflow-x: scroll;
 					overflow-y: hidden; // display: flex;
@@ -459,7 +443,7 @@
 			}
 
 			.swiper {
-				padding-top: calc(var(--status-bar-height) + 86upx);
+				padding-top: calc(var(--status-bar-height) + 76upx);
 				width: 750upx;
 				height: 400upx;
 
@@ -489,7 +473,7 @@
 
 				.child_switch {
 					// position: fixed;
-					margin-top: 10upx;
+					// margin-top: 10upx;
 					// z-index: 100;
 					background: #F9F9F9;
 					width: 100%;
@@ -605,7 +589,8 @@
 								top: 50%;
 								transform: translateY(-50%);
 								display: inline-block;
-								width: 28upx;
+								width: 13upx;
+								margin-left:16upx
 							}
 						}
 					}

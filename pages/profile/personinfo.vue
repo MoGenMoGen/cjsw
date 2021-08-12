@@ -13,55 +13,57 @@
 			</view>
 			<view class="list">
 				<view class="item">
-					<text class="title">真实姓名:</text>
-					<input type="text" class="content" v-model="info.name" :disabled="!ifEdit"></input>
+					<view class="title">真实姓名:</view>
+					<input type="text" maxlength="8" class="content" v-model="info.name" :disabled="!ifEdit"></input>
 					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
-					<text class="title">员工工号:</text>
-					<input type="text" class="content" v-model="info.account" :disabled="!ifEdit"></input>
-					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
+					<view class="title">员工工号:</view>
+					<input type="text" maxlength="11" class="content" v-model="info.account" disabled="true"></input>
+					<!-- <image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image> -->
 				</view>
 				<view class="item">
-					<text class="title">部门名称:</text>
-					<input type="text" class="content" v-model="info.deptId" disabled="true"></input>
+					<view class="title">部门名称:</view>
+					<input type="view" maxlength="10" class="content" v-model="info.deptId" disabled="true"></input>
 					<!-- <image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image> -->
 				</view>
 				<!-- <view class="item">
-					<text class="title">职位名称:</text>
-					<text class="content">{{ info.post }}</text>
+					<view class="title">职位名称:</view>
+					
+					<view class="content">{{ info.post }}</view>
 				</view> -->
 				<view class="item">
-					<text class="title">性别:</text>
+					<view class="title" >性别:</view>
 					<picker class="content" mode="selector" :range="sexes" @change="handleChangeSex"
 						:disabled="!ifEdit">
-						<text>{{sexes[index1]}}</text>
+						<view  class="content"> {{sexes[index1]}}</view>
 					</picker>
 					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
-					<text class="title">政治面貌:</text>
-					<picker mode="selector" :range="statuses" @change="handleChangeStatus" :disabled="!ifEdit">
-						<view>{{statuses[index2]}}</view>
+					<view class="title">政治面貌:</view>
+					<picker class="content" mode="selector" :range="statuses" @change="handleChangeStatus" :disabled="!ifEdit">
+						<view  class="content">{{statuses[index2]}}</view>
 					</picker>
 					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
-					<text class="title">籍贯:</text>
-					<input type="text" class="content" v-model="info.place" :disabled="!ifEdit"></input>
+					<view class="title">籍贯:</view>
+					<input type="view" maxlength="20" class="content" v-model="info.place" :disabled="!ifEdit"></input>
 					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
-					<text class="title">联系电话:</text>
+					<view class="title">联系电话:</view>
 					<input type="number" maxlength="11" class="content" v-model="info.phone"
 						:disabled="!ifEdit"></input>
 					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
 				<view class="item">
-					<text class="title">联系地址:</text>
-					<input type="text" class="content" v-model="info.addr" :disabled="!ifEdit"></input>
+					<view class="title">联系地址:</view>
+					<input type="text" maxlength="20" class="content" v-model="info.addr" :disabled="!ifEdit"></input>
 					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
 				</view>
+				
 
 
 			</view>
@@ -203,8 +205,9 @@
 
 			.list {
 				margin-top: 100upx;
-				padding: 0 50upx;
+				// padding: 0 50upx;
 				width: 100%;
+				box-sizing: border-box;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
@@ -218,12 +221,15 @@
 					border-bottom: 2upx solid #d0ced8;
 
 					.title {
+						width: 150upx;
 						font-size: 28upx;
-						margin-right: 60upx;
+						margin-right: 20upx;
 					}
 
 					.content {
 						font-size: 28upx;
+						flex:1;
+						overflow: hidden;
 					}
 				}
 			}

@@ -1,7 +1,10 @@
 <template>
 	<!-- 内容列表详情 -->
 	<view class="container">
-		<image src="../../static/banner2.png" mode="aspectFill"></image>
+		<!-- <view class="back">
+			<image src="../../static/back.png" mode="widthFix"></image>
+		</view> -->
+		<image class="banner" src="../../static/banner2.png" mode="aspectFill"></image>
 		<view class="wrapper_item_container">
 			<view class="th">
 				<view class="line1 line">
@@ -25,7 +28,7 @@
 					{{item2.val}}
 				</view>
 				<view class="line3 line">
-					(XX~XX)
+					{{item2.lowVal}}~{{item2.faultVal}}
 				</view>
 				<view class="line4 line">
 					{{item2.unit}}
@@ -66,10 +69,20 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.container {
 		width: 100%;
-		image {
+		position: relative;
+		// .back{
+		// 	background-color: red;
+		// 	position: absolute;
+		// 	top:calc(var(--status-bar-height) + 10upx);
+		// 	left:20upx;
+		// 	image{
+		// 		width: 13upx;
+		// 	}
+		// }
+		.banner {
 			width: 750upx;
 			height: 470upx;
 		}

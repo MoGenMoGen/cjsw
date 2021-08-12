@@ -69,9 +69,9 @@
             "path" : "pages/profile/modifypass",
             "style" :                                                                                    
             {
-                // "navigationBarTitleText": "修改密码",
+                "navigationBarTitleText": "修改密码"
                 // "enablePullDownRefresh": false
-				"navigationStyle": "custom"
+				// "navigationStyle": "custom"
             }
             
         },
@@ -79,7 +79,8 @@
 		    "path" : "pages/message/index",
 		    "style" :                                                                                    
 		    {
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "消息列表"
+				// "navigationStyle": "custom"
 		    }
 		    
 		},
@@ -87,7 +88,8 @@
 		    "path" : "pages/message/detail",
 		    "style" :                                                                                    
 		    {
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "消息详情"
+				// "navigationStyle": "custom"
 		    }
 		    
 		}
@@ -95,7 +97,8 @@
             "path" : "pages/myreport/index",
             "style" :                                                                                    
             {
-               "navigationStyle": "custom"
+				"navigationBarTitleText": "我的报表"
+               // "navigationStyle": "custom"
             }
             
         }
@@ -103,7 +106,8 @@
             "path" : "pages/index/detail",
             "style" :                                                                                    
             {
-               "navigationStyle": "custom"
+				"navigationBarTitleText": "详情"
+               // "navigationStyle": "custom"
             }
             
         }
@@ -111,7 +115,8 @@
             "path" : "pages/profile/personinfo",
             "style" :                                                                                    
             {
-                "navigationStyle": "custom"
+                // "navigationStyle": "custom"
+				"navigationBarTitleText": "个人中心"
             }
             
         }
