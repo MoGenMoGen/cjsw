@@ -21,7 +21,7 @@
 				{{item}}
 			</view>
 		</view>
-	<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" v-if="isShowWindow==false">
+	<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" v-if="isShowWindow==false" style="position: sticky; top: 0;">
 		<swiper-item v-for="(item,index) in swiperList" :key="index">
 			<view class="swiper-item">
 				<image :src=item mode=""></image>
@@ -29,7 +29,7 @@
 		</swiper-item>
 	
 	</swiper>
-	<view class="Header">
+	<view class="Header" style="position: sticky;top:470upx ;">
 		<view class="item">
 			时间/日期
 		</view>
@@ -41,7 +41,7 @@
 		</view>
 	</view>
 		 
-	<view class="body" v-for="(item,index) in info" :key="index"  @click="showWindow(index)">
+	<view class="body" v-for="(item,index) in info" :key="index"  @click="showWindow(index)" :class="{'active':currentId==index}">
 		<view class="date">
 			{{item.time}} 
 		</view>
@@ -59,6 +59,7 @@
 		data() {
 			return {
 				isShowWindow:false,
+				currentId:-1,
 				title:"",
 				detail:[],
 				total:"",
@@ -107,16 +108,20 @@
 		},
 		methods: {
 		showWindow(index){
+			this.currentId=index;
 			this.isShowWindow=true
 			this.title=this.info[index].addr
 			this.detail=this.info[index].details
-			console.log(index);
+			console.log(this.currentId==index);
 		},
 		showSwiper(){
 			this.isShowWindow=false
+			this.currentId=-1
+			
 		},
 		windowDelete(){
 			this.isShowWindow=false
+			
 		}
 		},
 		onLoad() {
@@ -168,7 +173,7 @@
 		}
 	}
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 	.window{
 		position: fixed;
 		top: 0;
@@ -194,14 +199,16 @@
 		
 	}
 	.detail{
+		position: sticky;
+		top: 0;
 		width: 750upx;
 		height: 470upx;
-		background-color: #163756;
+		background: #163756;
 		box-sizing: border-box;
 		padding: 36upx 80upx;
-		position: relative;
 		overflow-y: scroll;
 		transition: 0.5s;
+	z-index: 100;
 		image{
 	 		position: absolute;
 			top: 34upx;
@@ -242,38 +249,56 @@
 		width: 100%;
 		height: 100upx;
 		display: flex;
-		justify-content: space-around;
+	
 		align-items: center;
 		.item{
+			width: 30%;
+			margin-left: 3%;
 			font-size: 28upx;
 			color: #FFFFFF;
+			text-align: center;
+		}
+		.item:first-child {
+			text-align: left;
 		}
 	}
+	
+	
 	.body{
 		display: flex;
+		transition: 0.3s;
 		width: 100%;
 		height: 120upx;
 		background: #FFFFFF;
 		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
 		align-items: center;
-		padding-left: 50upx
-		;
 		box-sizing: border-box;
 		color: #E2350A;
 		border-bottom:2upx solid rgba(0, 0, 0, 0.08)  ;
+	
 		.date{
-			width: 216upx;
+			width: 30%;
+			margin-left: 3%;
 			box-sizing: border-box;
 			font-size: 28upx;
 		}
 		.text{
-			margin-left: 58upx;
+			width: 30%;
+			margin-left: 3%;
 			font-size: 28upx;
 		}
 		.failPoint{
-			margin-left: 54upx;
+			width: 30%;
+			margin-left: 4%;
 			font-size: 28upx;
 			
 		}
+	}
+	.active{
+		background:#E2350A;
+		color:#FFFFFF ;
+		transition: 0.3s;
+		opacity: 0.5;
+		
 	}
 </style>
