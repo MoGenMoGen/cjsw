@@ -11,11 +11,10 @@
 				</view>
 			</view>
 			<view class="content">
-				<active-form :formDate.sync="formData" num></active-form>
-
-				<view class="subform" @click="sub">提交表单</view>
+				<avue-form ref="form" v-model="obj" :option="option" @reset-change="emptytChange" @submit="submit"
+					@error="error">
+				</avue-form>
 			</view>
-
 
 			<!-- <view class="containerBody" v-for="(item,index) in surface" :key="index">
 				<view class="containerTitle">
@@ -57,35 +56,44 @@
 </template>
 
 <script>
-	import ActiveForm from "@/components/active-form/active-form.vue";
 	export default {
 		data() {
 			return {
-				formData: [{
-					id: "kjjns", //id必须唯一 可以是数字
-					placeholder: "输入名字",
-					label: "姓名", // 提示输入名
-					type: "text", //类型
-					rules: {
-						name: "realName", //字段名 即提交给后端的字段
-						value: "",
-						verify: true, //是否开启校验
-						errMess: "姓名未填写", //校验不通过的错误提示
-					},
+				obj: {
+					id: 123123
 				},
-				    {
-				           id: "uisdfjks",
-				           placeholder: "请输入手机号",
-				           label: "手机",
-				           type: "phone",
-				           //   oneKeyPhone:true,
-				           rules: {
-				             name: "phone",
-				             value: "", //字段值
-				             verify: true,
-				             errMess: "手机号格式不正确",
-				           },
-				         },],
+				option: {
+					column: [{
+							label: "姓名",
+							prop: "name",
+							disabled: false,
+							mock: {
+								type: 'name'
+							},
+							span: 8,
+							   rules: [{
+							                required: true,
+							                message: "请输入姓名",
+							                trigger: "blur"
+							              }]
+						},
+						{
+							label: "密码",
+							prop: "password",
+							disabled: false,
+							type: 'password',
+							mock: {
+								type: 'name'
+							},
+							span: 8,
+							rules:[{
+								required: true,
+								 message: "请输入密码",
+								  trigger: "blur"
+							}]
+						},
+					]
+				},
 				switchList: [{
 						dictValue: '涂装线',
 						id: '1'
@@ -103,8 +111,9 @@
 					},
 					{
 						dictValue: '冰水机房',
-						id: '5'
+						id: '5',
 					},
+
 					{
 						dictValue: '空压机',
 						id: '6'
@@ -184,16 +193,27 @@
 					// this.getwrapperList(this.currentheaderID)
 				}
 			},
-			    sub() {
-			      this.$vervify(this.formData); //表单校验 成功会继续往下走 失败抛出异常
-			
-			      const res = this.$submitForm(this.formData); //校验成功 获取表单值
-			      console.log('表单对象 :>> ', res);
-			    },
+			sub() {
+				this.$vervify(this.formData); //表单校验 成功会继续往下走 失败抛出异常
+
+				const res = this.$submitForm(this.formData); //校验成功 获取表单值
+				console.log('表单对象 :>> ', res);
+			},
+			emptytChange() {
+				this.$message.success("清空方法回调")
+			},
+			submit(form, done) {
+				this.$message.success("当前数据" + JSON.stringify(this.obj))
+				console.log(JSON.stringify(this.obj));
+				done()
+			},
+			error(err) {
+				this.$message.success('请查看控制台');
+				console.log("111",err)
+			}
 		},
-		components: {
-			ActiveForm,
-		}
+
+
 	}
 </script>
 
@@ -258,19 +278,20 @@
 					}
 				}
 			}
-			.content { 
-				 display: flex;
-				  flex-direction: column;
-				  margin-top: 100upx; 
-				  .subform{
-					  // width: 200upx;
-					    margin: 0 auto;
-					      padding: 20rpx 60rpx;
-						  text-align: center;
-					      border-radius: 18rpx;
-					      background-color: bisque;
-				  }
+
+			.content {
+				display: flex;
+				flex-direction: column;
+				margin-top: 100upx;
+				justify-content: center;
+				margin-left: -90upx;
+				/deep/ .el-form-item__content{
+					margin-left: 110upx !important;
+	
+				}
+
 			}
+
 			.containerBody {
 				width: 100%;
 				margin-top: 100upx;
