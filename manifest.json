@@ -77,27 +77,25 @@
     "h5" : {
         "title" : "车间上位",
         // 跨域设置
-        "devServer" : {
-            "https" : false,
-            "port" : 8080,
-            "proxy" : {
-                "/api" : {
-                    // "target" : "http://hwnpoht.nat.ipyingshe.com",
-                    "target" : "http://10086.jinkworld.com/api",
-					
-                    "changeOrigin" : true,
-                    "secure" : false,
-                    "pathRewrite" : {
-                        "^/api" : ""
-                    }
-                }
-            }
-        },
+        // "devServer" : {
+        //     "https" : true,
+        //     "port" : 8080,
+        //     "proxy" : {
+        //         "/web" : {
+        //             "target" : "http://10086.jinkworld.com/api/",
+        //             "changeOrigin" : true,
+        //             "secure" : false,  
+        //             "pathRewrite" : {
+        //                 "^/web" : ""
+        //             }
+        //         }
+        //     }
+        // },
         "router" : {
             "mode" : "history",
             "base" : "/h5/"
         },
-        "domain" : "http://hwnpoht.nat.ipyingshe.com/api/h5",
-        "template" : "index.html"
+        "title" : "车间上位",
+        "domain" : "http://127.0.0.1"
     }
 }

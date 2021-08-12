@@ -30,6 +30,7 @@ function get(url, data, header, loading) {
 			// url: config.serverURL + url,
 			url: '/api' + url,
 			timeout: 30000,
+			timeout:15000,
 			success: function(res) {
 				console.log('get success', res)
 				// 登录失效重新登录
@@ -105,6 +106,7 @@ function post(url, data, header, loading) {
 			url: '/api' + url,
 
 			timeout: 60000,
+			timeout:15000,
 			success: function(res) {
 				console.log('post success', res)
 				// 登录失效重新登录
@@ -169,6 +171,7 @@ function loginpost(url, data, header) {
 			// url: config.serverURL + url,
 			url: '/api' + url,
 			timeout: 60000,
+			timeout:15000,
 			success: function(res) {
 				console.log('post success', res)
 				// 400账号或密码错误
