@@ -84,7 +84,6 @@
                 "/api" : {
                     // "target" : "http://hwnpoht.nat.ipyingshe.com",
                     "target" : "http://10086.jinkworld.com/api",
-
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
@@ -97,7 +96,7 @@
             "mode" : "history",
             "base" : "/h5/"
         },
-        "domain" : "http://hwnpoht.nat.ipyingshe.com/api/h5",
+        "domain" : "http://10086.jinkworld.com/h5",
         // "domain" : "http://10086.jinkworld.com",
         "template" : "index.html"
     }

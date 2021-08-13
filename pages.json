@@ -79,7 +79,7 @@
             "path" : "pages/profile/modifypass",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "修改密码"
+                "navigationBarTitleText": ""
                 // "enablePullDownRefresh": false
 				// "navigationStyle": "custom"
             }
@@ -89,7 +89,7 @@
 		    "path" : "pages/message/index",
 		    "style" :                                                                                    
 		    {
-				"navigationBarTitleText": "消息列表"
+				"navigationBarTitleText": ""
 				// "navigationStyle": "custom"
 		    }
 		    
@@ -98,7 +98,7 @@
 		    "path" : "pages/message/detail",
 		    "style" :                                                                                    
 		    {
-				"navigationBarTitleText": "消息详情"
+				"navigationBarTitleText": ""
 				// "navigationStyle": "custom"
 		    }
 		    
@@ -107,7 +107,7 @@
             "path" : "pages/myreport/index",
             "style" :                                                                                    
             {
-				"navigationBarTitleText": "我的报表"
+				"navigationBarTitleText": ""
                // "navigationStyle": "custom"
             }
             
@@ -116,7 +116,7 @@
             "path" : "pages/index/detail",
             "style" :                                                                                    
             {
-				"navigationBarTitleText": "详情"
+				"navigationBarTitleText": ""
                // "navigationStyle": "custom"
             }
             
@@ -126,7 +126,7 @@
             "style" :                                                                                    
             {
                 // "navigationStyle": "custom"
-				"navigationBarTitleText": "个人中心"
+				"navigationBarTitleText": ""
             }
             
         }

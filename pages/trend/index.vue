@@ -24,12 +24,14 @@
 				</view>
 			</view>
 			<!-- 子列表 结束 -->
-			<!-- 控制折线图的下拉框 -->
-			<view class="pickers">
+			<!-- 下拉开始 -->
+			<view class="selectbox">
+				<!-- 控制折线图的下拉框 -->
+				<!-- <view class="pickers"> -->
 				<picker mode="selector" :range="categories" @change="handleChangeCategory" range-key='dictValue'>
 					<view class="select">
-						<view v-if="index1<0" style="color:#C0C4CC">按类别</view>
-						<view v-else>{{categories[index1].dictValue}}</view>
+						<text v-if="index1<0" style="color:#C0C4CC">按类别</text>
+						<text v-else>{{categories[index1].dictValue}}</text>
 						<image src="../../static/downarrow.png" mode="widthFix" style="width:24upx;">
 						</image>
 					</view>
@@ -44,43 +46,51 @@
 					</view>
 
 				</picker>
-			</view>
-			<view style="width:750upx">
-				<choosedate @func="getdateA" :CheckedCount='AddrCheckedArray.length'></choosedate>
-			</view>
-			<view class="chartBox" @click="showTotal" :class="{'total': isTotal}">
-				<l-echart ref="chart" class="ehcarts"></l-echart>
-				<view class="del" v-if='isTotal' @click.stop="closeTotal">
-					关闭
+				<!-- </view> -->
+				<view style="width:350upx">
+					<choosedate @func="getdateA" :CheckedCount='AddrCheckedArray.length'></choosedate>
 				</view>
 			</view>
+			<!-- 下拉结束-->
+			<!-- <view class="chartBox">
+				<l-f2 ref="chart"></l-f2>
+			</view> -->
+			<view class="chartBox" @click="showTotal">
+				<l-echart ref="chart"></l-echart>
+			</view>
+			<!-- <view class="total" v-show="isTotal">
+				<l-echart ref="chartAll" class="echarts"></l-echart>
+				<view class="del" @click.stop="closeTotal">
+					关闭
+				</view>
+			</view> -->
 		</view>
 
 		<!-- 与首页相同的内容区域 -->
 		<view class="wrapper_list" :style="{'padding-top': (isChild?'calc(352upx  + 500upx)':'calc(252upx + 500upx)')}">
 			<checkbox-group @change="checkboxChange">
-			<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
-				<view class="wrapper_item_title" @click="toDetail(item1.id)">
-					{{item1.dictValue}}
-					<view class="arrow">详情
-						<image src="../../static/arrow1.png" mode="widthFix"></image>
-					</view>
-				</view>
-				<view class="wrapper_item_container">
-					<view class="th">
-						<view class="line1 line" style="color:#5481EA">
-							项目
-						</view>
-						<view class="line2 line" style="color:#5481EA">
-							浮点数
-						</view>
-						<view class="line3 line" style="color:#5481EA">
-							要求范围
-						</view>
-						<view class="line4 line" style="color:#5481EA">
-							单位
+				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
+					<view class="wrapper_item_title" @click="toDetail(item1.id)">
+						{{item1.dictValue}}
+						<view class="arrow">详情
+							<image src="../../static/arrow1.png" mode="widthFix"></image>
 						</view>
 					</view>
+					<view class="wrapper_item_container">
+						<view class="th">
+							<view class="line1 line" style="color:#5481EA">
+								项目
+							</view>
+							<view class="line2 line" style="color:#5481EA">
+								浮点数
+							</view>
+							<view class="line3 line" style="color:#5481EA">
+								要求范围
+							</view>
+							<view class="line4 line" style="color:#5481EA">
+								单位
+							</view>
+						</view>
 						<!-- <view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2"
 						@click="active(item2.addr)" :style="{'background-color':(item2.checked?item2.color:'')}"> -->
 						<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
@@ -100,8 +110,8 @@
 								{{item2.unit}}
 							</view>
 						</view>
+					</view>
 				</view>
-			</view>
 			</checkbox-group>
 		</view>
 		<!-- 内容列表 结束 -->
@@ -117,6 +127,7 @@
 <script>
 	import choosedate from "../../components/choosedate.vue"
 	import * as echarts from '@/uni_modules/lime-echart_0.3.4/components/l-echart/echarts.min';
+	// import F2 from '@/uni_modules/lime-f2/components/l-f2/f2-all.min.js';
 	import moment from "moment";
 	export default {
 		data() {
@@ -146,28 +157,7 @@
 				currentheaderIndex: 0,
 				// 当前子列表下标
 				currentChildIndex: 0,
-				wrapperList1: [{
-						dictValue: "前处理预脱",
-						sites: [{
-								name: '1.喷淋管道压力',
-								val: '浮点数',
-								unit: 'Bar',
-								addr: 'dfdfaf'
-							},
-							{
-								name: '2.频率',
-								val: '浮点数',
-								unit: 'Hz',
-								addr: 'dfdfafdff'
-							},
-							{
-								name: '3.电机温度',
-								val: '浮点数',
-								unit: 'A',
-								addr: 'dfdfafedftwe'
-							},
-						]
-					}
+				wrapperList1: [
 
 				],
 
@@ -256,10 +246,11 @@
 						height: 160
 					},
 					dataZoom: [{
-						type: 'inside',
+						// type: 'inside',
 						start: 0,
 						end: 10,
 					}, {
+						type: 'inside',
 						start: 0,
 						end: 10,
 						top: '3%'
@@ -340,6 +331,7 @@
 
 
 
+
 			}
 		},
 
@@ -351,12 +343,36 @@
 				uni.hideTabBar({
 
 				})
-				this.option.grid.height=200
-				this.$refs.chart.setOption(this.option, true)
+				console.log(22);
+				this.$refs.chartAll.setOption(this.option);
+
+
+				this.$refs.chartAll.setOption(this.option);
+				console.log(33);
+
+				// setTimeout(function() {
+				// window.onresize = function() {
+				// this.$refs.chart.resize()
+
+				// }
+				// }, 200)
+				// this.$refs.chart.clear()
+				// this.$refs.chart.init(config => {
+				// 	const {
+				// 		canvas
+				// 	} = config;
+				// 	const chart = echarts.init(canvas, null, config);
+				// 	chart.setOption(this.option);
+
+				// 	return chart;
+				// });
 			},
 			closeTotal() {
 				console.log(22);
 				this.isTotal = false;
+				// this.option.grid.height = 160
+				// this.option.grid.width = 'auto'
+				// this.$refs.chart.setOption(this.option, true)
 				uni.showTabBar({
 
 				})
@@ -426,7 +442,7 @@
 				this.AddrCheckedArray = e.detail.value;
 				// 请求中的sites重新赋值为数组的','分割字符串
 				this.sites = this.AddrCheckedArray.join(',')
-				console.log(11111111,this.sites);
+				console.log(11111111, this.sites);
 				this.getsiteValList(true)
 			},
 
@@ -547,6 +563,8 @@
 					et: this.et
 				}).then(res => {
 					// console.log({res});
+					// this.option = res;
+					// this.$refs.chart.changeData(this.option)
 					this.option.series = res;
 					this.option.series.push()
 					// console.log({option:this.option});
@@ -629,6 +647,21 @@
 				}
 				return chart;
 			});
+			setTimeout(() => {
+				this.$refs.chartAll.init(config => {
+					const {
+						canvas
+					} = config;
+					const chart = echarts.init(canvas, null, config);
+					chart.setOption(this.option);
+					window.onresize = () => {
+						chart.resize()
+					}
+					return chart;
+				});
+			}, 1000)
+
+
 
 		}
 	}
@@ -766,33 +799,77 @@
 				}
 			}
 
-			.pickers {
+			.selectbox {
+				padding: 10upx;
+				margin: 10upx;
+				width: 710upx;
+				height: 60upx;
 				display: flex;
-				justify-content: center;
+				justify-content: space-around;
+				align-items: center;
+				// .pickers {
+				// 	display: flex;
+				// 	justify-content: center;
 
 				.select {
-					padding: 10upx;
+					width: 150upx;
+					overflow: hidden;
+					height: 60upx;
+					margin-right: 10upx;
+					// padding: 10upx;
 					// display: inline-block;
-					margin: 10upx;
+					// margin: 10upx;
 					// width: 212upx;
 					// height: 60upx;
 					border: 2upx solid #1989FA;
 					opacity: 1;
-					border-radius: 20upx;
+					border-radius: 16upx;
 					display: flex;
 					align-items: center;
+					font-size: 14upx;
+
 					// justify-content: space-around;
+					text {
+						// box-sizing: border-box;
+						width: 130upx;
+						padding-left: 10upx;
+						overflow: hidden;
+						white-space: nowrap;
+						// text-overflow: ellipsis;
+					}
 
 					image {
 
 						// padding: 2upx;
 					}
 				}
+
+				// }
 			}
+
+
 
 			.chartBox {
 				// width: 600upx;
 				height: 500upx;
+
+
+			}
+
+			.total {
+
+				position: absolute;
+				top: -100vw;
+				// top: -300px;
+				transform-origin: bottom left;
+				width: 100vh !important;
+				height: 100vw !important;
+				// width: 300px;
+				// height:300px;
+				transform: rotate(90deg);
+				transition: 0.5s;
+				background: #fff;
+				z-index: 100;
 
 				.del {
 					position: absolute;
@@ -801,42 +878,33 @@
 					border: 1px solid #fff;
 					z-index: 199;
 				}
-			}
 
-			.total {
-
-				position: absolute;
-				top: -100vw;
-				transform-origin: bottom left;
-				width: 100vh !important;
-				height: 100vw !important;
-				transform: rotate(90deg);
-				transition: 0.5s;
-				background: #fff;
-				z-index: 100;
-
-				.ehcarts {
+				.echarts {
 					// transform: rotate(90deg);
-					width: 100vh !important;
-					// height: 200vw !important;
-					
+					// width: 100vh !important;
+					// height: 100vw !important;
+
 					z-index: 150;
 				}
 			}
 
-			.content {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				width: 100%;
+			// .content {
+			// 	display: flex;
+			// 	flex-direction: column; 
 
-				.echarts {
-					margin-top: 20upx;
-					width: 100%;
-					height: 470upx;
-				}
-			}
+
+
+
+			// 	align-items: center;
+			// 	justify-content: center;
+			// 	width: 100%;
+
+			// 	.echarts {
+			// 		margin-top: 20upx;
+			// 		width: 100%;
+			// 		height: 470upx;
+			// 	}
+			// }
 		}
 
 
