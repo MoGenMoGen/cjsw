@@ -84,7 +84,7 @@
                 "/api" : {
                     // "target" : "http://hwnpoht.nat.ipyingshe.com",
                     "target" : "http://10086.jinkworld.com/api",
-					
+
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
