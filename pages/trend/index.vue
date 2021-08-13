@@ -167,13 +167,15 @@
 						// text: '趋势分析图',
 						// subtext: '"tootip" and "dataZoom" on mobile device',
 					},
-					legend: {
-						top: 'bottom',
-						data: ['意向']
-					},
+					// legend: {
+					// 	top: 'bottom',
+					// 	data: ['意向']
+					// },
 					tooltip: {
-						triggerOn: 'none',
-						position: ['10%', '20%']
+						triggerOn: 'mousemove|click',
+						        trigger: 'axis'
+						// triggerOn: 'none',
+						// position: ['10%', '20%']
 						// position: function(pt) {
 						// 	return [pt[0], 10];
 						// }
@@ -199,27 +201,27 @@
 							show: false,
 						},
 
-						axisPointer: {
-							value: '2020-01-03',
-							snap: true,
-							lineStyle: {
-								color: '#7581BD',
-								width: 2
-							},
-							label: {
-								show: false,
-								formatter: function(params) {
-									return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
-								},
-								backgroundColor: '#7581BD'
-							},
-							handle: {
-								show: true,
-								color: '#7581BD',
-								margin: 20,
-								size: [30, 30]
-							}
-						},
+						// axisPointer: {
+						// 	value: '2020-01-03',
+						// 	snap: true,
+						// 	lineStyle: {
+						// 		color: '#7581BD',
+						// 		width: 2
+						// 	},
+						// 	label: {
+						// 		show: false,
+						// 		formatter: function(params) {
+						// 			return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
+						// 		},
+						// 		backgroundColor: '#7581BD'
+						// 	},
+						// 	handle: {
+						// 		show: true,
+						// 		color: '#7581BD',
+						// 		margin: 20,
+						// 		size: [30, 30]
+						// 	}
+						// },
 						splitLine: {
 							show: false
 						}
@@ -245,20 +247,19 @@
 						right: 15,
 						height: 160
 					},
-					dataZoom: [{
-						// type: 'inside',
-						start: 0,
-						end: 10,
-					}, {
-						type: 'inside',
-						start: 0,
-						end: 10,
-						top: '3%'
-					}],
 					// dataZoom: [{
+					// 	start: 0,
+					// 	end: 10,
+					// }, {
 					// 	type: 'inside',
-					// 	throttle: 50
+					// 	start: 0,
+					// 	end: 10,
+					// 	top: '3%'
 					// }],
+					dataZoom: [{
+						type: 'inside',
+						throttle: 0
+					}],
 					series: [
 						// {
 						// 	name: '模拟数据',
