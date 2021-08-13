@@ -462,6 +462,36 @@ class api {
 			});
 		})
 	}
+	//获取报表分类信息
+	getReportType(data){
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/reportQuery/reportType", {}, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	//获取报表列表信息
+	getReportList(data){
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/reportQuery/list", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	//获取报表内容信息
+	getReportDtl(data){
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/reportQuery/reportDtl", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
 
 }
 export {

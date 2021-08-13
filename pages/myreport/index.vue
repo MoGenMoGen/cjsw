@@ -3,15 +3,15 @@
 	<view class="pages_myreport"> 
 		<view class="container">
 			<view class="hidden">
-				<view class="head_switch">
+				<view class="head_switch" style="margin-top: 100upx;">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
-						@click="switchHead(item.id)" :class="{activeheader:item.id==currentheaderID}">
+						@click="switchHead(item.sort)" :class="{activeheader:item.sort==currentheaderID}">
 						{{item.dictValue}}
 					</text>
 				</view>
 			</view>
 			<view class="formList">
-				<view class="listBody" v-for="(item,index) in formList" :key="index" @click="showForm(index)">
+				<view class="listBody" v-for="(item,index) in formList" :key="index" @click="showDetail(index)">
 					{{item.name}}
 					<image src="../../static/arrow3.png" mode=""></image>
 				</view>
@@ -80,13 +80,33 @@
 			};
 		},
 		methods:{
-			switchHead(id){
-				if (this.currentheaderID != id) {
-					this.currentheaderID = id
+			switchHead(sort){
+				if (this.currentheaderID != sort) {
+					this.currentheaderID = sort
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
 					// this.getwrapperList(this.currentheaderID)
+					this.api.getReportList({id:this.switchList[sort-1].id}).then(res=>{
+						this.formList=res
+						
+					})
 				}
 			},
+			showDetail(index){
+				this.api.getReportDtl({id:this.formList[index].id}).then(res=>{
+					console.log(res);
+				})
+			}
+			
+			
+		},
+		onLoad() {
+			this.api.getReportType().then(res=>{
+				this.switchList=res
+				this.api.getReportList({id:this.switchList[0].id}).then(res=>{
+					this.formList=res
+					console.log("2222",this.formList);
+				})
+			})
 			
 			
 		}

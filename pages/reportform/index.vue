@@ -5,16 +5,18 @@
 			<view class="hidden">
 				<view class="head_switch">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
-						@click="switchHead(item.id)" :class="{activeheader:item.id==currentheaderID}">
+						@click="switchHead(item.sort)" :class="{activeheader:item.sort==currentheaderID}">
 						{{item.dictValue}}
 					</text>
 				</view>
 			</view>
-			<view class="content">
-				<avue-form ref="form" v-model="obj" :option="option" @reset-change="emptytChange" @submit="submit"
-					@error="error">
-				</avue-form>
-			</view>
+			<view class="formList">
+				<view class="listBody" v-for="(item,index) in formList" :key="index" @click="showDetail(index)">
+					{{item.name}}
+					<image src="../../static/arrow3.png" mode=""></image>
+				</view>
+			</view> 
+			
 
 			<!-- <view class="containerBody" v-for="(item,index) in surface" :key="index">
 				<view class="containerTitle">
@@ -62,6 +64,7 @@
 				obj: {
 					id: 123123
 				},
+				detailId:"",
 				option: {
 					column: [{
 							label: "姓名",
@@ -71,11 +74,11 @@
 								type: 'name'
 							},
 							span: 8,
-							   rules: [{
-							                required: true,
-							                message: "请输入姓名",
-							                trigger: "blur"
-							              }]
+							rules: [{
+								required: true,
+								message: "请输入姓名",
+								trigger: "blur"
+							}]
 						},
 						{
 							label: "密码",
@@ -86,10 +89,10 @@
 								type: 'name'
 							},
 							span: 8,
-							rules:[{
+							rules: [{
 								required: true,
-								 message: "请输入密码",
-								  trigger: "blur"
+								message: "请输入密码",
+								trigger: "blur"
 							}]
 						},
 					]
@@ -182,15 +185,20 @@
 					}
 
 
-				]
-			}
+				],
+				formList: []
+			};
 		},
 		methods: {
-			switchHead(id) {
-				if (this.currentheaderID != id) {
-					this.currentheaderID = id
+			switchHead(sort) {
+				if (this.currentheaderID != sort) {
+					this.currentheaderID = sort
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
 					// this.getwrapperList(this.currentheaderID)
+					this.api.getReportList({id:this.switchList[sort-1].id}).then(res=>{
+						this.formList=res
+						
+					})
 				}
 			},
 			sub() {
@@ -209,9 +217,24 @@
 			},
 			error(err) {
 				this.$message.success('请查看控制台');
-				console.log("111",err)
+				console.log("111", err)
+			},
+			showDetail(index){
+				 uni.navigateTo({
+				 	url:`./detail?id=${this.formList[index].id}`
+				 })
 			}
 		},
+		onLoad() {
+			this.api.getReportType().then(res => {
+				this.switchList = res
+				// console.log("1111", this.switchList);
+				this.api.getReportList({id:this.switchList[0].id}).then(res=>{
+					this.formList=res
+					console.log("2222",this.formList);
+				})
+			})
+		}
 
 
 	}
@@ -223,6 +246,36 @@
 
 		.container {
 			width: 100%;
+
+			.formList {
+				padding: 40upx 20upx 500upx 20upx;
+				box-sizing: border-box;
+				background: #FAFAFA;
+				margin-top: 80upx;
+
+				.listBody {
+					position: relative;
+					margin-top: 20upx;
+					background-color: #FFFFFF;
+					width: 710upx;
+					padding: 50upx;
+					box-sizing: border-box;
+					font-size: 28upx;
+					color: #606060;
+					box-shadow: 0upx 2upx 4upx rgba(155, 155, 155, 0.08);
+					border-radius: 12upx;
+
+					image {
+						position: absolute;
+						width: 12upx;
+						height: 21upx;
+						top: 50%;
+						right: 60upx;
+						transform: translateY(-50%);
+					}
+				}
+
+			}
 
 			.hidden {
 				top: 0;
@@ -285,9 +338,10 @@
 				margin-top: 100upx;
 				justify-content: center;
 				margin-left: -90upx;
-				/deep/ .el-form-item__content{
+
+				/deep/ .el-form-item__content {
 					margin-left: 110upx !important;
-	
+
 				}
 
 			}

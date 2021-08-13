@@ -34,7 +34,17 @@
 				"navigationStyle": "custom"
             }
             
-        }
+        },
+		{
+		    "path" : "pages/reportform/detail",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": ""
+		        // "enablePullDownRefresh": false
+				// "navigationStyle": "custom"
+		    }
+		    
+		}
         ,{
             "path" : "pages/policeinfo/index",
             "style" :                                                                                    
@@ -121,6 +131,15 @@
             
         }
        
+        // ,{
+        //     "path" : "pages/myreport/detail/detail",
+        //     "style" :                                                                                    
+        //     {
+        //         "navigationBarTitleText": "",
+        //         "enablePullDownRefresh": false
+        //     }
+            
+        // }
     ],
 	"tabBar": {
 		"custom": false,
