@@ -351,6 +351,7 @@
 				uni.hideTabBar({
 
 				})
+				this.option.grid.height=200
 				this.$refs.chart.setOption(this.option, true)
 			},
 			closeTotal() {
@@ -816,8 +817,9 @@
 
 				.ehcarts {
 					// transform: rotate(90deg);
-					// width: 100vh !important;
-					// height: 100vw !important;
+					width: 100vh !important;
+					// height: 200vw !important;
+					
 					z-index: 150;
 				}
 			}

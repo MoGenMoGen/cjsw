@@ -1,4 +1,4 @@
-<!-- ±¨±íÒ³Ãæ -->
+<!-- æŠ¥è¡¨é¡µé¢ -->
 <template>
 	<view class="pages_reportform">
 		<view class="container">
@@ -37,7 +37,7 @@
 							{{item2.name}}:
 							</view>
 							<view class="content">
-								<input type="text" value="" placeholder="±£Ñø±ê×¼: ¸É¾»ÎŞ»Ò³¾" placeholder-class="placeholderIn" />
+								<input type="text" value="" placeholder="ä¿å…»æ ‡å‡†: å¹²å‡€æ— ç°å°˜" placeholder-class="placeholderIn" />
 							</view>
 					</view>
 					<view class="abnormal">
@@ -64,7 +64,7 @@
 				},
 				option: {
 					column: [{
-							label: "ĞÕÃû",
+							label: "å§“å",
 							prop: "name",
 							disabled: false,
 							mock: {
@@ -73,12 +73,12 @@
 							span: 8,
 							   rules: [{
 							                required: true,
-							                message: "ÇëÊäÈëĞÕÃû",
+							                message: "è¯·è¾“å…¥å§“å",
 							                trigger: "blur"
 							              }]
 						},
 						{
-							label: "ÃÜÂë",
+							label: "å¯†ç ",
 							prop: "password",
 							disabled: false,
 							type: 'password',
@@ -88,97 +88,97 @@
 							span: 8,
 							rules:[{
 								required: true,
-								 message: "ÇëÊäÈëÃÜÂë",
+								 message: "è¯·è¾“å…¥å¯†ç ",
 								  trigger: "blur"
 							}]
 						},
 					]
 				},
 				switchList: [{
-						dictValue: 'Í¿×°Ïß',
+						dictValue: 'æ¶‚è£…çº¿',
 						id: '1'
 					},
 					{
-						dictValue: '¹©Æá',
+						dictValue: 'ä¾›æ¼†',
 						id: '2'
 					}, {
-						dictValue: '»úÆ÷ÈË',
+						dictValue: 'æœºå™¨äºº',
 						id: '3'
 					},
 					{
-						dictValue: '·ÏÆú´¦Àí',
+						dictValue: 'åºŸå¼ƒå¤„ç†',
 						id: '4'
 					},
 					{
-						dictValue: '±ùË®»ú·¿',
+						dictValue: 'å†°æ°´æœºæˆ¿',
 						id: '5',
 					},
 
 					{
-						dictValue: '¿ÕÑ¹»ú',
+						dictValue: 'ç©ºå‹æœº',
 						id: '6'
 					},
 					{
-						dictValue: '°²È«»·±£',
+						dictValue: 'å®‰å…¨ç¯ä¿',
 						id: '7'
 					}
 				],
 				currentheaderID: '1',
 				surface: [{
-						title: "Í¿×°Àë×Ó·ç»ú±£Ñø¼ÇÂ¼±í",
+						title: "æ¶‚è£…ç¦»å­é£æœºä¿å…»è®°å½•è¡¨",
 						body: [{
-								name: "±àºÅ",
-								content: "007¡ª¡ªWI-347"
+								name: "ç¼–å·",
+								content: "007â€”â€”WI-347"
 							},
 							{
-								name: "ÔğÈÎÈË",
-								content: "¹¤ÒÕÈËÔ±"
+								name: "è´£ä»»äºº",
+								content: "å·¥è‰ºäººå‘˜"
 							},
 							{
-								name: "¼ì²âÒÇÆ÷",
-								content: "¼ì²âÒÇÆ÷Ãû³Æ"
+								name: "æ£€æµ‹ä»ªå™¨",
+								content: "æ£€æµ‹ä»ªå™¨åç§°"
 
 							},
 							{
-								name: "ÒÇÆ÷ĞÍºÅ",
-								content: "¼ì²âÒÇÆ÷Ãû³Æ"
+								name: "ä»ªå™¨å‹å·",
+								content: "æ£€æµ‹ä»ªå™¨åç§°"
 							},
 							{
-								name: "Ïß±ğ",
-								content: "Í¿×°ÆßÏß"
+								name: "çº¿åˆ«",
+								content: "æ¶‚è£…ä¸ƒçº¿"
 							},
 							{
-								name: "ÇøÓò",
-								content: "³ı³¾Çø"
+								name: "åŒºåŸŸ",
+								content: "é™¤å°˜åŒº"
 							},
 
 						],
-						note: "±£ÑøÏîÄ¿£¨7ÔÂ-±£ÑøÖÜÆÚ/Ã¿ÔÂ£©",
+						note: "ä¿å…»é¡¹ç›®ï¼ˆ7æœˆ-ä¿å…»å‘¨æœŸ/æ¯æœˆï¼‰",
 						input: [{
-								name: "»úÌåÄÚ±Ú"
+								name: "æœºä½“å†…å£"
 							},
 							{
-								name: "Í­Õë"
+								name: "é“œé’ˆ"
 							},
 							{
-								name: "Ò¶ÂÖ"
+								name: "å¶è½®"
 							},
 							{
-								name: "·ç¹ÄÄÚ²â"
+								name: "é£é¼“å†…æµ‹"
 							},
 							{
-								name: "½ø·ç¿Ú¸ñÕ¤"
+								name: "è¿›é£å£æ ¼æ …"
 							},
 							{
-								name: "³ö·ç¿Ú"
+								name: "å‡ºé£å£"
 							}
 
 						],
-						abnormalIn: "Òì³£¼ÇÂ¼"
+						abnormalIn: "å¼‚å¸¸è®°å½•"
 
 					},
 					{
-						title: "¾²µç¼ì²â¼ÇÂ¼±í",
+						title: "é™ç”µæ£€æµ‹è®°å½•è¡¨",
 					}
 
 
@@ -194,21 +194,21 @@
 				}
 			},
 			sub() {
-				this.$vervify(this.formData); //±íµ¥Ğ£Ñé ³É¹¦»á¼ÌĞøÍùÏÂ×ß Ê§°ÜÅ×³öÒì³£
+				this.$vervify(this.formData); //è¡¨å•æ ¡éªŒ æˆåŠŸä¼šç»§ç»­å¾€ä¸‹èµ° å¤±è´¥æŠ›å‡ºå¼‚å¸¸
 
-				const res = this.$submitForm(this.formData); //Ğ£Ñé³É¹¦ »ñÈ¡±íµ¥Öµ
-				console.log('±íµ¥¶ÔÏó :>> ', res);
+				const res = this.$submitForm(this.formData); //æ ¡éªŒæˆåŠŸ è·å–è¡¨å•å€¼
+				console.log('è¡¨å•å¯¹è±¡ :>> ', res);
 			},
 			emptytChange() {
-				this.$message.success("Çå¿Õ·½·¨»Øµ÷")
+				this.$message.success("æ¸…ç©ºæ–¹æ³•å›è°ƒ")
 			},
 			submit(form, done) {
-				this.$message.success("µ±Ç°Êı¾İ" + JSON.stringify(this.obj))
+				this.$message.success("å½“å‰æ•°æ®" + JSON.stringify(this.obj))
 				console.log(JSON.stringify(this.obj));
 				done()
 			},
 			error(err) {
-				this.$message.success('Çë²é¿´¿ØÖÆÌ¨');
+				this.$message.success('è¯·æŸ¥çœ‹æ§åˆ¶å°');
 				console.log("111",err)
 			}
 		},
