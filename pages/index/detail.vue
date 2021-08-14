@@ -7,7 +7,14 @@
 			</view>
 		</view>
 		
-		<image class="banner" src="../../static/banner2.png" mode="aspectFill"></image>
+		<!-- 轮播图 开始 -->
+		<swiper class="swiper" :indicator-dots="true" autoplay="true" interval="4000" duration="500"
+			indicator-color="white" indicator-active-color="red">
+			<swiper-item v-for="(item, index) in swiperList" :key="index">
+				<image :src="item" mode="aspectFill" />
+			</swiper-item>
+		</swiper>
+		<!-- 轮播图 结束 -->
 		<view class="wrapper_item_container">
 			<view class="th">
 				<view class="line1 line">
@@ -45,25 +52,9 @@
 	export default {
 		data() {
 			return {
-				sites: [{
-						name: '1.喷淋管道压力',
-						val: '浮点数',
-						unit: 'Bar',
-						color: '#ccc'
-					},
-					{
-						name: '2.频率',
-						val: '浮点数',
-						unit: 'Hz',
-						color: 'rgba(211, 0, 100, .3)'
-					},
-					{
-						name: '3.电机温度',
-						val: '浮点数',
-						unit: 'A',
-						color: 'rgb(100, 200, 100)'
-					},
-				]
+				sites: [
+				],
+				swiperList:[]
 			};
 		},
 		methods:{
@@ -74,6 +65,7 @@
 			}
 		},
 		async onLoad(e){
+			this.swiperList = e.banner.split(',')
 			this.sites=await this.api.getsiteDetail({id:e.id})
 		}
 	}
@@ -96,6 +88,28 @@
 				}
 			}
 		}
+		.swiper {
+			margin:20upx auto;
+			// margin-top: calc(var(--status-bar-height) + 86upx);
+			width: 710upx;
+			height: 300upx;
+			border-radius: 24upx;
+			overflow: hidden;
+			// padding:0 4upx;
+			swiper-item {
+				width: 100%;
+				height: 400upx;
+		
+				image {
+					box-sizing: border-box;
+					width: 100%;
+					height: 100%;
+					// border-radius: 12upx;
+				}
+			}
+		}
+		
+		
 		// .back{
 		// 	background-color: red;
 		// 	position: absolute;
@@ -121,7 +135,7 @@
 			// width: 100%;
 			box-sizing: border-box;
 			// padding:60upx 40upx 160upx;
-			margin:60upx 20upx 0upx;
+			margin:20upx 20upx 0upx;
 			.th {
 				display: flex;
 				padding: 10upx 20upx;

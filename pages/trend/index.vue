@@ -70,7 +70,7 @@
 		<view class="wrapper_list" :style="{'margin-top': (isChild?'calc(182upx  + 300upx)':'calc(182upx + 300upx)')}">
 			<checkbox-group @change="checkboxChange">
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
-					<view class="wrapper_item_title" @click="toDetail(item1.id)">
+					<view class="wrapper_item_title" @click="toDetail(item1.id,item1.img)">
 						{{item1.dictValue}}
 						<view class="arrow">详情
 							<image src="../../static/arrow1.png" mode="widthFix"></image>
@@ -429,9 +429,9 @@
 				this.et = a.endDate;
 				this.getsiteValList()
 			},
-			toDetail(id) {
+			toDetail(id,banner) {
 				uni.navigateTo({
-					url: `/pages/index/detail?id=${id}`
+					url: `/pages/index/detail?id=${id}&banner=${banner}`
 				})
 			},
 			checkboxChange: function(e) {

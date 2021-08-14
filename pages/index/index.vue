@@ -51,7 +51,7 @@
 			<!-- 内容列表 开始 -->
 			<view class="wrapper_list" v-if='!ismonitor' >
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
-					@click="toDetail(item1.id)">
+					@click="toDetail(item1.id,item1.img)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
 						{{item1.dictValue}}
 						<view class="arrow">详情
@@ -282,11 +282,11 @@
 
 
 			},
-			 toDetail(id) {
+			toDetail(id,banner) {
 				uni.navigateTo({
-					url: `/pages/index/detail?id=${id}`
+					url: `/pages/index/detail?id=${id}&banner=${banner}`
 				})
-			}
+			},
 
 
 
