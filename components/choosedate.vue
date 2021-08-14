@@ -231,7 +231,7 @@
 		// width: 750upx;
 		// box-sizing: border-box;
 		// margin: 0upx 10upx;
-		display: flex;
+		// display: flex;
 		white-space: nowrap;
 		// flex-wrap: nowrap;
 		align-items: center;
@@ -239,24 +239,26 @@
 		border: 1px solid #ccc;
 		border-radius: 30upx;
 		// padding: 0 20upx;
-		justify-content: space-between;
-
+		// justify-content: space-between;
+		border: 2upx solid #1989FA;
 		.leftcell {
 			// width: 600upx;
 			display: flex;
 			align-items: center;
+			justify-content: center;
 
 			picker {
 				margin: 0 5upx;
-			}
-
-			// padding:0 20upx;
+				// padding:0 20upx;
 			.uni-input {
 				height: 60upx;
 				line-height: 60upx;
 				// font-size: 32upx;
 				font-size: 28upx;
 			}
+			}
+
+			
 		}
 
 	}

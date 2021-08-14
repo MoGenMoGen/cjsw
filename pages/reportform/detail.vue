@@ -1,5 +1,10 @@
 <template>
 	<view class="pages_reportformDetail">
+		<view class="navigation">
+			<view class="back" @click="back">
+				<image src="../../static/back.png" mode="widthFix"></image>
+			</view>
+		</view>
 		<view class="title">
 			{{name}}
 		</view>
@@ -51,6 +56,13 @@
 				
 			}
 		},
+		methods:{
+			back(){
+			uni.navigateBack({
+				
+			})}
+			
+		},
 		onLoad(e) {
 			console.log(1111, e);
 			this.id=e.id
@@ -76,6 +88,18 @@
 <style lang="scss" scoped>
 	.pages_reportformDetail{
 		width: 100%;
+		.navigation{
+			width: 100%;
+			// background-color: #2957C4;
+			background-color: #0984e3;
+			padding:20upx;
+			.back{
+				width:24upx ;
+				image{
+					width:24upx !important;
+				}
+			}
+		}
 		.title{
 			width: 100%;
 			text-align: center;

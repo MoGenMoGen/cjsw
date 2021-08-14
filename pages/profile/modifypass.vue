@@ -2,6 +2,11 @@
 	<!-- 修改密码页面 -->
 	<view class="pages_modify_pass">
 		<view class="wrapper">
+			<view class="navigation">
+				<view class="back" @click="back">
+					<image src="../../static/back.png" mode="widthFix"></image>
+				</view>
+			</view>
 			<image class="cover" :src="modifyPassCover" mode="aspectfit"></image>
 			<!-- 表单 开始 -->
 			<view class="list">
@@ -74,6 +79,11 @@
 				})
 				},1500)
 				
+			},
+			back() {
+				uni.navigateBack({
+			
+				})
 			}
 		}
 	}
@@ -84,8 +94,24 @@
 		width: 100%;
 
 		.wrapper {
+			
+			.navigation {
+				width: 100%;
+				box-sizing: border-box;
+				// background-color: #2957C4;
+				background-color: #0984e3;
+				padding: 20upx;
+			
+				.back {
+					width: 24upx;
+			
+					image {
+						width: 24upx;
+					}
+				}
+			}
 			width: 100%;
-			padding-top: 60rpx;
+			// padding-top: 60rpx;
 			display: flex;
 			flex-direction: column;
 			align-items: center;

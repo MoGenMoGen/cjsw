@@ -1,9 +1,12 @@
 <template>
 	<!-- 内容列表详情 -->
 	<view class="container">
-		<!-- <view class="back">
-			<image src="../../static/back.png" mode="widthFix"></image>
-		</view> -->
+		<view class="navigation">
+			<view class="back" @click="back">
+				<image src="../../static/back.png" mode="widthFix"></image>
+			</view>
+		</view>
+		
 		<image class="banner" src="../../static/banner2.png" mode="aspectFill"></image>
 		<view class="wrapper_item_container">
 			<view class="th">
@@ -63,6 +66,13 @@
 				]
 			};
 		},
+		methods:{
+			back(){
+			uni.navigateBack({
+				
+			})
+			}
+		},
 		async onLoad(e){
 			this.sites=await this.api.getsiteDetail({id:e.id})
 		}
@@ -73,6 +83,19 @@
 	.container {
 		width: 100%;
 		position: relative;
+		background-color: #ecf0f1;
+		padding-bottom: 160upx;
+		.navigation{
+			width: 100%;
+			background-color: #0984e3;
+			padding:20upx;
+			.back{
+				width:24upx ;
+				image{
+					width:24upx ;
+				}
+			}
+		}
 		// .back{
 		// 	background-color: red;
 		// 	position: absolute;
@@ -83,18 +106,22 @@
 		// 	}
 		// }
 		.banner {
-			width: 750upx;
-			height: 470upx;
+			width: 710upx;
+			height: 300upx;
+			margin:10upx 20upx;
+			border-radius: 24upx;
 		}
 
 		.wrapper_item_container {
+			width: 710upx;
+			border-radius: 30upx;
+			padding:30upx 20upx;
 			// margin-top:60upx;
 			background: #fff;
-			width: 100%;
+			// width: 100%;
 			box-sizing: border-box;
-			padding:60upx 40upx 160upx;
-			// padding-bottom:160upx;
-			// padding: 0 20upx;
+			// padding:60upx 40upx 160upx;
+			margin:60upx 20upx 0upx;
 			.th {
 				display: flex;
 				padding: 10upx 20upx;

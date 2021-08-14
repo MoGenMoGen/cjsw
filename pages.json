@@ -1,12 +1,11 @@
 {
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/index/index",
 			"style": {
 				// "navigationBarBackgroundColor":"#2957C4",
 				"navigationStyle": "custom"
 				// "navigationBarTitleText": "首页"
-				
+
 			}
 		},
 		{
@@ -15,132 +14,120 @@
 				// "navigationBarTitleText": "登录"
 				"navigationStyle": "custom"
 			}
-			},
-			{
-				"path": "pages/profile/index",
-				"style": {
-					"navigationStyle": "custom"
-					// "navigationBarTitleText": "个人中心"
-				}
-			
-		}
-       
-        ,{
-            "path" : "pages/reportform/index",
-            "style" :                                                                                    
-            {
-                // "navigationBarTitleText": "报表",
-                // "enablePullDownRefresh": false
-				"navigationStyle": "custom"
-            }
-            
-        },
-		{
-		    "path" : "pages/reportform/detail",
-		    "style" :                                                                                    
-		    {
-		        "navigationBarTitleText": ""
-		        // "enablePullDownRefresh": false
-				// "navigationStyle": "custom"
-		    }
-		    
-		}
-        ,{
-            "path" : "pages/policeinfo/index",
-            "style" :                                                                                    
-            {
-                // "navigationBarTitleText": "报警信息",
-                "enablePullDownRefresh": true, 
-				"navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/trend/index",
-            "style" :                                                                                    
-            {
-                // "navigationBarTitleText": "趋势",
-                // "enablePullDownRefresh": false
-				"navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/login/forgetpass",
-            "style" :                                                                                    
-            {
-                // "navigationBarTitleText": "忘记密码",
-                // "enablePullDownRefresh": false
-				"navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/profile/modifypass",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": ""
-                // "enablePullDownRefresh": false
-				// "navigationStyle": "custom"
-            }
-            
-        },
-		{
-		    "path" : "pages/message/index",
-		    "style" :                                                                                    
-		    {
-				"navigationBarTitleText": ""
-				// "navigationStyle": "custom"
-		    }
-		    
 		},
 		{
-		    "path" : "pages/message/detail",
-		    "style" :                                                                                    
-		    {
-				"navigationBarTitleText": ""
-				// "navigationStyle": "custom"
-		    }
-		    
+			"path": "pages/profile/index",
+			"style": {
+				"navigationStyle": "custom"
+				// "navigationBarTitleText": "个人中心"
+			}
+
 		}
-        ,{
-            "path" : "pages/myreport/index",
-            "style" :                                                                                    
-            {
-				"navigationBarTitleText": ""
-               // "navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/index/detail",
-            "style" :                                                                                    
-            {
-				"navigationBarTitleText": ""
-               // "navigationStyle": "custom"
-            }
-            
-        }
-        ,{
-            "path" : "pages/profile/personinfo",
-            "style" :                                                                                    
-            {
-                // "navigationStyle": "custom"
-				"navigationBarTitleText": ""
-            }
-            
-        }
-       
-        // ,{
-        //     "path" : "pages/myreport/detail/detail",
-        //     "style" :                                                                                    
-        //     {
-        //         "navigationBarTitleText": "",
-        //         "enablePullDownRefresh": false
-        //     }
-            
-        // }
-    ],
+
+		, {
+			"path": "pages/reportform/index",
+			"style": {
+				// "navigationBarTitleText": "报表",
+				// "enablePullDownRefresh": false
+				"navigationStyle": "custom"
+			}
+
+		},
+		{
+			"path": "pages/reportform/detail",
+			"style": {
+				// "navigationBarTitleText": "",
+				// "navigationBarBackgroundColor": "#2957C4"
+				// "enablePullDownRefresh": false
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/policeinfo/index",
+			"style": {
+				// "navigationBarTitleText": "报警信息",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/trend/index",
+			"style": {
+				// "navigationBarTitleText": "趋势",
+				// "enablePullDownRefresh": false
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/login/forgetpass",
+			"style": {
+				// "navigationBarTitleText": "忘记密码",
+				// "enablePullDownRefresh": false
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/profile/modifypass",
+			"style": {
+				// "navigationBarTitleText": "",
+				// "navigationBarBackgroundColor": "#2957C4",
+				// "enablePullDownRefresh": false
+				"navigationStyle": "custom"
+			}
+
+		},
+		{
+			"path": "pages/message/index",
+			"style": {
+				// "navigationBarTitleText": "",
+				// "navigationBarBackgroundColor": "#2957C4"
+				"navigationStyle": "custom"
+			}
+
+		},
+		{
+			"path": "pages/message/detail",
+			"style": {
+				// "navigationBarTitleText": "",
+				// "navigationBarBackgroundColor": "#2957C4"
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/myreport/index",
+			"style": {
+				// "navigationBarTitleText": "",
+				// "navigationBarBackgroundColor": "#2957C4"
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/index/detail",
+			"style": {
+				// "navigationBarTitleText": "",
+				// "navigationBarBackgroundColor": "#2957C4"
+				"navigationStyle": "custom"
+			}
+
+		}, {
+			"path": "pages/profile/personinfo",
+			"style": {
+				"navigationStyle": "custom"
+				// "navigationBarBackgroundColor":"#2957C4"
+			}
+
+		}
+
+		// ,{
+		//     "path" : "pages/myreport/detail/detail",
+		//     "style" :                                                                                    
+		//     {
+		//         "navigationBarTitleText": "",
+		//         "enablePullDownRefresh": false
+		//     }
+
+		// }
+	],
 	"tabBar": {
 		"custom": false,
 		"selectedColor": "#5481EA",
@@ -148,49 +135,56 @@
 		"backgroundColor": "#ffffff",
 		"borderStyle": "white",
 		// "height":"0px",
-		"list": [
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/tabhome.png",
+				"selectedIconPath": "static/tabhomeactive.png"
+			},
 			{
-			"pagePath": "pages/index/index",
-			"text": "首页",
-			"iconPath":"static/tabhome.png",
-			"selectedIconPath":"static/tabhomeactive.png"
-		},
-		{
-			"pagePath": "pages/reportform/index",
-			"text": "报表",
-			"iconPath":"static/tabreportform.png",
-			"selectedIconPath":"static/tabreportformactive.png"
-		},
-		 {
-			"pagePath": "pages/policeinfo/index",
-			"text": "报警信息",
-			"iconPath":"static/tabpolice.png",
-			"selectedIconPath":"static/tabpoliceactivie.png"
-		},
-		{
-			"pagePath": "pages/trend/index",
-			"text": "趋势",
-			"iconPath":"static/tabtrend.png",
-			"selectedIconPath":"static/tabtrendactive.png"
-		},
-		{
-			"pagePath": "pages/profile/index",
-			"text": "我的",
-			"iconPath":"static/tabprofile.png",
-			"selectedIconPath":"static/tabprofileactive.png"
-		}
-		
-		
+				"pagePath": "pages/reportform/index",
+				"text": "报表",
+				"iconPath": "static/tabreportform.png",
+				"selectedIconPath": "static/tabreportformactive.png"
+			},
+			{
+				"pagePath": "pages/policeinfo/index",
+				"text": "报警信息",
+				"iconPath": "static/tabpolice.png",
+				"selectedIconPath": "static/tabpoliceactivie.png"
+			},
+			{
+				"pagePath": "pages/trend/index",
+				"text": "趋势",
+				"iconPath": "static/tabtrend.png",
+				"selectedIconPath": "static/tabtrendactive.png"
+			},
+			{
+				"pagePath": "pages/profile/index",
+				"text": "我的",
+				"iconPath": "static/tabprofile.png",
+				"selectedIconPath": "static/tabprofileactive.png"
+			}
+
+
 		]
 	},
+	// "h5":{
+	// 	 "titleNView":{  
+	// 		 "autoBackButton":true,
+	// 	         "backButton":{
+	// 				 "color:":"white"
+	// 			 }           
+	// 	                }  
+	// },
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",
 		"navigationBarBackgroundColor": "#fff",
 		"backgroundColor": "#fff",
-		"onReachBottomDistance":100
+		"onReachBottomDistance": 100
 	},
-	
+
 	"condition": { //模式配置，仅开发期间生效
 		"current": 1, //当前激活的模式(list 的索引项)
 		"list": [{

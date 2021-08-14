@@ -80,6 +80,7 @@
 							</view>
 							<view class="line2 line" :style="{color:item2.color}">
 								{{item2.val}}
+						
 							</view>
 							<view class="line3 line">
 								{{item2.lowVal}}~{{item2.faultVal}}
@@ -120,34 +121,7 @@
 		data() {
 			return {
 				// 头部车间列表
-				switchList: [{
-						dictValue: '涂装线',
-						id: '1'
-					},
-					{
-						dictValue: '供漆',
-						id: '2'
-					}, {
-						dictValue: '机器人',
-						id: '3'
-					},
-					{
-						dictValue: '废弃处理',
-						id: '4'
-					},
-					{
-						dictValue: '冰水机房',
-						id: '5'
-					},
-					{
-						dictValue: '空压机',
-						id: '6'
-					},
-					{
-						dictValue: '安全环保',
-						id: '7'
-					}
-				],
+				switchList: [],
 				// 监控项
 				ismonitor: false,
 				// 是否有子列表
@@ -165,7 +139,7 @@
 				banner1,
 				banner2,
 				banner3,
-				swiperList: [banner1, banner2, banner3],
+				swiperList: [],
 				prolineList: ['产线1', '产线2', '产线3', '产线4'],
 				statusList: [{
 						icon: "../../static/iconnormal.png",
@@ -193,28 +167,7 @@
 
 					}
 				],
-				wrapperList1: [{
-						dictValue: "前处理预脱",
-						// toogleflag: false,
-						sites: [{
-								name: '1.喷淋管道压力',
-								val: '浮点数',
-								unit: 'Bar'
-							},
-							{
-								name: '2.频率',
-								val: '浮点数',
-								unit: 'Hz'
-							},
-							{
-								name: '3.电机温度',
-								val: '浮点数',
-								unit: 'A'
-							},
-						]
-					}
-
-				],
+				wrapperList1: [],
 				monitorList: [{
 						src: '../../static/banner1.png',
 						title: '监控视频监控视频监控视频监控视频监控视频监控视频',
@@ -352,7 +305,7 @@
 		// 头部切换栏列表
 		this.switchList=await this.api.getheadswitchList()
 		// isChild赋值
-		this.isChild=this.swiperList[0].isChild
+		this.isChild=this.switchList[0].isChild
 		this.switchHead(0,this.isChild)
 		},
 		onHide() {
@@ -376,17 +329,18 @@
 <style lang="scss" scoped>
 	.pages_index {
 		width: 100%;
-		// background-color: #2957C4;
+		background-color: #ecf0f1;
 		// padding-top: calc(var(--status-bar-height) + 10upx);
 
 		.container {
 			width: 100%;
-
+			padding-top: calc(var(--status-bar-height) + 92upx);
 			.hidden {
 				top: 0;
 				position: fixed;
 				z-index: 100;
-				background-color: #2957C4;
+				// background-color: #2957C4;
+				background-color: #0984e3;
 				height: calc(var(--status-bar-height) +86upx);
 				// overflow: hidden;
 				width: 100%;
@@ -395,7 +349,7 @@
 					// position: fixed;
 					// margin-top: calc(var(--status-bar-height) + 10upx);
 					// z-index: 100;
-					background-color: #2957C4;
+					background-color: #0984e3;
 					width: 100%;
 					padding:20upx 0;
 					// height: 76upx;
@@ -443,10 +397,12 @@
 			}
 
 			.swiper {
-				padding-top: calc(var(--status-bar-height) + 76upx);
-				width: 750upx;
-				height: 400upx;
-
+				margin:0 auto;
+				// margin-top: calc(var(--status-bar-height) + 86upx);
+				width: 710upx;
+				height: 300upx;
+				border-radius: 24upx;
+				overflow: hidden;
 				// padding:0 4upx;
 				swiper-item {
 					width: 100%;
@@ -555,13 +511,18 @@
 			}
 
 			.wrapper_list {
-				width: 690upx;
+				width: 710upx;
 				box-sizing: border-box;
-				margin: 30upx;
+				margin: 30upx 20upx;
 
 				.wrapper_item {
-					width: 690upx;
+					box-sizing: border-box;
+					width: 710upx;
 					margin-bottom: 40upx;
+					padding:20upx;
+					border-radius: 30upx;
+					background-color: #fff;
+					// box-shadow: 0 0 30upx rgba(0,0,0,.2);
 
 					.wrapper_item_title {
 						width: 100%;
@@ -601,6 +562,7 @@
 						background: #fff;
 						width: 100%;
 						box-sizing: border-box;
+						
 
 						// padding: 0 20upx;
 						.th {
@@ -621,12 +583,14 @@
 						.wrapper_item_item {
 							display: flex;
 							padding: 10upx 20upx;
+							
 
 						}
 
 						.line {
 							color: #333333;
 							font-size: 30upx;
+							
 						}
 
 						.line1 {

@@ -2,8 +2,14 @@
 <template>
 	<view class="pages_myreport"> 
 		<view class="container">
+			
 			<view class="hidden">
-				<view class="head_switch" style="margin-top: 100upx;">
+				<view class="navigation">
+					<view class="back" @click="back">
+						<image src="../../static/back.png" mode="widthFix"></image>
+					</view>
+				</view>
+				<view class="head_switch" style="margin-top: 0upx;">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
 						@click="switchHead(item.sort)" :class="{activeheader:item.sort==currentheaderID}">
 						{{item.dictValue}}
@@ -95,7 +101,12 @@
 				this.api.getReportDtl({id:this.formList[index].id}).then(res=>{
 					console.log(res);
 				})
-			}
+			},
+			back(){
+			uni.navigateBack({
+				
+			})}
+			
 			
 			
 		},
@@ -117,17 +128,21 @@
 <style lang="scss">
 	.pages_myreport{
 		width: 100%;
+		// background: #FAFAFA;
+		background-color: #ecf0f1;
+		min-height: 100vh;
 		.pic{
 			height: 400upx;
 			width: 100%;
 		}
 		.container{
 			width: 100%;
+			
 			.formList{
 				padding: 40upx 20upx 500upx 20upx;
 				box-sizing:border-box;
-				background: #FAFAFA;
-				margin-top: 80upx;
+				
+				margin-top: 164upx;
 				.listBody{
 					position: relative;
 					margin-top: 20upx;
@@ -138,7 +153,7 @@
 					font-size: 28upx;
 					color: #606060;
 					box-shadow: 0upx 2upx 4upx rgba(155, 155, 155, 0.08);
-					border-radius: 12upx;
+					border-radius: 20upx;
 					image{
 						position: absolute;
 						width:12upx ;
@@ -149,22 +164,38 @@
 					}
 				}
 				
+				
 			}
 			
 			.hidden{
+				
 				top: 0;
 				position: fixed;
 				z-index: 100;
 				background-color: #2957C4;
 				height: calc(var(--status-bar-height) +86upx);
 				width: 100%;
-			}
+				.navigation{
+					width: 100%;
+					// background-color: #2957C4;
+					background-color: #0984e3;
+					padding:20upx;
+					.back{
+						width:24upx ;
+						image{
+							width:24upx !important;
+						}
+					}
+				}
+		
 			.head_switch{
 				margin-top: calc(var(--status-bar-height) + 10upx);
-				background-color: #2957C4;
+				// background-color: #2957C4;
+				background-color: #0984e3;
 				width: 100%;
 				height: 76upx;
 				overflow-x: scroll;
+				overflow-y: hidden;
 				white-space: nowrap;
 				.switch_item{
 					padding: 18upx 23upx;
@@ -196,7 +227,10 @@
 				}
 				
 			}
-			
+			.head_switch::-webkit-scrollbar {
+				display: none;
+			}
+				}
 		}
 	}
 </style>

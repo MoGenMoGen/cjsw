@@ -1,6 +1,11 @@
 <template>
 	<!-- 我的消息主页-->
 	<view class="container">
+		<view class="navigation">
+			<view class="back" @click="back">
+				<image src="../../static/back.png" mode="widthFix"></image>
+			</view>
+		</view>
 		<view class="list">
 			<view class="item" v-for="item in infoList" :key='item.id' @click="toDetail(item.id)">
 				<view class="title">
@@ -81,29 +86,46 @@
 					title: '标题1',
 					content: '发动机市领导高房价绿色定功介绍了大概就是勒杜鹃',
 					date: '2020-01-03'
-				}
-				]
+				}]
 			};
 		},
-		methods:{
-			toDetail(id){
+		methods: {
+			toDetail(id) {
 				uni.navigateTo({
-					url:`/pages/message/detail?id=${id}`
+					url: `/pages/message/detail?id=${id}`
+				})
+			},
+			back() {
+				uni.navigateBack({
+
 				})
 			}
+
 		}
-		
+
 	}
 </script>
 
 <style lang="scss">
 	.container {
 		background-color: #fafafa;
-		;
-		height: 100vh;
-		padding: 36upx 22upx;
+		.navigation {
+			width: 100%;
+			// background-color: #2957C4;
+			background-color: #0984e3;
+			padding: 20upx;
+
+			.back {
+				width: 24upx;
+
+				image {
+					width: 24upx;
+				}
+			}
+		}
 
 		.list {
+			padding: 36upx 22upx;
 			.item {
 				margin-bottom: 20upx;
 				padding: 28upx 60upx;

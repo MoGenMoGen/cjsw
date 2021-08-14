@@ -2,7 +2,13 @@
 <template>
 	<view class="pages_reportform">
 		<view class="container">
+			
 			<view class="hidden">
+				<!-- <view class="navigation">
+					<view class="back" @click="back">
+						<image src="../../static/back.png" mode="widthFix"></image>
+					</view>
+				</view> -->
 				<view class="head_switch">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
 						@click="switchHead(item.sort)" :class="{activeheader:item.sort==currentheaderID}">
@@ -223,7 +229,12 @@
 				 uni.navigateTo({
 				 	url:`./detail?id=${this.formList[index].id}`
 				 })
-			}
+			},
+			// back(){
+			// uni.navigateBack({
+				
+			// })}
+			
 		},
 		onLoad() {
 			this.api.getReportType().then(res => {
@@ -243,14 +254,15 @@
 <style lang="scss" scoped>
 	.pages_reportform {
 		width: 100%;
-
+		background-color: #ecf0f1;
+		min-height: 100vh;
 		.container {
 			width: 100%;
 
 			.formList {
 				padding: 40upx 20upx 500upx 20upx;
 				box-sizing: border-box;
-				background: #FAFAFA;
+				
 				margin-top: 80upx;
 
 				.listBody {
@@ -281,20 +293,33 @@
 				top: 0;
 				position: fixed;
 				z-index: 100;
-				background-color: #2957C4;
+				background-color: #0984e3;
 				height: calc(var(--status-bar-height) +86upx);
 				// overflow: hidden;
 				width: 100%;
-
+				// .navigation{
+				// 	width: 100%;
+				// 	// background-color: #2957C4;
+				// 	background-color: #0984e3;
+				// 	padding:20upx;
+				// 	box-sizing: border-box;
+				// 	.back{
+				// 		width:24upx ;
+				// 		image{
+				// 			width:24upx !important;
+				// 		}
+				// 	}
+				// }
 				.head_switch {
 					// position: fixed;
 					margin-top: calc(var(--status-bar-height) + 10upx);
 					// z-index: 100;
-					background-color: #2957C4;
+					background-color: #0984e3;
 					width: 100%;
 					height: 76upx;
 					// padding-bottom: 12upx;
 					overflow-x: scroll;
+					overflow-y: hidden;
 					// display: flex;
 					// align-items: center;
 					white-space: nowrap;
@@ -329,6 +354,9 @@
 						opacity: 1;
 						border-radius: 6upx;
 					}
+				}
+				.head_switch::-webkit-scrollbar {
+					display: none;
 				}
 			}
 

@@ -55,7 +55,7 @@
 			<!-- <view class="chartBox">
 				<l-f2 ref="chart"></l-f2>
 			</view> -->
-			<view class="chartBox" @click="showTotal">
+			<view class="chartBox">
 				<l-echart ref="chart"></l-echart>
 			</view>
 			<!-- <view class="total" v-show="isTotal">
@@ -67,7 +67,7 @@
 		</view>
 
 		<!-- 与首页相同的内容区域 -->
-		<view class="wrapper_list" :style="{'padding-top': (isChild?'calc(352upx  + 500upx)':'calc(252upx + 500upx)')}">
+		<view class="wrapper_list" :style="{'margin-top': (isChild?'calc(182upx  + 300upx)':'calc(182upx + 300upx)')}">
 			<checkbox-group @change="checkboxChange">
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
 					<view class="wrapper_item_title" @click="toDetail(item1.id)">
@@ -133,10 +133,10 @@
 		data() {
 			return {
 				isTotal: false,
-				categories: ['温度类', '压力类', '温度类', '压力类', '温度类', '压力类'],
+				categories: [],
 				index1: -1,
 				index2: -5,
-				crafts: ['前处理预脱', '前处理主脱', '前处理水洗'],
+				crafts: [],
 				st: '',
 				et: '',
 				sites: "",
@@ -157,9 +157,7 @@
 				currentheaderIndex: 0,
 				// 当前子列表下标
 				currentChildIndex: 0,
-				wrapperList1: [
-
-				],
+				wrapperList1: [],
 
 				option: {
 					title: {
@@ -173,9 +171,9 @@
 					// },
 					tooltip: {
 						triggerOn: 'mousemove|click',
-						        trigger: 'axis'
+						        trigger: 'axis',
 						// triggerOn: 'none',
-						// position: ['10%', '20%']
+						position: ['10%', '0%']
 						// position: function(pt) {
 						// 	return [pt[0], 10];
 						// }
@@ -238,14 +236,20 @@
 							inside: true,
 							formatter: '{value}\n'
 						},
+						      max: function (value) {
+						    return value.max * 10;
+						},
+						     min: function (value) {
+						    return -value.max * 10;
+						},
 						z: 10
 					},
 					grid: {
-						// show:true,
-						top: 50,
+						show:true,
+						bottom: '20%',
 						left: 15,
 						right: 15,
-						height: 160
+						height: '80%'
 					},
 					// dataZoom: [{
 					// 	start: 0,
@@ -380,16 +384,29 @@
 			},
 			switchHead(index, child) {
 				console.log('switchhead');
+				// 清空选中编号
+				this.AddrCheckedArray=[];
+				// 清空折线图
+				this.option.series=[];
+				this.$refs.chart.setOption(this.option, true)
+				
 				this.currentheaderIndex = index
 				this.isChild = child;
 				// 内容列表
 				this.getwrapperList(this.switchList[this.currentheaderIndex].id, child)
 				// 轮播图
-				this.swiperList = this.switchList[this.currentheaderIndex].img.split(',')
+				// this.swiperList = this.switchList[this.currentheaderIndex].img.split(',')
+				
 
 
 			},
 			switchChildList(index) {
+				// 清空选中编号
+				this.AddrCheckedArray=[];
+				// 清空折线图
+				this.option.series=[];
+				this.$refs.chart.setOption(this.option, true)
+				
 				this.currentChildIndex = index;
 				this.getwrapperList(this.switchList[this.currentheaderIndex].id, 1)
 
@@ -431,9 +448,9 @@
 				//    }
 
 
-				if (e.detail.value.length >= 10) {
+				if (e.detail.value.length > 5) {
 					uni.showToast({
-						title: '最多不超过10条',
+						title: '最多不超过5条',
 						icon: "none",
 						duration: 2000
 					})
@@ -521,6 +538,8 @@
 					if (child) {
 						this.ChildListTitle = res.map(item => item.dictValue)
 						this.wrapperList1 = res[this.currentChildIndex].children
+						console.table(this.ChildListTitle);
+						console.log({childindex:this.currentChildIndex});
 					} else
 						this.wrapperList1 = res
 				})
@@ -570,6 +589,7 @@
 					this.option.series.push()
 					// console.log({option:this.option});
 					// 是否不跟之前设置的 option 进行合并。默认为 false。即表示合并
+					// 删除不合并
 					if (flag)
 						this.$refs.chart.setOption(this.option, true)
 					else
@@ -648,19 +668,19 @@
 				}
 				return chart;
 			});
-			setTimeout(() => {
-				this.$refs.chartAll.init(config => {
-					const {
-						canvas
-					} = config;
-					const chart = echarts.init(canvas, null, config);
-					chart.setOption(this.option);
-					window.onresize = () => {
-						chart.resize()
-					}
-					return chart;
-				});
-			}, 1000)
+			// setTimeout(() => {
+			// 	this.$refs.chartAll.init(config => {
+			// 		const {
+			// 			canvas
+			// 		} = config;
+			// 		const chart = echarts.init(canvas, null, config);
+			// 		chart.setOption(this.option);
+			// 		window.onresize = () => {
+			// 			chart.resize()
+			// 		}
+			// 		return chart;
+			// 	});
+			// }, 1000)
 
 
 
@@ -670,9 +690,9 @@
 <style lang="scss" scoped>
 	.pages_trend {
 		width: 100%;
-
+		background-color: #ecf0f1;
 		.fixed {
-
+		border-bottom:1px solid rgba(0,0,0,.1);
 			background-color: #FFF;
 			width: 100%;
 			position: fixed;
@@ -682,7 +702,8 @@
 			z-index: 100;
 
 			.hidden {
-				background-color: #2957C4;
+				// background-color: #2957C4;
+				background-color: #0984e3;
 				height: calc(var(--status-bar-height) +86upx);
 				// overflow: hidden;
 				width: 100%;
@@ -691,7 +712,8 @@
 					// position: fixed;
 					// margin-top: calc(var(--status-bar-height) + 10upx);
 					// z-index: 100;
-					background-color: #2957C4;
+					// background-color: #2957C4;
+					background-color: #0984e3;
 					width: 100%;
 					padding: 20upx 0;
 					// height: 76upx;
@@ -827,7 +849,6 @@
 					border-radius: 16upx;
 					display: flex;
 					align-items: center;
-					font-size: 14upx;
 
 					// justify-content: space-around;
 					text {
@@ -836,6 +857,7 @@
 						padding-left: 10upx;
 						overflow: hidden;
 						white-space: nowrap;
+						font-size: 28upx;
 						// text-overflow: ellipsis;
 					}
 
@@ -852,7 +874,7 @@
 
 			.chartBox {
 				// width: 600upx;
-				height: 500upx;
+				height: 300upx;
 
 
 			}
@@ -910,17 +932,20 @@
 
 
 		.wrapper_list {
-			// padding-top: calc(362upx + var(--status-bar-height) + 250px);
-			margin-top: var(--status-bar-height);
-			width: 690upx;
+			width: 710upx;
 			box-sizing: border-box;
-			margin: 30upx;
-
+			margin: 30upx 20upx;
+		padding-top:50upx;
 			.wrapper_item {
-				width: 690upx;
+				box-sizing: border-box;
+				width: 710upx;
 				margin-bottom: 40upx;
+				padding:20upx;
+				border-radius: 30upx;
+				background-color: #fff;
 
 				.wrapper_item_title {
+					// box-shadow: 0 0 3px rgba(0,0,0,.1);
 					width: 100%;
 					// box-sizing: border-box;
 					border-left: 8upx solid #5481EA;
@@ -963,14 +988,18 @@
 					.th {
 						display: flex;
 						padding: 10upx 20upx;
-						padding-left: 70upx;
+						// padding-left:50upx;
+						// padding-left: 70upx;
 
 						background: #C7E3FF;
 						color: #5481EA;
 
 						.line {
-							color: #333333;
-							font-size: 30upx;
+							text-align: center;
+							// padding-left: 40upx;
+							// box-sizing: border-box;
+							// color: #333333;
+							// font-size: 30upx;
 						}
 					}
 

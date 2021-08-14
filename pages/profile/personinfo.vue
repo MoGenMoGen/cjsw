@@ -2,9 +2,14 @@
 	<!-- 个人信息页面 -->
 	<view class="pages_personinfo">
 		<view class="container">
+			<view class="navigation">
+				<view class="back" @click="back">
+					<image src="../../static/back.png" mode="widthFix"></image>
+				</view>
+			</view>
 			<view class="avatarbox" @click="changeAvatar">
 				<view class="avatar">
-					<image :src="info.avatar" mode="aspectFill" />
+					<image :src="info.avatar?info.avatar:avatar" mode="aspectFill" />
 				</view>
 				<view class="avataredit">
 					<image :src="pen" mode="widthFix" v-show='ifEdit' class='pen'></image>
@@ -89,7 +94,7 @@
 				statuses: ['群众', '党员', '团员'],
 				sexes: ['男', '女'],
 				info: {
-					avatar,
+					
 
 				},
 			};
@@ -118,9 +123,20 @@
 			},
 			// 保存信息
 			save() {
-				this.ifEdit = false
-				console.log(this.info);
-				this.api.modidyPersoninfo(this.info).then(()=>{
+				this.postinfo=JSON.parse(JSON.stringify(this.info));
+				delete this.postinfo.deptId;
+				delete this.postinfo.account;
+				let phonetip =this.reg.checkPhone(this.postinfo.phone)
+				if(phonetip != 'ok')
+				{
+					uni.showToast({
+					  title: phonetip,
+					  icon: 'none',
+					  duration: 2000
+					})
+					return false;
+				}
+				this.api.modidyPersoninfo(this.postinfo).then(()=>{
 				  uni.showToast({
 				    title: '保存成功',
 				    icon: 'success',
@@ -130,6 +146,12 @@
 				})
 
 			},
+				
+			back(){
+			uni.navigateBack({
+				
+			})
+			}
 		},
 		async onLoad() {
 			this.info = await this.api.getPersoninfo()
@@ -169,16 +191,29 @@
 		display: flex;
 		justify-content: center;
 		padding: 20upx;
+		padding-top:0;
 		padding-bottom: 100upx;
 
 		.container {
+			border-radius:30upx ;
 			// height: calc(100vh - 88upx - 100upx);
 			width: 100%;
 			background: #fff;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-
+				
+			.navigation{
+				width: 100%;
+				background-color: #0984e3;
+				padding:20upx;
+				.back{
+					width:24upx ;
+					image{
+						width:24upx ;
+					}
+				}
+			}
 			.avatarbox {
 				position: relative;
 
