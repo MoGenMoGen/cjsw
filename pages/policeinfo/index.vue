@@ -143,15 +143,17 @@
 		//下拉页面刷新
 		onPullDownRefresh() {
 			this.info=[]
+			this.page.current=1
 			let page={
 				current:1,
 				size:10
 			}
+			
 			this.api.getapiList(page).then(res=>{
 				for(let i=0;i<res.records.length;i++){
 				    res.records[i].details=res.records[i].details.split(",")
 				}
-				this.info=res.records
+			this.info=[...this.info,...res.records]
 				this.total=res.total
 			})
 			setTimeout(function() {

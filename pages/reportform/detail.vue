@@ -60,7 +60,38 @@
 			back(){
 			uni.navigateBack({
 				
-			})}
+			})},
+			emptytChange() {
+				this.$message.success("清空方法回调")
+			},
+			submit(form, done) {
+				this.$message.success("当前数据" + JSON.stringify(this.obj))
+				console.log(564654,(Object.keys(this.obj)).length)
+				console.log(47897489798,Object.values(this.obj));
+				if((Object.keys(this.obj)).length<=this.option.column.length){
+					uni.showToast({
+						icon:"none",
+						title:"存在信息未填"
+					})
+				}
+				else
+				{
+					for(let i=0;i<Object.values(this.obj).length;i++)
+					{
+						if(Object.values(this.obj)[i]==""){
+							uni.showToast({
+								icon:"none",
+								title:"存在信息未填"
+							})
+						}
+					}
+				}
+				done()
+			},
+			error(err) {
+				this.$message.success('请查看控制台'); 
+				console.log("111", err)
+			},
 			
 		},
 		onLoad(e) {
