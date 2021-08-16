@@ -204,7 +204,11 @@
 			align-items: center;
 				
 			.navigation{
+				position: fixed;
+				top:0;
+				z-index: 100;
 				width: 100%;
+				box-sizing: border-box;
 				background-color: #0984e3;
 				padding:20upx;
 				.back{
@@ -215,6 +219,7 @@
 				}
 			}
 			.avatarbox {
+				margin-top:88upx;
 				position: relative;
 
 				.avatar {

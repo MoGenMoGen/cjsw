@@ -237,7 +237,7 @@
 		align-items: center;
 		// width: 650upx;
 		border: 1px solid #ccc;
-		border-radius: 30upx;
+		border-radius: 16upx;
 		// padding: 0 20upx;
 		// justify-content: space-between;
 		border: 2upx solid #1989FA;

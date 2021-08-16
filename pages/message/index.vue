@@ -110,6 +110,10 @@
 	.container {
 		background-color: #fafafa;
 		.navigation {
+			position: fixed;
+			top:0;
+			z-index: 100;
+			box-sizing: border-box;
 			width: 100%;
 			// background-color: #2957C4;
 			background-color: #0984e3;
@@ -125,6 +129,7 @@
 		}
 
 		.list {
+			margin-top: 88upx;
 			padding: 36upx 22upx;
 			.item {
 				margin-bottom: 20upx;

@@ -78,6 +78,9 @@
 		background-color: #ecf0f1;
 		padding-bottom: 160upx;
 		.navigation{
+			position: fixed;
+			z-index: 100;
+			top:0;
 			width: 100%;
 			background-color: #0984e3;
 			padding:20upx;
@@ -89,7 +92,7 @@
 			}
 		}
 		.swiper {
-			margin:20upx auto;
+			margin:108upx auto 20upx;
 			// margin-top: calc(var(--status-bar-height) + 86upx);
 			width: 710upx;
 			height: 300upx;

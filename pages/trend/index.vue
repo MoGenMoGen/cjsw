@@ -67,7 +67,7 @@
 		</view>
 
 		<!-- 与首页相同的内容区域 -->
-		<view class="wrapper_list" :style="{'margin-top': (isChild?'calc(182upx  + 300upx)':'calc(182upx + 300upx)')}">
+		<view class="wrapper_list" :style="{'margin-top': (isChild?'calc(282upx  + 300upx)':'calc(182upx + 300upx)')}">
 			<checkbox-group @change="checkboxChange">
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
 					<view class="wrapper_item_title" @click="toDetail(item1.id,item1.img)">
@@ -691,6 +691,7 @@
 	.pages_trend {
 		width: 100%;
 		background-color: #ecf0f1;
+		min-height: 100vh;
 		.fixed {
 		border-bottom:1px solid rgba(0,0,0,.1);
 			background-color: #FFF;
