@@ -1,3 +1,4 @@
+<!-- 报警信息 -->
 <template>
 	<view>
 		<!-- <view class="window" v-if="isShowWindow==true">
@@ -8,8 +9,8 @@
 				x
 			</view>
 			<view class="ListTitle">
-				{{title}}
-			</view>
+				{{ti2123tle}}
+			</view>1
 			
 		</view> -->
 		<view class="detail" v-if="isShowWindow==true">
@@ -27,9 +28,8 @@
 				<image :src=item mode=""></image>
 			</view>
 		</swiper-item>
-	
 	</swiper>
-	<view class="Header" style="position: sticky;top:470upx ;">
+	<view class="Header" style="position: sticky;top:470upx ; z-index: 100;">
 		<view class="item">
 			时间/日期
 		</view>
