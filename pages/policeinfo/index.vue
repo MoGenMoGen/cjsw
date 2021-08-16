@@ -130,12 +130,14 @@
 				size:10
 			}
 			this.api.getapiList(page).then(res=>{
+				for(let i=0;i<res.records.length;i++){
+			        res.records[i].details=res.records[i].details.split(",")
+				}
 				this.info=res.records
+				
 				this.total=res.total
 				console.log("111",this.total);
-				for(let i=0;i<this.info.length;i++){
-					this.info[i].details=this.info[i].details.split(",")
-				}
+				
 			})
 		},
 		//下拉页面刷新
@@ -146,11 +148,11 @@
 				size:10
 			}
 			this.api.getapiList(page).then(res=>{
-				this.info=res.records
-				console.log("111",this.info);
-				for(let i=0;i<this.info.length;i++){
-					this.info[i].details=this.info[i].details.split(",")
+				for(let i=0;i<res.records.length;i++){
+				    res.records[i].details=res.records[i].details.split(",")
 				}
+				this.info=res.records
+				this.total=res.total
 			})
 			setTimeout(function() {
 				uni.stopPullDownRefresh()
@@ -162,14 +164,21 @@
 		onReachBottom() {
 			console.log("触底");
 			if(this.total>this.info.length){
-				this.api.getapiList(page).then(res=>{
-					this.info=res.records
-					console.log("111",this.info);
-					for(let i=0;i<this.info.length;i++){
-						this.info[i].details=this.info[i].details.split(",")
+			
+				this.page.current+=1
+				console.log(5555,this.page);
+				this.api.getapiList(this.page).then(res=>{
+					for(let i=0;i<res.records.length;i++){
+					    res.records[i].details=res.records[i].details.split(",")
 					}
+					this.info=[...this.info,...res.records]
+					console.log("111",this.info);
+					
 				})
+			
+				
 			}
+				
 		}
 	}
 </script>
