@@ -23,7 +23,7 @@
 			<!-- 表单 结束 -->
 		</view>
 		<!-- 忘记密码 -->
-		<text class="forget_pass" @click="forget">忘记密码</text>
+		<!-- <text class="forget_pass" @click="forget">忘记密码</text> -->
 	</view>
 </template>
 
@@ -31,14 +31,14 @@
 	import {
 		md5
 	} from '../../utils/md5.js';
-	import bg from "static/banner1.png";
+	// import bg from "static/banner1.png";
 	import phoneimg from "static/loginPhone.png";
 	import passimg from "static/loginPass.png";
 	export default {
 		data() {
 			return {
 				// 图片
-				bg,
+				bg:'',
 				phoneimg,
 				passimg,
 				info: {
@@ -49,6 +49,7 @@
 				}, //用户信息
 			};
 		},
+		
 		methods: {
 			async summit() {
 				if (!this.info.username) {
@@ -112,6 +113,11 @@
 					}
 				})
 			}
+		},
+		async onLoad(){
+			let data=await this.api.getLoginBg()
+			this.bg = data.records[0].img;
+			console.log(11111,data);
 		}
 
 

@@ -179,9 +179,9 @@
 					width: 100%;
 					// background-color: #2957C4;
 					background-color: #0984e3;
-					padding:20upx;
 					.back{
 						width:24upx ;
+						padding: 20upx 30upx;
 						image{
 							width:24upx !important;
 						}

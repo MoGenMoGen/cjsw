@@ -104,7 +104,7 @@
 			async changeAvatar() {
 				if (this.ifEdit) {
 					// 图片上传接口
-					let avatar = await this.api.chooseImages('', 1)
+					let avatar = await this.api.chooseImages('',1)
 					console.log(1111111);
 					let res = await this.api.upLoad(avatar[0])
 					this.info.avatar=res
@@ -210,8 +210,8 @@
 				width: 100%;
 				box-sizing: border-box;
 				background-color: #0984e3;
-				padding:20upx;
 				.back{
+					padding:20upx 30upx;
 					width:24upx ;
 					image{
 						width:24upx ;

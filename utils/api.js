@@ -278,7 +278,7 @@ class api {
 			uni.chooseImage({
 				count: max || 9, //一次最多可以选择的图片张数
 				sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-				sourceType: type || ['camera', 'album'], // 可以指定来源是相册还是相机，默认二者都有
+				// sourceType: type ||['album'], // 可以指定来源是相册还是相机，默认二者都有
 				// 可以指定来源是相册还是相机，默认二者都有
 
 				success: function(res) {
@@ -348,8 +348,8 @@ class api {
 		})
 	}
 
-	// 首页轮播图
-	getbanner() {
+	// 登录轮播图
+	getLoginBg() {
 		return new Promise((resolve, reject) => {
 			get("/blade-banner/banner/list?type=mob-index", {}, {
 				'Content-Type': 'application/json'

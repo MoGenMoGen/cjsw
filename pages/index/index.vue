@@ -329,6 +329,7 @@
 <style lang="scss" scoped>
 	.pages_index {
 		width: 100%;
+		min-height: 100vh;
 		background-color: #ecf0f1;
 		// padding-top: calc(var(--status-bar-height) + 10upx);
 

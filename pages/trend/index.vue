@@ -100,7 +100,7 @@
 							<view class="line1 line">
 								{{item2.name}}
 							</view>
-							<view class="line2 line">
+							<view class="line2 line" :style="{color:item2.color}">
 								{{item2.val}}
 							</view>
 							<view class="line3 line">

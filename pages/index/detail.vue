@@ -83,8 +83,8 @@
 			top:0;
 			width: 100%;
 			background-color: #0984e3;
-			padding:20upx;
 			.back{
+				padding:20upx 30upx;
 				width:24upx ;
 				image{
 					width:24upx ;
