@@ -30,7 +30,7 @@ function get(url, data, header, loading) {
 			// url: config.serverURL + url,
 			url: '/api' + url,
 			timeout: 30000,
-			timeout:15000,
+			timeout: 15000,
 			success: function(res) {
 				console.log('get success', res)
 				// 登录失效重新登录
@@ -45,7 +45,7 @@ function get(url, data, header, loading) {
 						uni.reLaunch({
 							url: '/pages/login/index'
 						})
-					}, 2000)
+					}, 100)
 
 
 				} else if (res.data.code == '200')
@@ -106,7 +106,7 @@ function post(url, data, header, loading) {
 			url: '/api' + url,
 
 			timeout: 60000,
-			timeout:15000,
+			timeout: 15000,
 			success: function(res) {
 				console.log('post success', res)
 				// 登录失效重新登录
@@ -116,11 +116,15 @@ function post(url, data, header, loading) {
 						duration: 2000,
 						icon: 'none',
 						complete() {
-							uni.reLaunch({
-								url: '/pages/login/index'
-							})
+
 						}
 					})
+					setTimeout(()=>{
+							uni.reLaunch({
+						url: '/pages/login/index'
+					})
+					},100)
+				
 
 				} else if (res.data.code == '200')
 					resolve(res.data);
@@ -171,7 +175,7 @@ function loginpost(url, data, header) {
 			// url: config.serverURL + url,
 			url: '/api' + url,
 			timeout: 60000,
-			timeout:15000,
+			timeout: 15000,
 			success: function(res) {
 				console.log('post success', res)
 				// 400账号或密码错误
@@ -441,7 +445,7 @@ class api {
 			});
 		})
 	}
-	
+
 	// 个人信息
 	getPersoninfo() {
 		return new Promise((resolve, reject) => {
@@ -463,7 +467,7 @@ class api {
 		})
 	}
 	//获取报表分类信息
-	getReportType(data){
+	getReportType(data) {
 		return new Promise((resolve, reject) => {
 			get("/blade-mh/reportQuery/reportType", {}, {
 				'Content-Type': 'application/json'
@@ -473,7 +477,7 @@ class api {
 		})
 	}
 	//获取报表列表信息
-	getReportList(data){
+	getReportList(data) {
 		return new Promise((resolve, reject) => {
 			get("/blade-mh/reportQuery/list", data, {
 				'Content-Type': 'application/json'
@@ -483,7 +487,7 @@ class api {
 		})
 	}
 	//获取报表内容信息
-	getReportDtl(data){
+	getReportDtl(data) {
 		return new Promise((resolve, reject) => {
 			get("/blade-mh/reportQuery/reportDtl", data, {
 				'Content-Type': 'application/json'

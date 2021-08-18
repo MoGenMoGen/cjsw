@@ -33,13 +33,13 @@
 						<image :src="arrow2" mode="widthFix" />
 					</view>
 				</view> -->
-				<view class="item" >
+				<view class="item" @click='toechart'>
 					<view class="item_icon">
 						<image :src="phone" mode="widthFix" />
-						<text>联系电话</text>
+						<text>测试横屏图表</text>
 					</view>
 					<view class="righticon">
-						<text>{{userdata.phone}}</text>
+						<text>图表</text>
 						<image :src="arrow2" mode="widthFix" />
 					</view>
 				</view>
@@ -116,6 +116,11 @@
 			
 		},
 		methods: {
+			toechart(){
+				uni.navigateTo({
+					url:'/pages/profile/echarts'
+				})
+			},
 			// 进入个人中心
 			goToperson(){
 				uni.navigateTo({

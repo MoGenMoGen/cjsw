@@ -5,10 +5,13 @@
 			<view class="back" @click="back">
 				<image src="../../static/back.png" mode="widthFix"></image>
 			</view>
+			<view class="title">
+				{{title}}
+			</view>
 		</view>
-		
+
 		<!-- 轮播图 开始 -->
-		<swiper class="swiper" :indicator-dots="true" autoplay="true" interval="4000" duration="500"
+		<swiper class="swiper" :indicator-dots="false" autoplay="true" interval="4000" duration="500"
 			indicator-color="white" indicator-active-color="red">
 			<swiper-item v-for="(item, index) in swiperList" :key="index">
 				<image :src="item" mode="aspectFill" />
@@ -52,21 +55,25 @@
 	export default {
 		data() {
 			return {
-				sites: [
-				],
-				swiperList:[]
+				title: '',
+				sites: [],
+				swiperList: []
 			};
 		},
-		methods:{
-			back(){
-			uni.navigateBack({
-				
-			})
+		methods: {
+			back() {
+				uni.navigateBack({
+
+				})
 			}
 		},
-		async onLoad(e){
+		async onLoad(e) {
+			console.log(e);
+			this.title = e.title;
 			this.swiperList = e.banner.split(',')
-			this.sites=await this.api.getsiteDetail({id:e.id})
+			this.sites = await this.api.getsiteDetail({
+				id: e.id
+			})
 		}
 	}
 </script>
@@ -77,32 +84,51 @@
 		position: relative;
 		background-color: #ecf0f1;
 		padding-bottom: 160upx;
-		.navigation{
+		padding-top: 56px;
+		min-height: 100vh;
+		.navigation {
 			position: fixed;
 			z-index: 100;
-			top:0;
+			top: 0;
 			width: 100%;
 			background-color: #0984e3;
-			.back{
-				padding:20upx 30upx;
-				width:24upx ;
-				image{
-					width:24upx ;
+			padding-right: 84upx;
+			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+
+			.back {
+				padding: 20upx 30upx;
+				width: 24upx;
+
+				image {
+					width: 24upx;
 				}
 			}
+
+			.title {
+				flex: 1;
+				text-align: center;
+				height: 92upx;
+				line-height: 92upx;
+				color: #fff;
+
+			}
 		}
+
 		.swiper {
-			margin:108upx auto 20upx;
+			margin: 0upx auto 20upx;
 			// margin-top: calc(var(--status-bar-height) + 86upx);
 			width: 710upx;
 			height: 300upx;
 			border-radius: 24upx;
 			overflow: hidden;
+
 			// padding:0 4upx;
 			swiper-item {
 				width: 100%;
 				height: 400upx;
-		
+
 				image {
 					box-sizing: border-box;
 					width: 100%;
@@ -111,8 +137,8 @@
 				}
 			}
 		}
-		
-		
+
+
 		// .back{
 		// 	background-color: red;
 		// 	position: absolute;
@@ -125,20 +151,21 @@
 		.banner {
 			width: 710upx;
 			height: 300upx;
-			margin:10upx 20upx;
+			margin: 10upx 20upx;
 			border-radius: 24upx;
 		}
 
 		.wrapper_item_container {
 			width: 710upx;
 			border-radius: 30upx;
-			padding:30upx 20upx;
+			padding: 30upx 20upx;
 			// margin-top:60upx;
 			background: #fff;
 			// width: 100%;
 			box-sizing: border-box;
 			// padding:60upx 40upx 160upx;
-			margin:20upx 20upx 0upx;
+			margin: 20upx 20upx 0upx;
+
 			.th {
 				display: flex;
 				padding: 10upx 20upx;

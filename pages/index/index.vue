@@ -14,7 +14,7 @@
 			</view>
 			<!-- 头部切换栏 结束 -->
 			<!-- 轮播图 开始 -->
-			<swiper class="swiper" :indicator-dots="true" autoplay="true" interval="4000" duration="500"
+			<swiper class="swiper" :indicator-dots="false" autoplay="true" interval="4000" duration="500"
 				indicator-color="white" indicator-active-color="red">
 				<swiper-item v-for="(item, index) in swiperList" :key="index">
 					<image :src="item" mode="aspectFill" />
@@ -51,10 +51,13 @@
 			<!-- 内容列表 开始 -->
 			<view class="wrapper_list" v-if='!ismonitor' >
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
-					@click="toDetail(item1.id,item1.img)">
+					@click="toDetail(item1.id,item1.img,item1.dictValue)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
-						{{item1.dictValue}}
+						<view class="title_text">
+							{{item1.dictValue}}
+						</view>
 						<view class="arrow">详情
+							
 							<image src="../../static/arrow1.png" mode="widthFix"></image>
 						</view>
 						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
@@ -282,11 +285,11 @@
 
 
 			},
-			toDetail(id,banner) {
-				uni.navigateTo({
-					url: `/pages/index/detail?id=${id}&banner=${banner}`
-				})
-			},
+		toDetail(id, banner, title) {
+			uni.navigateTo({
+				url: `/pages/index/detail?id=${id}&banner=${banner}&title=${title}`
+			})
+		},
 
 
 
@@ -527,7 +530,8 @@
 
 					.wrapper_item_title {
 						width: 100%;
-						// box-sizing: border-box;
+						// padding:0 20upx;
+						box-sizing: border-box;
 						border-left: 8upx solid #5481EA;
 						color: #5481EA;
 						padding-left: 20upx;
@@ -536,11 +540,15 @@
 						display: flex;
 						align-items: center;
 						justify-content: space-between;
-						height: 50upx;
+						height: 34upx;
 						font-size: 32upx;
+						.title_text{
+							color: #5481EA;
+							font-size: 32upx;
+						}
 
 						.arrow {
-							padding-right: 20upx;
+							// padding-right: 20upx;
 							width: 100upx;
 							color: #5481EA;
 							font-size: 32upx;

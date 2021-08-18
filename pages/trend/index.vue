@@ -47,10 +47,23 @@
 
 				</picker>
 				<!-- </view> -->
-				<view style="width:350upx">
-					<choosedate @func="getdateA" :CheckedCount='AddrCheckedArray.length'></choosedate>
+				<view class="timebox">
+					<!-- <choosedate @func="getdateA" :CheckedCount='AddrCheckedArray.length'></choosedate> -->
+					<u-picker v-model="show1" mode="time" :params="params" @confirm="confirm1"></u-picker>
+					<view class="time" @click='show1=true'>
+						{{starttime}}
+					</view>
+					~
+					<u-picker v-model="show2" mode="time" :params="params" @confirm="confirm2"></u-picker>
+					<view class="time" @click='show2=true'>
+						{{endtime}}
+					</view>
 				</view>
 			</view>
+			<!-- <view>
+				<u-picker v-model="show" mode="time" :params="params" @confirm="confirm"></u-picker>
+				
+			</view> -->
 			<!-- 下拉结束-->
 			<!-- <view class="chartBox">
 				<l-f2 ref="chart"></l-f2>
@@ -67,11 +80,13 @@
 		</view>
 
 		<!-- 与首页相同的内容区域 -->
-		<view class="wrapper_list" :style="{'margin-top': (isChild?'calc(282upx  + 300upx)':'calc(182upx + 300upx)')}">
+		<view class="wrapper_list" :style="{'margin-top': (isChild?'calc(256upx  + 300upx)':'calc(156upx + 300upx)')}">
 			<checkbox-group @change="checkboxChange">
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
-					<view class="wrapper_item_title" @click="toDetail(item1.id,item1.img)">
-						{{item1.dictValue}}
+					<view class="wrapper_item_title" @click="toDetail(item1.id,item1.img,item1.dictValue)">
+						<view class="title_text">
+							{{item1.dictValue}}
+						</view>
 						<view class="arrow">详情
 							<image src="../../static/arrow1.png" mode="widthFix"></image>
 						</view>
@@ -132,11 +147,25 @@
 	export default {
 		data() {
 			return {
+				// 页面显示的开始结束时间
+				starttime: 'ff',
+				endtime: 'ff',
+				params: {
+					year: true,
+					month: true,
+					day: true,
+					hour: true,
+					minute: true,
+					second: true
+				},
+				show1: false,
+				show2: false,
 				isTotal: false,
 				categories: [],
 				index1: -1,
 				index2: -5,
 				crafts: [],
+				// 传给后台的开始结束时间
 				st: '',
 				et: '',
 				sites: "",
@@ -171,7 +200,8 @@
 					// },
 					tooltip: {
 						triggerOn: 'mousemove|click',
-						        trigger: 'axis',
+						// triggerOn: 'click',
+						trigger: 'axis',
 						// triggerOn: 'none',
 						position: ['10%', '0%']
 						// position: function(pt) {
@@ -236,34 +266,38 @@
 							inside: true,
 							formatter: '{value}\n'
 						},
-						      max: function (value) {
-						    return value.max * 10;
+						max: function(value) {
+							return value.max * 10;
 						},
-						     min: function (value) {
-						    return -value.max * 10;
+						min: function(value) {
+							return -value.max * 10;
 						},
 						z: 10
 					},
 					grid: {
-						show:true,
+						show: true,
 						bottom: '20%',
 						left: 15,
 						right: 15,
 						height: '80%'
 					},
-					// dataZoom: [{
-					// 	start: 0,
-					// 	end: 10,
-					// }, {
+					dataZoom: [{
+						type: 'inside',
+						start: 0,
+						end: 10,
+						orient:'horizontal'
+					},
+					// {
 					// 	type: 'inside',
 					// 	start: 0,
 					// 	end: 10,
 					// 	top: '3%'
+					// },
+					],
+					// dataZoom: [{
+					// 	type: 'inside',
+					// 	throttle: 0
 					// }],
-					dataZoom: [{
-						type: 'inside',
-						throttle: 0
-					}],
 					series: [
 						// {
 						// 	name: '模拟数据',
@@ -341,7 +375,56 @@
 		},
 
 		methods: {
-
+			confirm1(e) {
+				let len = this.AddrCheckedArray.length;
+				if (moment(`${this.et}`).valueOf() < moment(
+						`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf()) {
+					uni.showToast({
+						title: '开始时间需小于结束时间',
+						icon: "none",
+						duration: 2000
+					})
+					return false;
+				} else if ((moment(`${this.et}`).valueOf() - moment(
+							`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`)
+						.valueOf()) * len > 129600000) {
+					uni.showToast({
+						title: '总时间需小于36h',
+						icon: "none",
+						duration: 2000
+					})
+					return false;
+				}
+				this.st = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
+				this.starttime = `${e.month}-${e.day} ${e.hour}:${e.minute}`
+				if (this.sites)
+					this.getsiteValList()
+			},
+			confirm2(e) {
+				let len = this.AddrCheckedArray.length;
+				if (moment(`${this.st}`).valueOf() > moment(
+						`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf()) {
+					uni.showToast({
+						title: '开始时间需小于结束时间',
+						icon: "none",
+						duration: 2000
+					})
+					return false;
+				} else if ((moment(`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf() - moment(
+							`${this.st}`)
+						.valueOf()) * len > 129600000) {
+					uni.showToast({
+						title: '总时间需小于36h',
+						icon: "none",
+						duration: 2000
+					})
+					return false;
+				}
+				this.et = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
+				this.endtime = `${e.month}-${e.day} ${e.hour}:${e.minute}`
+				if (this.sites)
+					this.getsiteValList()
+			},
 			showTotal() {
 				console.log(11);
 				this.isTotal = true
@@ -385,28 +468,28 @@
 			switchHead(index, child) {
 				console.log('switchhead');
 				// 清空选中编号
-				this.AddrCheckedArray=[];
+				this.AddrCheckedArray = [];
 				// 清空折线图
-				this.option.series=[];
+				this.option.series = [];
 				this.$refs.chart.setOption(this.option, true)
-				
+
 				this.currentheaderIndex = index
 				this.isChild = child;
 				// 内容列表
 				this.getwrapperList(this.switchList[this.currentheaderIndex].id, child)
 				// 轮播图
 				// this.swiperList = this.switchList[this.currentheaderIndex].img.split(',')
-				
+
 
 
 			},
 			switchChildList(index) {
 				// 清空选中编号
-				this.AddrCheckedArray=[];
+				this.AddrCheckedArray = [];
 				// 清空折线图
-				this.option.series=[];
+				this.option.series = [];
 				this.$refs.chart.setOption(this.option, true)
-				
+
 				this.currentChildIndex = index;
 				this.getwrapperList(this.switchList[this.currentheaderIndex].id, 1)
 
@@ -429,9 +512,9 @@
 				this.et = a.endDate;
 				this.getsiteValList()
 			},
-			toDetail(id,banner) {
+			toDetail(id, banner, title) {
 				uni.navigateTo({
-					url: `/pages/index/detail?id=${id}&banner=${banner}`
+					url: `/pages/index/detail?id=${id}&banner=${banner}&title=${title}`
 				})
 			},
 			checkboxChange: function(e) {
@@ -446,11 +529,19 @@
 				//            this.$set(item,'checked',false)
 				//        }
 				//    }
+				let len = e.detail.value.length;
 
-
-				if (e.detail.value.length > 5) {
+				if (len > 5) {
 					uni.showToast({
 						title: '最多不超过5条',
+						icon: "none",
+						duration: 2000
+					})
+					return false;
+				} else if ((moment(`${this.et}`).valueOf() - moment(`${this.st}`)
+						.valueOf()) * len > 129600000) {
+					uni.showToast({
+						title: '总时间需小于36h',
 						icon: "none",
 						duration: 2000
 					})
@@ -539,7 +630,9 @@
 						this.ChildListTitle = res.map(item => item.dictValue)
 						this.wrapperList1 = res[this.currentChildIndex].children
 						console.table(this.ChildListTitle);
-						console.log({childindex:this.currentChildIndex});
+						console.log({
+							childindex: this.currentChildIndex
+						});
 					} else
 						this.wrapperList1 = res
 				})
@@ -615,7 +708,10 @@
 		components: {
 			choosedate
 		},
-
+		onReady() {
+			this.starttime = moment().format("MM-DD 00:00");
+			this.endtime = moment().format("MM-DD HH:mm");
+		},
 		async onLoad() {
 			console.log('onload');
 			this.st = `${moment().format("YYYY-MM-DD")} 00:00:00`
@@ -692,8 +788,9 @@
 		width: 100%;
 		background-color: #ecf0f1;
 		min-height: 100vh;
+
 		.fixed {
-		border-bottom:1px solid rgba(0,0,0,.1);
+			border-bottom: 1px solid rgba(0, 0, 0, .1);
 			background-color: #FFF;
 			width: 100%;
 			position: fixed;
@@ -868,6 +965,22 @@
 					}
 				}
 
+				.timebox {
+					width: 350upx;
+					border-radius: 16upx;
+					border: 2upx solid #1989FA;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					.time {
+						height: 60upx;
+						line-height: 60upx;
+						// font-size: 32upx;
+						font-size: 28upx;
+					}
+				}
+
 				// }
 			}
 
@@ -936,12 +1049,13 @@
 			width: 710upx;
 			box-sizing: border-box;
 			margin: 30upx 20upx;
-		padding-top:50upx;
+			padding-top: 50upx;
+
 			.wrapper_item {
 				box-sizing: border-box;
 				width: 710upx;
 				margin-bottom: 40upx;
-				padding:20upx;
+				padding: 20upx;
 				border-radius: 30upx;
 				background-color: #fff;
 
@@ -957,8 +1071,14 @@
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
-					height: 50upx;
+					height: 34upx;
 					font-size: 32upx;
+
+					.title_text {
+						color: #5481EA;
+						font-size: 32upx;
+					}
+
 
 					.arrow {
 						padding-right: 20upx;
