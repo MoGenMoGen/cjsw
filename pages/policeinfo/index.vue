@@ -22,9 +22,9 @@
 				{{item}}
 			</view>
 		</view>
-	<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" v-if="isShowWindow==false" style="position: sticky; top: 0;">
+	<swiper class="swiper" :indicator-dots="false" :autoplay="true" :interval="3000" :duration="1000" v-if="isShowWindow==false" style="position: sticky; top: 0;">
 		<swiper-item v-for="(item,index) in swiperList" :key="index">
-			<view class="swiper-item">
+			<view class="swiper-item" @click="enlarge(index)">
 				<image :src=item mode=""></image>
 			</view>
 		</swiper-item>
@@ -59,6 +59,7 @@
 		data() {
 			return {
 				isShowWindow:false,
+				rotate:false,
 				currentId:-1,
 				title:"",
 				detail:[],
@@ -122,7 +123,20 @@
 		windowDelete(){
 			this.isShowWindow=false
 			
+		},
+		enlarge(index){
+			console.log(4456564);
+		
+			uni.previewImage({
+				current:this.swiperList[index],
+				
+				urls:this.swiperList,
+				indicator:"default"
+				
+			})
+			
 		}
+		
 		},
 		onLoad() {
 			let page={
@@ -253,6 +267,9 @@
 				width: 100%;
 				height: 100%;
 			}
+		}
+		.zhuan{
+			 transform:rotate(-90deg);
 		}
 	}
 	.Header{

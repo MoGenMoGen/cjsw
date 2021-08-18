@@ -9,6 +9,9 @@
 			{{name}}
 		</view>
 		<view class="para">
+			<view class="date" style="font-size: 30upx;">
+				当前日期：{{date}}
+			</view>
 			<view class="paraList" v-for="(item,index) in para " :key="index">
 				{{item}}
 			</view>
@@ -37,6 +40,7 @@
 	export default {
 		data() {
 			return {
+				date:"",
 				obj: {
 					id: 123123
 				},
@@ -66,9 +70,10 @@
 			},
 			submit(form, done) {
 				this.$message.success("当前数据" + JSON.stringify(this.obj))
+				this.obj.date=this.date
 				console.log(564654,(Object.keys(this.obj)).length)
 				console.log(47897489798,Object.values(this.obj));
-				if((Object.keys(this.obj)).length<=this.option.column.length){
+				if((Object.keys(this.obj)).length<=(this.option.column.length+2)){
 					uni.showToast({
 						icon:"none",
 						title:"存在信息未填"
@@ -92,6 +97,25 @@
 				this.$message.success('请查看控制台'); 
 				console.log("111", err)
 			},
+			dateFormat(fmt, date) {
+				let ret;
+				const opt = {
+					"Y+": date.getFullYear().toString(), // 年
+					"m+": (date.getMonth() + 1).toString(), // 月
+					"d+": date.getDate().toString(), // 日
+					"H+": date.getHours().toString(), // 时
+					"M+": date.getMinutes().toString(), // 分
+					"S+": date.getSeconds().toString() // 秒
+					// 有其他格式化字符需求可以继续添加，必须转化成字符串
+				};
+				for (let k in opt) {
+					ret = new RegExp("(" + k + ")").exec(fmt);
+					if (ret) {
+						fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+					};
+				};
+				return fmt;
+			},
 			
 		},
 		onLoad(e) {
@@ -111,6 +135,7 @@
 				this.name=this.detailList.name
 				this.option.column=this.content.column
 			})
+			this.date=this.dateFormat("YYYY-mm-dd HH:MM", new Date())
 		},
 
 	}
@@ -118,7 +143,7 @@
 
 <style lang="scss" scoped>
 	.pages_reportformDetail{
-		width: 100%;
+ 		width: 100%;
 		.navigation{
 			width: 100%;
 			// background-color: #2957C4;
@@ -132,6 +157,7 @@
 			}
 		}
 		.title{
+			margin-top: 50upx;
 			width: 100%;
 			text-align: center;
 			font-size: 32upx;
