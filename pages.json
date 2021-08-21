@@ -143,6 +143,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/profile/testf2",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"tabBar": {
 		"custom": false,

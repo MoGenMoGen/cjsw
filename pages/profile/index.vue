@@ -1,8 +1,8 @@
 <template>
 	<!-- 我的页面 -->
 	<view class="pages_profile_tab">
-		<view class="profile_container">
 
+		<view class="profile_container">
 			<!-- 个人中心头部背景部分 开始 -->
 			<view class="profile_info_bg">
 				<view class="profile_info" @click="goToperson()">
@@ -22,9 +22,10 @@
 				</view>
 			</view>
 			<!-- 个人中心头部背景部分 结束 -->
+
 			<!-- 功能列表 开始 -->
 			<view class="list">
-				<!-- <view class="item"  @click="goToperson(userinfo.user_id)">
+				<!-- 	<view class="item"  @click="goToperson(userinfo.user_id)">
 					<view class="item_icon">
 						<image :src="personinfo" mode="widthFix" />
 						<text>个人信息</text>
@@ -37,6 +38,16 @@
 					<view class="item_icon">
 						<image :src="phone" mode="widthFix" />
 						<text>测试横屏图表</text>
+					</view>
+					<view class="righticon">
+						<text>图表</text>
+						<image :src="arrow2" mode="widthFix" />
+					</view>
+				</view>
+				<view class="item" @click='tof2'>
+					<view class="item_icon">
+						<image :src="phone" mode="widthFix" />
+						<text>支付宝图表</text>
 					</view>
 					<view class="righticon">
 						<text>图表</text>
@@ -94,6 +105,7 @@
 	export default {
 		data() {
 			return {
+				showf2: false,
 				current: 0, //tab下标
 				avatar,
 				personinfo,
@@ -109,25 +121,30 @@
 					phone: "12345678901",
 					deptId: "宁波聚联科技有限公司"
 				},
-				
+
 			}
 		},
 		computed: {
-			
+
 		},
 		methods: {
-			toechart(){
+			tof2() {
 				uni.navigateTo({
-					url:'/pages/profile/echarts'
+					url: '/pages/profile/testf2'
+				})
+			},
+			toechart() {
+				uni.navigateTo({
+					url: '/pages/profile/echarts'
 				})
 			},
 			// 进入个人中心
-			goToperson(){
+			goToperson() {
 				uni.navigateTo({
-					url:'/pages/profile/personinfo'
+					url: '/pages/profile/personinfo'
 				})
 			},
-			
+
 			// 进入修改密码
 			goTomodifyPass() {
 				uni.navigateTo({
@@ -135,27 +152,29 @@
 				});
 			},
 			// 进入我的报表
-			
-			toReport(){
+
+			toReport() {
 				uni.navigateTo({
-					url:'/pages/myreport/index'
+					url: '/pages/myreport/index'
 				})
 			},
 			//进入我的消息
-			toMessage(){
+			toMessage() {
 				uni.navigateTo({
-					url:'/pages/message/index'
+					url: '/pages/message/index'
 				})
 			},
-			 
+
 			// 更换头像
 			async changeAvatar() {
 				// 图片上传接口
-				let avatar = await this.api.chooseImages('',1)
+				let avatar = await this.api.chooseImages('', 1)
 				console.log(1111111);
 				let res = await this.api.upLoad(avatar[0])
-				console.log({res});
-				this.userdata.avatar=res
+				console.log({
+					res
+				});
+				this.userdata.avatar = res
 				// 调用更换头像接口
 				await this.api.modidyPersoninfo({
 					avatar: res,
@@ -172,19 +191,18 @@
 				uni.reLaunch({
 					url: '/pages/login/index'
 				});
-			},   
+			},
 		},
-		components: {
-		},
+		components: {},
 		beforeMount() {
 
 		},
 		mounted() {
-			
+			// this.$refs.iframe.height=document.documentElement.clientHeight;
+			// this.$refs.iframe.width=document.documentElement.clientWidth;
 
 		},
-		async onLoad(){
-		},
+		async onLoad() {},
 		async onShow() {
 			this.userdata = await this.api.getPersoninfo()
 
@@ -201,6 +219,14 @@
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
+
+		.showf2 {
+			position: fixed;
+			top: 0;
+			width: 375px;
+			height: 667px;
+			z-index: 999;
+		}
 
 		.profile_container {
 			padding-bottom: 120upx;
@@ -360,7 +386,7 @@
 
 			.list {
 				border-radius: 30upx;
- 				margin-top:-60upx;
+				margin-top: -60upx;
 				box-sizing: border-box;
 				background: #fff;
 				padding: 0 40upx;
@@ -396,10 +422,11 @@
 					.righticon {
 						display: flex;
 						align-items: center;
-						
+
 						image {
 							width: 32upx;
 						}
+
 						text {
 							margin-right: 16upx;
 							font-size: 28upx;
