@@ -65,11 +65,14 @@
 				
 			</view> -->
 			<!-- 下拉结束-->
-			<!-- <view class="chartBox">
-				<l-f2 ref="chart"></l-f2>
-			</view> -->
+
 			<view class="chartBox">
-				<l-echart ref="chart"></l-echart>
+
+				<iframe :src="url" width="100%" v-if="subsectionShow" height="160" frameborder="no" border="0">
+				</iframe>
+				<u-subsection bg-color="#ecf0f1" height="50" @change="sectionChange" v-if="subsectionShow" :list="list" :current="current">
+				</u-subsection>
+
 			</view>
 			<!-- <view class="total" v-show="isTotal">
 				<l-echart ref="chartAll" class="echarts"></l-echart>
@@ -141,12 +144,17 @@
 
 <script>
 	import choosedate from "../../components/choosedate.vue"
-	import * as echarts from '@/uni_modules/lime-echart_0.3.4/components/l-echart/echarts.min';
+	// import * as echarts from '@/uni_modules/lime-echart_0.3.4/components/l-echart/echarts.min';
 	// import F2 from '@/uni_modules/lime-f2/components/l-f2/f2-all.min.js';
 	import moment from "moment";
 	export default {
 		data() {
 			return {
+				subsectionShow: false,
+				map: new Map(),
+				list: [],
+				current: 0,
+				url: '',
 				// 页面显示的开始结束时间
 				starttime: 'ff',
 				endtime: 'ff',
@@ -168,7 +176,7 @@
 				// 传给后台的开始结束时间
 				st: '',
 				et: '',
-				sites: "",
+				sites: null,
 				timer: null,
 				// 类别id
 				categoryID: '',
@@ -188,195 +196,22 @@
 				currentChildIndex: 0,
 				wrapperList1: [],
 
-				option: {
-					title: {
-						left: 'center',
-						// text: '趋势分析图',
-						// subtext: '"tootip" and "dataZoom" on mobile device',
-					},
-					// legend: {
-					// 	top: 'bottom',
-					// 	data: ['意向']
-					// },
-					tooltip: {
-						triggerOn: 'mousemove|click',
-						// triggerOn: 'click',
-						trigger: 'axis',
-						// triggerOn: 'none',
-						position: ['10%', '0%']
-						// position: function(pt) {
-						// 	return [pt[0], 10];
-						// }
-					},
-					// toolbox: {
-					//     left: 'center',
-					//     itemSize: 25,
-					//     top: 55,
-					//     feature: {
-					//         dataZoom: {
-					//             yAxisIndex: 'none'
-					//         },
-					//         restore: {}
-					//     }
-					// },
-					xAxis: {
-						type: 'time',
-						show: true,
-						// boundaryGap: [0, 0],+
-						axisLabel: {
-							interval: 0, // 坐标轴刻度标签的显示间隔
-							rotate: 40, // 标签倾斜的角度
-							show: false,
-						},
-
-						// axisPointer: {
-						// 	value: '2020-01-03',
-						// 	snap: true,
-						// 	lineStyle: {
-						// 		color: '#7581BD',
-						// 		width: 2
-						// 	},
-						// 	label: {
-						// 		show: false,
-						// 		formatter: function(params) {
-						// 			return echarts.format.formatTime('yyyy-MM-dd hh:mm:ss', params.value);
-						// 		},
-						// 		backgroundColor: '#7581BD'
-						// 	},
-						// 	handle: {
-						// 		show: true,
-						// 		color: '#7581BD',
-						// 		margin: 20,
-						// 		size: [30, 30]
-						// 	}
-						// },
-						splitLine: {
-							show: false
-						}
-					},
-					yAxis: {
-						type: 'value',
-						axisTick: {
-							inside: true
-						},
-						splitLine: {
-							show: false
-						},
-						axisLabel: {
-							inside: true,
-							formatter: '{value}\n'
-						},
-						max: function(value) {
-							return value.max * 10;
-						},
-						min: function(value) {
-							return -value.max * 10;
-						},
-						z: 10
-					},
-					grid: {
-						show: true,
-						bottom: '20%',
-						left: 15,
-						right: 15,
-						height: '80%'
-					},
-					dataZoom: [{
-						type: 'inside',
-						start: 0,
-						end: 10,
-						orient:'horizontal'
-					},
-					// {
-					// 	type: 'inside',
-					// 	start: 0,
-					// 	end: 10,
-					// 	top: '3%'
-					// },
-					],
-					// dataZoom: [{
-					// 	type: 'inside',
-					// 	throttle: 0
-					// }],
-					series: [
-						// {
-						// 	name: '模拟数据',
-						// 	type: 'line',
-						// 	smooth: true,
-						// 	symbol: 'circle',
-						// 	symbolSize: 5,
-						// 	sampling: 'average',
-						// 	itemStyle: {
-						// 		color: '#0770FF'
-						// 	},
-						// 	stack: 'a',
-						// 	areaStyle: {
-						// 		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-						// 			offset: 0,
-						// 			color: 'rgba(58,77,233,0.8)'
-						// 		}, {
-						// 			offset: 1,
-						// 			color: 'rgba(58,77,233,0.3)'
-						// 		}])
-						// 	},
-						// 	data: [
-						// 		['2020-01-01 10:00', 95],
-						// 		['2020-01-02 10:00', 45],
-						// 		['2020-01-03 10:00', 30],
-						// 		['2020-01-04 10:00', 60],
-						// 		['2020-01-05 10:00', 100],
-						// 		['2020-01-06 10:00', 195],
-						// 		['2020-01-07 10:00', 425],
-						// 		['2020-01-08 10:00', 320],
-						// 		['2020-01-09 10:00', 330],
-						// 		['2020-01-10 10:00', 430]
-						// 	]
-						// },
-						// {
-						// 	name: '模拟数据',
-						// 	type: 'line',
-						// 	smooth: true,
-						// 	stack: 'a',
-						// 	symbol: 'circle',
-						// 	symbolSize: 5,
-						// 	sampling: 'average',
-						// 	itemStyle: {
-						// 		color: '#F2597F'
-						// 	},
-						// 	areaStyle: {
-						// 		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-						// 			offset: 0,
-						// 			color: 'rgba(213,72,120,0.8)'
-						// 		}, {
-						// 			offset: 1,
-						// 			color: 'rgba(213,72,120,0.3)'
-						// 		}])
-						// 	},
-						// 	data: [
-						// 		['2020-01-01 10:00', 55],
-						// 		['2020-01-02 10:00', 75],
-						// 		['2020-01-03 10:00', 10],
-						// 		['2020-01-04 10:00', 90],
-						// 		['2020-01-05 10:00', 60],
-						// 		['2020-01-06 10:00', 155],
-						// 		['2020-01-07 10:00', 175],
-						// 		['2020-01-08 10:00', 110],
-						// 		['2020-01-09 10:00', 190],
-						// 		['2020-01-10 10:00', 160],
-						// 	]
-						// }
-					]
-				}
-
-
-
-
 			}
 		},
 
 		methods: {
+			setUrlVal(sites, st, et) {
+				this.url = 'http://10086.jinkworld.com/demo/fund/trend-no-deal-landscape.html?sites=' + sites + '&st=' +
+					st + '&et=' + et
+			},
+			sectionChange(index) {
+				this.current = index;
+				this.setUrlVal(this.list[index].sites, this.st, this.et)
+				
+			},
 			confirm1(e) {
-				let len = this.AddrCheckedArray.length;
+				console.log(e)
+				//let len = this.AddrCheckedArray.length;
 				if (moment(`${this.et}`).valueOf() < moment(
 						`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf()) {
 					uni.showToast({
@@ -385,23 +220,28 @@
 						duration: 2000
 					})
 					return false;
-				} else if ((moment(`${this.et}`).valueOf() - moment(
-							`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`)
-						.valueOf()) * len > 129600000) {
-					uni.showToast({
-						title: '总时间需小于36h',
-						icon: "none",
-						duration: 2000
-					})
-					return false;
-				}
+				} 
+				// else if ((moment(`${this.et}`).valueOf() - moment(
+				// 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`)
+				// 		.valueOf()) * len > 129600000) {
+				// 	uni.showToast({
+				// 		title: '总时间需小于36h',
+				// 		icon: "none",
+				// 		duration: 2000
+				// 	})
+				// 	return false;
+				// }
 				this.st = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 				this.starttime = `${e.month}-${e.day} ${e.hour}:${e.minute}`
-				if (this.sites)
-					this.getsiteValList()
+				if(this.list.length > 0){
+					this.setUrlVal(this.list[this.current].sites, this.st, this.et)
+				}
+				
+				// if (this.sites)
+				// 	this.getsiteValList()
 			},
 			confirm2(e) {
-				let len = this.AddrCheckedArray.length;
+				//let len = this.AddrCheckedArray.length;
 				if (moment(`${this.st}`).valueOf() > moment(
 						`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf()) {
 					uni.showToast({
@@ -410,69 +250,36 @@
 						duration: 2000
 					})
 					return false;
-				} else if ((moment(`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf() - moment(
-							`${this.st}`)
-						.valueOf()) * len > 129600000) {
-					uni.showToast({
-						title: '总时间需小于36h',
-						icon: "none",
-						duration: 2000
-					})
-					return false;
-				}
+				} 
+				// else if ((moment(`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf() - moment(
+				// 			`${this.st}`)
+				// 		.valueOf()) * len > 129600000) {
+				// 	uni.showToast({
+				// 		title: '总时间需小于36h',
+				// 		icon: "none",
+				// 		duration: 2000
+				// 	})
+				// 	return false;
+				// }
 				this.et = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 				this.endtime = `${e.month}-${e.day} ${e.hour}:${e.minute}`
-				if (this.sites)
-					this.getsiteValList()
+				if(this.list.length > 0){
+					this.setUrlVal(this.list[this.current].sites, this.st, this.et)
+				}
 			},
 			showTotal() {
-				console.log(11);
 				this.isTotal = true
 				uni.hideTabBar({
 
 				})
-				console.log(22);
-				this.$refs.chartAll.setOption(this.option);
-
-
-				this.$refs.chartAll.setOption(this.option);
-				console.log(33);
-
-				// setTimeout(function() {
-				// window.onresize = function() {
-				// this.$refs.chart.resize()
-
-				// }
-				// }, 200)
-				// this.$refs.chart.clear()
-				// this.$refs.chart.init(config => {
-				// 	const {
-				// 		canvas
-				// 	} = config;
-				// 	const chart = echarts.init(canvas, null, config);
-				// 	chart.setOption(this.option);
-
-				// 	return chart;
-				// });
 			},
 			closeTotal() {
-				console.log(22);
 				this.isTotal = false;
-				// this.option.grid.height = 160
-				// this.option.grid.width = 'auto'
-				// this.$refs.chart.setOption(this.option, true)
 				uni.showTabBar({
 
 				})
 			},
 			switchHead(index, child) {
-				console.log('switchhead');
-				// 清空选中编号
-				this.AddrCheckedArray = [];
-				// 清空折线图
-				this.option.series = [];
-				this.$refs.chart.setOption(this.option, true)
-
 				this.currentheaderIndex = index
 				this.isChild = child;
 				// 内容列表
@@ -486,10 +293,6 @@
 			switchChildList(index) {
 				// 清空选中编号
 				this.AddrCheckedArray = [];
-				// 清空折线图
-				this.option.series = [];
-				this.$refs.chart.setOption(this.option, true)
-
 				this.currentChildIndex = index;
 				this.getwrapperList(this.switchList[this.currentheaderIndex].id, 1)
 
@@ -517,122 +320,105 @@
 					url: `/pages/index/detail?id=${id}&banner=${banner}&title=${title}`
 				})
 			},
+			//选中参数
 			checkboxChange: function(e) {
-				// console.log(e.detail.value);
-				//    var items = this.items,
-				//        values = e.detail.value;
-				//    for (var i = 0, lenI = items.length; i < lenI; ++i) {
-				//        const item = items[i]
-				//        if(values.includes(item.value)){
-				//            this.$set(item,'checked',true)
-				//        }else{
-				//            this.$set(item,'checked',false)
-				//        }
-				//    }
 				let len = e.detail.value.length;
-
-				if (len > 5) {
-					uni.showToast({
-						title: '最多不超过5条',
-						icon: "none",
-						duration: 2000
-					})
-					return false;
-				} else if ((moment(`${this.et}`).valueOf() - moment(`${this.st}`)
-						.valueOf()) * len > 129600000) {
-					uni.showToast({
-						title: '总时间需小于36h',
-						icon: "none",
-						duration: 2000
-					})
-					return false;
+				// if (len > 5) {
+				// 	uni.showToast({
+				// 		title: '最多不超过5条',
+				// 		icon: "none",
+				// 		duration: 2000
+				// 	})
+				// 	return false;
+				// }
+				// else if ((moment(`${this.et}`).valueOf() - moment(`${this.st}`)
+				// 		.valueOf()) * len > 129600000) {
+				// 	uni.showToast({
+				// 		title: '总时间需小于36h',
+				// 		icon: "none",
+				// 		duration: 2000
+				// 	})
+				// 	return false;
+				// }
+				if (len !== 0) {
+					//所有选中的编号
+					this.AddrCheckedArray = e.detail.value;
+					// 请求中的sites重新赋值为数组的','分割字符串
+					//this.sites = this.AddrCheckedArray.join(',')
+					this.siteGrouping(e.detail.value)
+				} else {
+					this.subsectionShow = false
 				}
-				//所有选中的编号 
-				this.AddrCheckedArray = e.detail.value;
-				// 请求中的sites重新赋值为数组的','分割字符串
-				this.sites = this.AddrCheckedArray.join(',')
-				console.log(11111111, this.sites);
-				this.getsiteValList(true)
+
+			},
+			//相同单位分组显示
+			siteGrouping(arr) {
+				this.subsectionShow = false
+				let mp = new Map()
+				arr.map(addr => {
+					let unit = this.map.get(addr)
+					if (mp.has(unit)) {
+						//追加
+						let addrArrOld = mp.get(unit)
+						addrArrOld.push(addr)
+						mp.set(unit, addrArrOld)
+					} else {
+						//首次添加
+						let addrArr = []
+						addrArr.push(addr)
+						mp.set(unit, addrArr)
+					}
+				})
+				let group = []
+				mp.forEach(function(value, key) {
+					let item = {
+						name: key,
+						sites: value.join(',')
+					}
+					group.push(item)
+				});
+				this.list = group
+				this.$nextTick(() => {
+					this.subsectionShow = true
+				});
+				this.setUrlVal(this.list[this.current].sites, this.st, this.et)
 			},
 
 
 
-			// // 选中编号
-			// active(addr) {
-
-			// 	// 判断数组中是否有该编号
-			// 	let flag = false;
-			// 	for (let item of this.AddrCheckedArray) {
-			// 		if (item == addr) {
-			// 			flag = true;
-			// 			break;
-			// 		}
-			// 	}
-			// 	// 取消选中
-			// 	if (flag) {
-			// 		// 1.删除选中数组中该编号
-			// 		this.AddrCheckedArray = this.AddrCheckedArray.filter(item => item != addr)
-
-			// 		// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
-			// 		// 先清空定时器
-			// 		this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild,this.categoryID,this.craftID)
-			// 		// 请求中的sites重新赋值为数组的','分割字符串
-			// 		this.sites = this.AddrCheckedArray.join(',')
-			// 		this.getsiteValList(true)
-			// 	} else {
-			// 		// 最多不能超过十条
-			// 		if (this.AddrCheckedArray.length == 10) {
-			// 			uni.showToast({
-			// 				title: '最多不超过10条',
-			// 				icon: "none",
-			// 				duration: 2000
-			// 			})
-			// 			return false;
-			// 		}
-			// 		// 选中且不差过10条，向选中编号的数组中添加该编号
-			// 		this.AddrCheckedArray.push(addr)
-
-			// 		// 重新请求内容接口修改选中状态，不用循环内容数组修改选中状态
-			// 		// 先清空定时器
-			// 		this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild,this.categoryID,this.craftID)
-			// 		// 请求中的sites重新赋值为数组的','分割字符串
-			// 		this.sites = this.AddrCheckedArray.join(',')
-			// 		this.getsiteValList()
-			// 	}
-
-
-			// },
 			// 获取内容列表
 			getwrapperList(id, child, categoryID, craftID) {
+				this.subsectionShow = false
 				if (this.timer) {
 					clearInterval(this.timer);
 				}
-				console.log('获取内容列表');
+				this.setAddrMap(id)
 				this.api.getwrapperList({
 					id: id,
 					siteType: categoryID,
 					siteName: craftID
 				}).then(res => {
-					if (this.AddrCheckedArray.length > 0) {
-						// 用选中数组中的编号中的checked去替换响应数据中的checked
-						for (let itemCk of this.AddrCheckedArray) {
-							for (let itemtask of res) {
-								itemtask.sites = itemtask.sites.map(itemaddr => {
-									if (itemCk == itemaddr.addr) {
-										itemaddr.checked = true;
-									}
-									return itemaddr;
-								})
-							}
-						}
-					}
+
+					// if (this.AddrCheckedArray.length > 0) {
+					// 	// 用选中数组中的编号中的checked去替换响应数据中的checked
+					// 	for (let itemCk of this.AddrCheckedArray) {
+					// 		for (let itemtask of res) {
+					// 			itemtask.sites = itemtask.sites.map(itemaddr => {
+					// 				if (itemCk == itemaddr.addr) {
+					// 					itemaddr.checked = true;
+					// 				}
+					// 				return itemaddr;
+					// 			})
+					// 		}
+					// 	}
+					// }
 					if (child) {
 						this.ChildListTitle = res.map(item => item.dictValue)
 						this.wrapperList1 = res[this.currentChildIndex].children
-						console.table(this.ChildListTitle);
-						console.log({
-							childindex: this.currentChildIndex
-						});
+						// console.table(this.ChildListTitle);
+						// console.log({
+						// 	childindex: this.currentChildIndex
+						// });
 					} else
 						this.wrapperList1 = res
 				})
@@ -665,46 +451,25 @@
 
 				}, 10000)
 
-
 			},
-			// 获取折线图数据
-			getsiteValList(flag) {
-				// this.api.getsiteValList({sites:'CCF_FAN_VT,CCF_FILTER_DPT1',st:'2021-07-20 18:00:00',et:'2021-07-20 19:00:00'}).then(res=>{
-				this.api.getsiteValList({
-					sites: this.sites,
-					st: this.st,
-					et: this.et
+			setAddrMap(id) {
+				this.map = new Map()
+				this.api.getAllSiteByWid({
+					wid: id,
 				}).then(res => {
-					// console.log({res});
-					// this.option = res;
-					// this.$refs.chart.changeData(this.option)
-					this.option.series = res;
-					this.option.series.push()
-					// console.log({option:this.option});
-					// 是否不跟之前设置的 option 进行合并。默认为 false。即表示合并
-					// 删除不合并
-					if (flag)
-						this.$refs.chart.setOption(this.option, true)
-					else
-						this.$refs.chart.setOption(this.option)
-
+					if(res.length > 0){
+						res.map(item => {
+							if (item.unit != null && item.addr != null) {
+								this.map.set(item.addr, item.unit)
+							}
+						})
+					}
 				})
-
-				// let siteValList = await this.api.getsiteValList({
-				// 	sites: this.currentaddr,
-				// 	st: this.st,
-				// 	et: this.et
-				// })
-
-				// console.log(siteValList.date)
-				// console.log(siteValList.data)
-
-				// this.option.series[0].data = siteValList.data;
-				// this.option.xAxis.data = siteValList.date;
 			}
 
 
 		},
+
 		components: {
 			choosedate
 		},
@@ -713,12 +478,12 @@
 			this.endtime = moment().format("MM-DD HH:mm");
 		},
 		async onLoad() {
-			console.log('onload');
+			// console.log('onload');
 			this.st = `${moment().format("YYYY-MM-DD")} 00:00:00`
 			this.et = moment().format("YYYY-MM-DD HH:mm:ss")
 		},
 		async onShow() {
-			console.log('trend onshow');
+			// console.log('trend onshow');
 			this.categories = await this.api.getdictionary({
 				code: 'site_type'
 			})
@@ -728,7 +493,7 @@
 
 			// 头部切换栏列表
 			this.switchList = await this.api.getheadswitchList()
-			console.log(this.switchList);
+			// console.log(this.switchList);
 			// isChild赋值
 			this.isChild = this.switchList[0].isChild
 			this.crafts = await this.api.getcraftList({
@@ -743,27 +508,26 @@
 			if (this.timer) {
 				clearInterval(this.timer);
 			}
-			console.log('trend onhide');
 		},
 		onUnload() {
 			if (this.timer) {
 				clearInterval(this.timer);
 			}
-			console.log('trend onunload');
 		},
 		mounted() {
-			console.log('mounted');
-			this.$refs.chart.init(config => {
-				const {
-					canvas
-				} = config;
-				const chart = echarts.init(canvas, null, config);
-				chart.setOption(this.option);
-				window.onresize = () => {
-					chart.resize()
-				}
-				return chart;
-			});
+
+			// this.$refs.chart.init(config => {
+			// 	const {
+			// 		canvas
+			// 	} = config;
+			// 	const chart = echarts.init(canvas, null, config);
+			// 	chart.setOption(this.option);
+			// 	window.onresize = () => {
+			// 		chart.resize()
+			// 	}
+			// 	return chart;
+			// });
+
 			// setTimeout(() => {
 			// 	this.$refs.chartAll.init(config => {
 			// 		const {
@@ -988,7 +752,7 @@
 
 			.chartBox {
 				// width: 600upx;
-				height: 300upx;
+				height: 330upx;
 
 
 			}
@@ -1049,7 +813,7 @@
 			width: 710upx;
 			box-sizing: border-box;
 			margin: 30upx 20upx;
-			padding-top: 50upx;
+			padding-top: 80upx;
 
 			.wrapper_item {
 				box-sizing: border-box;

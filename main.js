@@ -13,9 +13,10 @@ import Avue from '@smallwei/avue'
 import '@smallwei/avue/lib/index.css'
  
 Vue.use(Avue)
-
-
 Vue.use(init);
+
+
+
 
 Vue.config.productionTip = false
 

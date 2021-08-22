@@ -435,6 +435,18 @@ class api {
 			});
 		})
 	}
+	//通过车间id查询该车间下所有采集点
+	getAllSiteByWid(data) {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/site/allSiteByWid", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	
+	
 	// 个人面貌列表
 	getPartyList(data) {
 		return new Promise((resolve, reject) => {

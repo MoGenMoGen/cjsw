@@ -1,4 +1,3 @@
-
 {
   "name": "ttcApp",
   "version": "1.0.0",
@@ -68,6 +67,7 @@
     "regenerator-runtime": "^0.12.1",
     "sass": "^1.34.1",
     "sass-loader": "^10.2.0",
+    "uview-ui": "file:uview-ui",
     "vconsole": "^3.7.0",
     "vue": "^2.6.11",
     "vuex": "^3.6.2"
