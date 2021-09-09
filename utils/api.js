@@ -35,7 +35,6 @@ function get(url, data, header, loading) {
 				console.log('get success', res)
 				// 登录失效重新登录
 				if (res.data.code == '401') {
-					console.log("401");
 					uni.showToast({
 						title: '登录失效了，重新登录',
 						duration: 2000,
@@ -119,12 +118,12 @@ function post(url, data, header, loading) {
 
 						}
 					})
-					setTimeout(()=>{
-							uni.reLaunch({
-						url: '/pages/login/index'
-					})
-					},100)
-				
+					setTimeout(() => {
+						uni.reLaunch({
+							url: '/pages/login/index'
+						})
+					}, 100)
+
 
 				} else if (res.data.code == '200')
 					resolve(res.data);
@@ -177,7 +176,6 @@ function loginpost(url, data, header) {
 			timeout: 60000,
 			timeout: 15000,
 			success: function(res) {
-				console.log('post success', res)
 				// 400账号或密码错误
 				if (res.data.error_code == '400') {
 					uni.showToast({
@@ -330,14 +328,11 @@ class api {
 					uni.showLoading({
 						title: '上传成功',
 					})
-					console.log('================')
-					console.log(1111111111)
 					let img = JSON.parse(res.data).data.link;
 
 					resolve(img)
 				},
 				fail: function(res) {
-					console.log('上传失败', res);
 					uni.showModal({
 						title: '上传失败',
 						content: res.msg,
@@ -445,8 +440,8 @@ class api {
 			});
 		})
 	}
-	
-	
+
+
 	// 个人面貌列表
 	getPartyList(data) {
 		return new Promise((resolve, reject) => {
@@ -478,6 +473,10 @@ class api {
 			});
 		})
 	}
+
+
+
+
 	//获取报表分类信息
 	getReportType(data) {
 		return new Promise((resolve, reject) => {
@@ -508,7 +507,47 @@ class api {
 			});
 		})
 	}
+	//报表填写记录历史
+	getReportLog(data) {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/reportQuery/reportList", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	//导出报表测试
+	getReportTest() {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/reportQuery/test",{},{
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
+	getReportValue(data) {
+		return new Promise((resolve, reject) => {
+			get("/blade-mh/reportQuery/reportDtlValue", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data);
+			});
+		})
+	}
 
+
+	//提交报表
+	mobSubmitReport(data) {
+		return new Promise((resolve, reject) => {
+			post("/blade-mh/reportQuery/mobSubmit", data, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res);
+			});
+		})
+	}
 }
 export {
 	api

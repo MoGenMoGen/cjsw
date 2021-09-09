@@ -1,6 +1,6 @@
 {
     "name" : "cjsw",
-    "appid" : "__UNI__0956E4A",
+    "appid" : "__UNI__6C85200",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -83,7 +83,8 @@
             "proxy" : {
                 "/api" : {
                     // "target" : "http://hwnpoht.nat.ipyingshe.com",
-                    "target" : "http://10086.jinkworld.com/api",
+                    //"target" : "http://10086.jinkworld.com/api",
+                    "target" : "http://127.0.0.1",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
@@ -94,10 +95,15 @@
         },
         "router" : {
             "mode" : "history",
-            "base" : "/h5/"
+            "base" : "./"
         },
         "domain" : "http://10086.jinkworld.com/h5",
         // "domain" : "http://10086.jinkworld.com",
-        "template" : "index.html"
+        "template" : "index.html",
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
+        }
     }
 }

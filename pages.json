@@ -134,15 +134,15 @@
 		//     }
 
 		// }
-	    ,{
-            "path" : "pages/profile/echarts",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
+	    // ,{
+     //        "path" : "pages/profile/echarts",
+     //        "style" :                                                                                    
+     //        {
+     //            "navigationBarTitleText": "",
+     //            "enablePullDownRefresh": false
+     //        }
             
-        }
+     //    }
         ,{
             "path" : "pages/profile/testf2",
             "style" :                                                                                    

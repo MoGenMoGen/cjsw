@@ -7,7 +7,7 @@
 			<view class="hidden">
 				<view class="head_switch">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
-						@click="switchHead(index,item.isChild)" :class="{activeheader:index==currentheaderIndex}">
+						@click="switchHead(index,item)" :class="{activeheader:index==currentheaderIndex}">
 						{{item.dictValue}}
 					</text>
 				</view>
@@ -49,7 +49,7 @@
 			</view>
 			<!-- 子列表 结束 -->
 			<!-- 内容列表 开始 -->
-			<view class="wrapper_list" v-if='!ismonitor' >
+			<view class="wrapper_list" v-if='!ismonitor'>
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
 					@click="toDetail(item1.id,item1.img,item1.dictValue)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
@@ -57,7 +57,6 @@
 							{{item1.dictValue}}
 						</view>
 						<view class="arrow">详情
-							
 							<image src="../../static/arrow1.png" mode="widthFix"></image>
 						</view>
 						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
@@ -83,7 +82,7 @@
 							</view>
 							<view class="line2 line" :style="{color:item2.color}">
 								{{item2.val}}
-						
+
 							</view>
 							<view class="line3 line">
 								{{item2.lowVal}}~{{item2.faultVal}}
@@ -96,22 +95,22 @@
 				</view>
 			</view>
 
-	<!-- 内容列表 结束 -->
-	<!-- 视频监控开始 -->
-	<view class="monitor_list" v-else>
-		<view class="monitor_item" v-for="(item,index) in monitorList" :key='index'>
-			<view class="pic">
-				<image class="monitor_cover" :src="item.src" mode="aspectFill"></image>
-				<image class="btn_play" src="../../static/btn_play.png" mode="widthFix"></image>
+			<!-- 内容列表 结束 -->
+			<!-- 视频监控开始 -->
+			<view class="monitor_list" v-else>
+				<view class="monitor_item" v-for="(item,index) in monitorList" :key='index'>
+					<view class="pic">
+						<image class="monitor_cover" :src="item.src" mode="aspectFill"></image>
+						<image class="btn_play" src="../../static/btn_play.png" mode="widthFix"></image>
+					</view>
+					<view class="monitor_title">{{item.title}}</view>
+					<view class="monitor_date">{{item.date}}</view>
+
+				</view>
 			</view>
-			<view class="monitor_title">{{item.title}}</view>
-			<view class="monitor_date">{{item.date}}</view>
+			<!-- 视频监控结束 -->
 
 		</view>
-	</view>
-	<!-- 视频监控结束 -->
-	
-	</view>
 	</view>
 
 </template>
@@ -123,6 +122,7 @@
 	export default {
 		data() {
 			return {
+				workshopName:'',
 				// 头部车间列表
 				switchList: [],
 				// 监控项
@@ -231,20 +231,21 @@
 			// }
 		},
 		methods: {
-			switchHead(index, child) {
-				console.log('switchhead');
-					this.currentheaderIndex = index
-					this.isChild = child;
-					// 内容列表
-					this.getwrapperList(this.switchList[this.currentheaderIndex].id, child)
-					// 轮播图
-					this.swiperList=this.switchList[this.currentheaderIndex].img.split(',')
+			switchHead(index, item) {
+				//console.log(item.dictValue)
+				this.workshopName = item.dictValue
+				this.currentheaderIndex = index
+				this.isChild = item.isChild
+				// 内容列表
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild)
+				// 轮播图
+				this.swiperList = this.switchList[this.currentheaderIndex].img.split(',')
 
 
 			},
 			switchChildList(index) {
-					this.currentChildIndex = index;
-					this.getwrapperList(this.switchList[this.currentheaderIndex].id, 1)
+				this.currentChildIndex = index;
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, 1)
 
 			},
 			toogle(index) {
@@ -262,7 +263,7 @@
 					id: id
 				}).then(res => {
 					if (child) {
-						console.log('child',this.currentChildIndex);
+						console.log('child', this.currentChildIndex);
 						this.ChildListTitle = res.map(item => item.dictValue)
 						this.wrapperList1 = res[this.currentChildIndex].children
 						console.log("wrapList", this.wrapperList1);
@@ -285,11 +286,12 @@
 
 
 			},
-		toDetail(id, banner, title) {
-			uni.navigateTo({
-				url: `/pages/index/detail?id=${id}&banner=${banner}&title=${title}`
-			})
-		},
+			toDetail(id, banner, title) {
+				console.log(title)
+				uni.navigateTo({
+					url: `/pages/index/detail?id=${id}&banner=${banner}&title=${this.workshopName+'>'+ title}`
+				})
+			},
 
 
 
@@ -302,30 +304,26 @@
 			// 	.then(banners => {
 			// 		this.swiperList = banners.records.map(item => item.img)
 			// 	})
-			
+
 		},
 		async onShow() {
-		// 头部切换栏列表
-		this.switchList=await this.api.getheadswitchList()
-		// isChild赋值
-		this.isChild=this.switchList[0].isChild
-		this.switchHead(0,this.isChild)
+			// 头部切换栏列表
+			this.switchList = await this.api.getheadswitchList()
+			// isChild赋值
+			this.isChild = this.switchList[0].isChild
+			this.switchHead(0, this.switchList[0])
 		},
 		onHide() {
 			if (this.timer) {
 				clearInterval(this.timer);
 			}
-			console.log('index onhide');
+		
 		},
 		onUnload() {
 			if (this.timer) {
 				clearInterval(this.timer);
 			}
-			console.log('index onUnload');
 		}
-
-
-
 	}
 </script>
 
@@ -339,6 +337,7 @@
 		.container {
 			width: 100%;
 			padding-top: calc(var(--status-bar-height) + 92upx);
+
 			.hidden {
 				top: 0;
 				position: fixed;
@@ -355,7 +354,7 @@
 					// z-index: 100;
 					background-color: #0984e3;
 					width: 100%;
-					padding:20upx 0;
+					padding: 20upx 0;
 					// height: 76upx;
 					// padding-bottom: 12upx;
 					overflow-x: scroll;
@@ -401,12 +400,13 @@
 			}
 
 			.swiper {
-				margin:0 auto;
+				margin: 0 auto;
 				// margin-top: calc(var(--status-bar-height) + 86upx);
 				width: 710upx;
 				height: 300upx;
 				border-radius: 24upx;
 				overflow: hidden;
+
 				// padding:0 4upx;
 				swiper-item {
 					width: 100%;
@@ -523,7 +523,7 @@
 					box-sizing: border-box;
 					width: 710upx;
 					margin-bottom: 40upx;
-					padding:20upx;
+					padding: 20upx;
 					border-radius: 30upx;
 					background-color: #fff;
 					// box-shadow: 0 0 30upx rgba(0,0,0,.2);
@@ -542,7 +542,8 @@
 						justify-content: space-between;
 						height: 34upx;
 						font-size: 32upx;
-						.title_text{
+
+						.title_text {
 							color: #5481EA;
 							font-size: 32upx;
 						}
@@ -560,7 +561,7 @@
 								transform: translateY(-50%);
 								display: inline-block;
 								width: 13upx;
-								margin-left:16upx
+								margin-left: 16upx
 							}
 						}
 					}
@@ -571,7 +572,7 @@
 						background: #fff;
 						width: 100%;
 						box-sizing: border-box;
-						
+
 
 						// padding: 0 20upx;
 						.th {
@@ -592,14 +593,14 @@
 						.wrapper_item_item {
 							display: flex;
 							padding: 10upx 20upx;
-							
+
 
 						}
 
 						.line {
 							color: #333333;
 							font-size: 30upx;
-							
+
 						}
 
 						.line1 {

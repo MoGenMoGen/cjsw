@@ -8,7 +8,7 @@
 			<view class="hidden">
 				<view class="head_switch">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
-						@click="switchHead(index,item.isChild)" :class="{activeheader:index==currentheaderIndex}">
+						@click="switchHead(index,item)" :class="{activeheader:index==currentheaderIndex}">
 						{{item.dictValue}}
 					</text>
 				</view>
@@ -46,28 +46,20 @@
 					</view>
 
 				</picker>
-				<!-- </view> -->
 				<view class="timebox">
-					<!-- <choosedate @func="getdateA" :CheckedCount='AddrCheckedArray.length'></choosedate> -->
-					<u-picker v-model="show1" mode="time" :params="params" @confirm="confirm1"></u-picker>
+					<u-picker v-model="show1" mode="time" :params="params" @confirm="confirm1" title="选择开始时间" ></u-picker>
 					<view class="time" @click='show1=true'>
 						{{starttime}}
 					</view>
 					~
-					<u-picker v-model="show2" mode="time" :params="params" @confirm="confirm2"></u-picker>
+					<u-picker v-model="show2" mode="time" :params="params" @confirm="confirm2" title="选择结束时间"></u-picker>
 					<view class="time" @click='show2=true'>
 						{{endtime}}
 					</view>
 				</view>
 			</view>
-			<!-- <view>
-				<u-picker v-model="show" mode="time" :params="params" @confirm="confirm"></u-picker>
-				
-			</view> -->
 			<!-- 下拉结束-->
-
 			<view class="chartBox">
-
 				<iframe :src="url" width="100%" v-if="subsectionShow" height="160" frameborder="no" border="0">
 				</iframe>
 				<u-subsection bg-color="#ecf0f1" height="50" @change="sectionChange" v-if="subsectionShow" :list="list" :current="current">
@@ -144,8 +136,6 @@
 
 <script>
 	import choosedate from "../../components/choosedate.vue"
-	// import * as echarts from '@/uni_modules/lime-echart_0.3.4/components/l-echart/echarts.min';
-	// import F2 from '@/uni_modules/lime-f2/components/l-f2/f2-all.min.js';
 	import moment from "moment";
 	export default {
 		data() {
@@ -155,6 +145,7 @@
 				list: [],
 				current: 0,
 				url: '',
+				workshopName:'',
 				// 页面显示的开始结束时间
 				starttime: 'ff',
 				endtime: 'ff',
@@ -201,8 +192,9 @@
 
 		methods: {
 			setUrlVal(sites, st, et) {
-				this.url = 'http://10086.jinkworld.com/demo/fund/trend-no-deal-landscape.html?sites=' + sites + '&st=' +
-					st + '&et=' + et
+				//this.url = 'http://192.168.38.254/demo/fund/trend-no-deal-landscape.html?sites=' + sites + '&st=' +	st + '&et=' + et
+				this.url = 'http://10086.jinkworld.com/demo/fund/trend-no-deal-landscape.html?sites=' + sites + '&st=' +	st + '&et=' + et
+				
 			},
 			sectionChange(index) {
 				this.current = index;
@@ -210,38 +202,11 @@
 				
 			},
 			confirm1(e) {
-				console.log(e)
-				//let len = this.AddrCheckedArray.length;
-				if (moment(`${this.et}`).valueOf() < moment(
-						`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf()) {
-					uni.showToast({
-						title: '开始时间需小于结束时间',
-						icon: "none",
-						duration: 2000
-					})
-					return false;
-				} 
-				// else if ((moment(`${this.et}`).valueOf() - moment(
-				// 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`)
-				// 		.valueOf()) * len > 129600000) {
-				// 	uni.showToast({
-				// 		title: '总时间需小于36h',
-				// 		icon: "none",
-				// 		duration: 2000
-				// 	})
-				// 	return false;
-				// }
 				this.st = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 				this.starttime = `${e.month}-${e.day} ${e.hour}:${e.minute}`
-				if(this.list.length > 0){
-					this.setUrlVal(this.list[this.current].sites, this.st, this.et)
-				}
-				
-				// if (this.sites)
-				// 	this.getsiteValList()
+				this.show2 =true
 			},
 			confirm2(e) {
-				//let len = this.AddrCheckedArray.length;
 				if (moment(`${this.st}`).valueOf() > moment(
 						`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`).valueOf()) {
 					uni.showToast({
@@ -269,9 +234,9 @@
 			},
 			showTotal() {
 				this.isTotal = true
-				uni.hideTabBar({
+				uni.hideTabBar({})
 
-				})
+			
 			},
 			closeTotal() {
 				this.isTotal = false;
@@ -279,16 +244,12 @@
 
 				})
 			},
-			switchHead(index, child) {
+			switchHead(index, item) {
+				this.workshopName = item.dictValue
 				this.currentheaderIndex = index
-				this.isChild = child;
+				this.isChild = item.isChild
 				// 内容列表
-				this.getwrapperList(this.switchList[this.currentheaderIndex].id, child)
-				// 轮播图
-				// this.swiperList = this.switchList[this.currentheaderIndex].img.split(',')
-
-
-
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild)
 			},
 			switchChildList(index) {
 				// 清空选中编号
@@ -317,7 +278,7 @@
 			},
 			toDetail(id, banner, title) {
 				uni.navigateTo({
-					url: `/pages/index/detail?id=${id}&banner=${banner}&title=${title}`
+					url: `/pages/index/detail?id=${id}&banner=${banner}&title=${this.workshopName+'>'+ title}`
 				})
 			},
 			//选中参数
@@ -502,7 +463,7 @@
 			this.crafts.unshift({
 				dictValue: '全部'
 			})
-			this.switchHead(0, this.isChild)
+			this.switchHead(0, this.switchList[0])
 		},
 		onHide() {
 			if (this.timer) {

@@ -34,26 +34,7 @@
 						<image :src="arrow2" mode="widthFix" />
 					</view>
 				</view> -->
-				<view class="item" @click='toechart'>
-					<view class="item_icon">
-						<image :src="phone" mode="widthFix" />
-						<text>测试横屏图表</text>
-					</view>
-					<view class="righticon">
-						<text>图表</text>
-						<image :src="arrow2" mode="widthFix" />
-					</view>
-				</view>
-				<view class="item" @click='tof2'>
-					<view class="item_icon">
-						<image :src="phone" mode="widthFix" />
-						<text>支付宝图表</text>
-					</view>
-					<view class="righticon">
-						<text>图表</text>
-						<image :src="arrow2" mode="widthFix" />
-					</view>
-				</view>
+				
 				<view class="item" @click="toReport">
 					<view class="item_icon">
 						<image src="../../static/report.png" mode="widthFix" />

@@ -1,14 +1,8 @@
 <template>
 	<!-- 内容列表详情 -->
 	<view class="container">
-		<view class="navigation">
-			<view class="back" @click="back">
-				<image src="../../static/back.png" mode="widthFix"></image>
-			</view>
-			<view class="title">
-				{{title}}
-			</view>
-		</view>
+
+	<u-navbar @custom-back="back" :title="title" title-color="#ffffff" back-icon-color="#ffffff" :background="background"></u-navbar>
 
 		<!-- 轮播图 开始 -->
 		<swiper class="swiper" :indicator-dots="false" autoplay="true" interval="4000" duration="500"
@@ -19,6 +13,14 @@
 		</swiper>
 		<!-- 轮播图 结束 -->
 		<view class="wrapper_item_container">
+			
+			<view class="wrapper_item_title" >
+				<view class="title_text">
+				{{title}}
+				</view>
+				<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
+			</view>
+			
 			<view class="th">
 				<view class="line1 line">
 					项目
@@ -55,6 +57,9 @@
 	export default {
 		data() {
 			return {
+				background: {
+					backgroundColor: '#0984e3',
+				},
 				title: '',
 				sites: [],
 				swiperList: []
@@ -62,9 +67,9 @@
 		},
 		methods: {
 			back() {
-				uni.navigateBack({
+				uni.navigateBack({})
 
-				})
+			
 			}
 		},
 		async onLoad(e) {
@@ -84,37 +89,37 @@
 		position: relative;
 		background-color: #ecf0f1;
 		padding-bottom: 160upx;
-		padding-top: 56px;
+		padding-top: 5px;
 		min-height: 100vh;
-		.navigation {
-			position: fixed;
-			z-index: 100;
-			top: 0;
-			width: 100%;
-			background-color: #0984e3;
-			padding-right: 84upx;
-			box-sizing: border-box;
-			display: flex;
-			align-items: center;
+		// .navigation {
+		// 	position: fixed;
+		// 	z-index: 100;
+		// 	top: 0;
+		// 	width: 100%;
+		// 	background-color: #0984e3;
+		// 	padding-right: 84upx;
+		// 	box-sizing: border-box;
+		// 	display: flex;
+		// 	align-items: center;
 
-			.back {
-				padding: 20upx 30upx;
-				width: 24upx;
+			// .back {
+			// 	padding: 20upx 30upx;
+			// 	width: 24upx;
 
-				image {
-					width: 24upx;
-				}
-			}
+			// 	image {
+			// 		width: 24upx;
+			// 	}
+			// }
 
-			.title {
-				flex: 1;
-				text-align: center;
-				height: 92upx;
-				line-height: 92upx;
-				color: #fff;
+			// .title {
+			// 	flex: 1;
+			// 	text-align: center;
+			// 	height: 92upx;
+			// 	line-height: 92upx;
+			// 	color: #fff;
 
-			}
-		}
+			// }
+		// }
 
 		.swiper {
 			margin: 0upx auto 20upx;
@@ -180,7 +185,43 @@
 			.wrapper_item_item:nth-child(even) {
 				background-color: #F9F9F9;
 			}
-
+			.wrapper_item_title {
+				width: 100%;
+				// padding:0 20upx;
+				box-sizing: border-box;
+				border-left: 8upx solid #5481EA;
+				color: #5481EA;
+				padding-left: 20upx;
+				margin-bottom: 40upx;
+				// position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				height: 34upx;
+				font-size: 32upx;
+			
+				.title_text {
+					color: #5481EA;
+					font-size: 32upx;
+				}
+			
+				.arrow {
+					// padding-right: 20upx;
+					width: 100upx;
+					color: #5481EA;
+					font-size: 32upx;
+					position: relative;
+			
+					image {
+						position: absolute;
+						top: 50%;
+						transform: translateY(-50%);
+						display: inline-block;
+						width: 13upx;
+						margin-left: 16upx
+					}
+				}
+			}	
 			.wrapper_item_item {
 				display: flex;
 				padding: 10upx 20upx;

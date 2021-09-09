@@ -2,13 +2,7 @@
 <template>
 	<view class="pages_reportform">
 		<view class="container">
-			
 			<view class="hidden">
-				<!-- <view class="navigation">
-					<view class="back" @click="back">
-						<image src="../../static/back.png" mode="widthFix"></image>
-					</view>
-				</view> -->
 				<view class="head_switch">
 					<text class="switch_item" v-for="(item,index) in switchList" :key="index"
 						@click="switchHead(item.sort)" :class="{activeheader:item.sort==currentheaderID}">
@@ -21,44 +15,7 @@
 					{{item.name}}
 					<image src="../../static/arrow3.png" mode=""></image>
 				</view>
-			</view> 
-			
-
-			<!-- <view class="containerBody" v-for="(item,index) in surface" :key="index">
-				<view class="containerTitle">
-					{{item.title}}
-				</view>
-				<view class="containerList">
-					<view class="bodyList" v-for="(item1,index1) in item.body" :key="index1">
-						<view class="name">
-							{{item1.name}}
-						</view>
-						<view class="content">
-							{{item1.content}}
-						</view>
-					</view>
-					<view class="" style="font-size:28upx;color:rgba(0, 0, 0, 0.9); ">
-						{{item.note}}
-					</view>
-					<view class="listInput" v-for="(item2,index2) in item.input" :key="index2">
-							<view class="name">
-							{{item2.name}}:
-							</view>
-							<view class="content">
-								<input type="text" value="" placeholder="保养标准: 干净无灰尘" placeholder-class="placeholderIn" />
-							</view>
-					</view>
-					<view class="abnormal">
-						<view class="name">
-							{{item.abnormalIn}}
-						</view>
-						<view class="content">
-							
-						</view>
-					</view>
-				</view>
-			
-			</view> -->
+			</view>
 		</view>
 	</view>
 </template>
@@ -70,128 +27,9 @@
 				obj: {
 					id: 123123
 				},
-				detailId:"",
-				option: {
-					column: [{
-							label: "姓名",
-							prop: "name",
-							disabled: false,
-							mock: {
-								type: 'name'
-							},
-							span: 8,
-							rules: [{
-								required: true,
-								message: "请输入姓名",
-								trigger: "blur"
-							}]
-						},
-						{
-							label: "密码",
-							prop: "password",
-							disabled: false,
-							type: 'password',
-							mock: {
-								type: 'name'
-							},
-							span: 8,
-							rules: [{
-								required: true,
-								message: "请输入密码",
-								trigger: "blur"
-							}]
-						},
-					]
-				},
-				switchList: [{
-						dictValue: '涂装线',
-						id: '1'
-					},
-					{
-						dictValue: '供漆',
-						id: '2'
-					}, {
-						dictValue: '机器人',
-						id: '3'
-					},
-					{
-						dictValue: '废弃处理',
-						id: '4'
-					},
-					{
-						dictValue: '冰水机房',
-						id: '5',
-					},
-
-					{
-						dictValue: '空压机',
-						id: '6'
-					},
-					{
-						dictValue: '安全环保',
-						id: '7'
-					}
-				],
+				detailId: "",
+				switchList: [],
 				currentheaderID: '1',
-				surface: [{
-						title: "涂装离子风机保养记录表",
-						body: [{
-								name: "编号",
-								content: "007——WI-347"
-							},
-							{
-								name: "责任人",
-								content: "工艺人员"
-							},
-							{
-								name: "检测仪器",
-								content: "检测仪器名称"
-
-							},
-							{
-								name: "仪器型号",
-								content: "检测仪器名称"
-							},
-							{
-								name: "线别",
-								content: "涂装七线"
-							},
-							{
-								name: "区域",
-								content: "除尘区"
-							},
-
-						],
-						note: "保养项目（7月-保养周期/每月）",
-						input: [{
-								name: "机体内壁"
-							},
-							{
-								name: "铜针"
-							},
-							{
-								name: "叶轮"
-							},
-							{
-								name: "风鼓内测"
-							},
-							{
-								name: "进风口格栅"
-							},
-							{
-								name: "出风口"
-							}
-
-						],
-						abnormalIn: "异常记录"
-
-					},
-					{
-						title: "静电检测记录表",
-					}
-
-
-				],
 				formList: []
 			};
 		},
@@ -201,9 +39,11 @@
 					this.currentheaderID = sort
 					uni.setStorageSync("currentheaderID", this.currentheaderID)
 					// this.getwrapperList(this.currentheaderID)
-					this.api.getReportList({id:this.switchList[sort-1].id}).then(res=>{
-						this.formList=res
-						
+					this.api.getReportList({
+						id: this.switchList[sort - 1].id
+					}).then(res => {
+						this.formList = res
+
 					})
 				}
 			},
@@ -225,24 +65,21 @@
 				this.$message.success('请查看控制台');
 				console.log("111", err)
 			},
-			showDetail(index){
-				 uni.navigateTo({
-				 	url:`./detail?id=${this.formList[index].id}`
-				 })
+			showDetail(index) {
+				uni.navigateTo({
+					url: `./detail?id=${this.formList[index].id}`
+				})
 			},
-			// back(){
-			// uni.navigateBack({
-				
-			// })}
-			
 		},
 		onLoad() {
 			this.api.getReportType().then(res => {
 				this.switchList = res
 				// console.log("1111", this.switchList);
-				this.api.getReportList({id:this.switchList[0].id}).then(res=>{
-					this.formList=res
-					console.log("2222",this.formList);
+				this.api.getReportList({
+					id: this.switchList[0].id
+				}).then(res => {
+					this.formList = res
+					console.log("2222", this.formList);
 				})
 			})
 		}
@@ -256,13 +93,14 @@
 		width: 100%;
 		background-color: #ecf0f1;
 		min-height: 100vh;
+
 		.container {
 			width: 100%;
 
 			.formList {
 				padding: 40upx 20upx 500upx 20upx;
 				box-sizing: border-box;
-				
+
 				margin-top: 80upx;
 
 				.listBody {
@@ -297,6 +135,7 @@
 				height: calc(var(--status-bar-height) +86upx);
 				// overflow: hidden;
 				width: 100%;
+
 				// .navigation{
 				// 	width: 100%;
 				// 	// background-color: #2957C4;
@@ -312,11 +151,11 @@
 				// }
 				.head_switch {
 					// position: fixed;
-					margin-top: calc(var(--status-bar-height) + 10upx);
+					margin-top: calc(var(--status-bar-height));
 					// z-index: 100;
 					background-color: #0984e3;
 					width: 100%;
-					height: 76upx;
+					padding:20upx 0;
 					// padding-bottom: 12upx;
 					overflow-x: scroll;
 					overflow-y: hidden;
@@ -355,6 +194,7 @@
 						border-radius: 6upx;
 					}
 				}
+
 				.head_switch::-webkit-scrollbar {
 					display: none;
 				}
