@@ -13,14 +13,14 @@
 		</swiper>
 		<!-- 轮播图 结束 -->
 		<view class="wrapper_item_container">
-			
+
 			<view class="wrapper_item_title" >
 				<view class="title_text">
 				{{title}}
 				</view>
 				<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
 			</view>
-			
+
 			<view class="th">
 				<view class="line1 line">
 					项目
@@ -69,7 +69,7 @@
 			back() {
 				uni.navigateBack({})
 
-			
+
 			}
 		},
 		async onLoad(e) {
@@ -199,19 +199,19 @@
 				justify-content: space-between;
 				height: 34upx;
 				font-size: 32upx;
-			
+
 				.title_text {
 					color: #5481EA;
 					font-size: 32upx;
 				}
-			
+
 				.arrow {
 					// padding-right: 20upx;
 					width: 100upx;
 					color: #5481EA;
 					font-size: 32upx;
 					position: relative;
-			
+
 					image {
 						position: absolute;
 						top: 50%;
@@ -221,7 +221,7 @@
 						margin-left: 16upx
 					}
 				}
-			}	
+			}
 			.wrapper_item_item {
 				display: flex;
 				padding: 10upx 20upx;
