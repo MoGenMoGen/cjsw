@@ -103,6 +103,7 @@
 
 				image {
 					width: 24upx;
+
 				}
 			}
 

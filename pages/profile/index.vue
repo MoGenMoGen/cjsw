@@ -168,7 +168,7 @@
 			// 更换头像
 			async changeAvatar() {
 				// 图片上传接口
-				let avatar = await this.api.chooseImages('', 1)
+				let avatar = await this.api.chooseImages('',1)
 				console.log(1111111);
 				let res = await this.api.upLoad(avatar[0])
 				console.log({
