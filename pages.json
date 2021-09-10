@@ -167,7 +167,7 @@
 				"selectedIconPath": "static/tabhomeactive.png"
 			},
 			{
-				"pagePath": "pages/reportform/index",
+				"pagePath": "/pages/reportform/index",
 				"text": "报表",
 				"iconPath": "static/tabreportform.png",
 				"selectedIconPath": "static/tabreportformactive.png"

@@ -53,12 +53,19 @@
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
 					@click="toDetail(item1.id,item1.img,item1.dictValue)">
 					<view class="wrapper_item_title" @click='toogle(index1)'>
-						<view class="title_text">
-							{{item1.dictValue}}
+						<view class="" style="display: flex;align-items: center;">
+							<image src="../../static/titletip.png" mode="widthFix" style="width: 32upx;margin-right: 10upx;"></image>
+							<view class="title_text">
+								{{item1.dictValue}}
+							</view>
 						</view>
-						<view class="arrow">详情
+						<view style="display: flex;align-items: center;">
+							<image src="../../static/btn.png" mode="widthFix" style="width:64upx;height: 64upx; ;margin-right:20upx ;"></image>
+							<image src="../../static/todetail.png" mode="widthFix" style="width:64upx ;"></image>
+						</view>
+						<!-- <view class="arrow">详情
 							<image src="../../static/arrow1.png" mode="widthFix"></image>
-						</view>
+						</view> -->
 						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
 					</view>
 					<view class="wrapper_item_container">
@@ -122,7 +129,7 @@
 	export default {
 		data() {
 			return {
-				workshopName:'',
+				workshopName: '',
 				// 头部车间列表
 				switchList: [],
 				// 监控项
@@ -317,7 +324,7 @@
 			if (this.timer) {
 				clearInterval(this.timer);
 			}
-		
+
 		},
 		onUnload() {
 			if (this.timer) {
@@ -532,7 +539,7 @@
 						width: 100%;
 						// padding:0 20upx;
 						box-sizing: border-box;
-						border-left: 8upx solid #5481EA;
+						// border-left: 8upx solid #5481EA;
 						color: #5481EA;
 						padding-left: 20upx;
 						margin-bottom: 40upx;
