@@ -87,9 +87,10 @@
 	.container {
 		width: 100%;
 		position: relative;
-		background-color: #ecf0f1;
+		// background-color: #ecf0f1;
+		background-color: #fafafa;
 		padding-bottom: 160upx;
-		padding-top: 5px;
+		// padding-top: 5px;
 		min-height: 100vh;
 		// .navigation {
 		// 	position: fixed;
@@ -124,10 +125,10 @@
 		.swiper {
 			margin: 0upx auto 20upx;
 			// margin-top: calc(var(--status-bar-height) + 86upx);
-			width: 710upx;
+			width: 750upx;
 			height: 300upx;
 			border-radius: 24upx;
-			overflow: hidden;
+			// overflow: hidden;
 
 			// padding:0 4upx;
 			swiper-item {
@@ -162,7 +163,7 @@
 
 		.wrapper_item_container {
 			width: 710upx;
-			border-radius: 30upx;
+			border-radius: 40upx;
 			padding: 30upx 20upx;
 			// margin-top:60upx;
 			background: #fff;
@@ -174,16 +175,17 @@
 			.th {
 				display: flex;
 				padding: 10upx 20upx;
-				background: #C7E3FF;
+				// background: #C7E3FF;
 				color: #5481EA;
+				border-bottom: 1px solid #E4EAEE;
 			}
 
 			.wrapper_item_item:nth-child(odd) {
-				background-color: #F1F1F1;
+				// background-color: #F1F1F1;
 			}
 
 			.wrapper_item_item:nth-child(even) {
-				background-color: #F9F9F9;
+				// background-color: #F9F9F9;
 			}
 			.wrapper_item_title {
 				width: 100%;

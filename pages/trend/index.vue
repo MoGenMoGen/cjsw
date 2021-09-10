@@ -78,13 +78,15 @@
 		<view class="wrapper_list" :style="{'margin-top': (isChild?'calc(256upx  + 300upx)':'calc(156upx + 300upx)')}">
 			<checkbox-group @change="checkboxChange">
 				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1">
-					<view class="wrapper_item_title" @click="toDetail(item1.id,item1.img,item1.dictValue)">
+					<view class="wrapper_item_title">
 						<view class="title_text">
 							{{item1.dictValue}}
 						</view>
-						<view class="arrow">详情
+						<image src="../../static/todetail.png" mode="widthFix" style="width:64upx ;"
+							@click="toDetail(item1.id,item1.img,item1.dictValue)"></image>
+						<!-- <view class="arrow">详情
 							<image src="../../static/arrow1.png" mode="widthFix"></image>
-						</view>
+						</view> -->
 					</view>
 					<view class="wrapper_item_container">
 						<view class="th">
@@ -788,15 +790,15 @@
 					// box-shadow: 0 0 3px rgba(0,0,0,.1);
 					width: 100%;
 					// box-sizing: border-box;
-					border-left: 8upx solid #5481EA;
+					// border-left: 8upx solid #5481EA;
 					color: #5481EA;
 					padding-left: 20upx;
-					margin-bottom: 40upx;
+					// margin-bottom: 40upx;
 					// position: relative;
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
-					height: 34upx;
+					// height: 34upx;
 					font-size: 32upx;
 
 					.title_text {
@@ -833,12 +835,13 @@
 					// padding: 0 20upx;
 					.th {
 						display: flex;
-						padding: 10upx 20upx;
+						padding: 16upx 20upx;
 						// padding-left:50upx;
 						// padding-left: 70upx;
 
-						background: #C7E3FF;
+						// background: #C7E3FF;
 						color: #5481EA;
+						border-bottom: 1px solid #E4EAEE;
 
 						.line {
 							text-align: center;
@@ -850,16 +853,16 @@
 					}
 
 					.wrapper_item_item:nth-child(odd) {
-						background-color: #F1F1F1;
+						// background-color: #F1F1F1;
 					}
 
 					.wrapper_item_item:nth-child(even) {
-						background-color: #F9F9F9;
+						// background-color: #F9F9F9;
 					}
 
 					.wrapper_item_item {
 						display: flex;
-						padding: 10upx 20upx;
+						padding: 16upx 20upx;
 
 					}
 

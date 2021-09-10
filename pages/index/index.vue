@@ -13,13 +13,17 @@
 				</view>
 			</view>
 			<!-- 头部切换栏 结束 -->
+			<!-- 首页背景开始 -->
+			<view class="indexbg" :style="{backgroundImage:'url('+homebg+')'}">
+			</view>
+			<!-- 首页背景开始 -->
 			<!-- 轮播图 开始 -->
-			<swiper class="swiper" :indicator-dots="false" autoplay="true" interval="4000" duration="500"
+			<!-- <swiper class="swiper" :indicator-dots="false" autoplay="true" interval="4000" duration="500"
 				indicator-color="white" indicator-active-color="red">
 				<swiper-item v-for="(item, index) in swiperList" :key="index">
 					<image :src="item" mode="aspectFill" />
 				</swiper-item>
-			</swiper>
+			</swiper> -->
 			<!-- 轮播图 结束 -->
 			<!-- 机器运行状态 开始 -->
 			<!-- <view class="flexspace">
@@ -38,68 +42,82 @@
 			</view> -->
 			<!-- 产线 结束 -->
 
-			<!-- 子列表 开始 -->
-			<view class="child_hidden" v-if='isChild'>
-				<view class="child_switch">
-					<text class="child_switch_item" v-for="(item,index) in ChildListTitle" :key="index"
-						@click="switchChildList(index)" :class="{active_child:index == currentChildIndex}">
-						{{item}}
-					</text>
-				</view>
-			</view>
-			<!-- 子列表 结束 -->
+
 			<!-- 内容列表 开始 -->
 			<view class="wrapper_list" v-if='!ismonitor'>
-				<view class="wrapper_item" v-for="(item1,index1) in wrapperList1" :key="index1"
-					@click="toDetail(item1.id,item1.img,item1.dictValue)">
-					<view class="wrapper_item_title" @click='toogle(index1)'>
-						<view class="" style="display: flex;align-items: center;">
-							<image src="../../static/titletip.png" mode="widthFix" style="width: 32upx;margin-right: 10upx;"></image>
-							<view class="title_text">
-								{{item1.dictValue}}
-							</view>
-						</view>
-						<view style="display: flex;align-items: center;">
-							<image src="../../static/btn.png" mode="widthFix" style="width:64upx;height: 64upx; ;margin-right:20upx ;"></image>
-							<image src="../../static/todetail.png" mode="widthFix" style="width:64upx ;"></image>
-						</view>
-						<!-- <view class="arrow">详情
-							<image src="../../static/arrow1.png" mode="widthFix"></image>
-						</view> -->
-						<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
-					</view>
-					<view class="wrapper_item_container">
-						<view class="th">
-							<view class="line1 line" style="color:#5481EA">
-								项目
-							</view>
-							<view class="line2 line" style="color:#5481EA">
-								浮点数
-							</view>
-							<view class="line3 line" style="color:#5481EA">
-								要求范围
-							</view>
-							<view class="line4 line" style="color:#5481EA">
-								单位
-							</view>
-						</view>
-						<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
-							<view class="line1 line">
-								{{item2.name}}
-							</view>
-							<view class="line2 line" :style="{color:item2.color}">
-								{{item2.val}}
-
-							</view>
-							<view class="line3 line">
-								{{item2.lowVal}}~{{item2.faultVal}}
-							</view>
-							<view class="line4 line">
-								{{item2.unit}}
-							</view>
-						</view>
+				<!-- 子列表 开始 -->
+				<view class="child_hidden" v-if='isChild'>
+					<view class="child_switch">
+						<text class="child_switch_item" v-for="(item,index) in ChildListTitle" :key="index"
+							@click="switchChildList(index)" :class="{active_child:index == currentChildIndex}">
+							{{item}}
+						</text>
 					</view>
 				</view>
+				<!-- 子列表 结束 -->
+					<view class="wrapper_item"  v-for="(item1,index1) in wrapperList1" :key="index1"
+						:style="{'border-radius':showIdList.length!=0?'40upx':'62upx'}">
+						<view class="wrapper_item_title" @click='toogle(index1)'>
+							<view class="" style="display: flex;align-items: center;">
+								<image src="../../static/titletip.png" mode="widthFix"
+									style="width: 32upx;margin-right: 10upx;"></image>
+								<view class="title_text">
+									{{item1.dictValue}}
+								</view>
+							</view>
+							<view style="display: flex;align-items: center;">
+								<image src="../../static/showmore.png" mode="widthFix"
+									style="width:64upx;height: 64upx; ;margin-right:20upx ;" v-show="item1.isshow==true"
+									@click="showless(item1)"></image>
+								<image src="../../static/showless.png" mode="widthFix"
+									style="width:64upx;height: 64upx; ;margin-right:20upx ;" @click="showmore(item1)"
+									v-show="item1.isshow==false"></image>
+
+								<image src="../../static/todetail.png" mode="widthFix" style="width:64upx ;"
+									@click="toDetail(item1.id,item1.img,item1.dictValue)"></image>
+							</view>
+							<!-- <view class="arrow">详情
+							<image src="../../static/arrow1.png" mode="widthFix"></image>
+						</view> -->
+							<!-- <image :src="item1.arrow" mode="widthFix" class="arrow"></image> -->
+						</view>
+						<transition name="fade" class="fade">
+							<view class="wrapper_item_container" v-show='item1.isshow' transiton="fade">
+								<view class="th">
+									<view class="line1 line" style="color:#5481EA">
+										项目
+									</view>
+									<view class="line2 line" style="color:#5481EA">
+										浮点数
+									</view>
+									<view class="line3 line" style="color:#5481EA">
+										要求范围
+									</view>
+									<view class="line4 line" style="color:#5481EA">
+										单位
+									</view>
+								</view>
+								<view class="wrapper_item_item" v-for="(item2,index2) in item1.sites" :key="index2">
+									<view class="line1 line">
+										{{item2.name}}
+									</view>
+									<view class="line2 line" :style="{color:item2.color}">
+										{{item2.val}}
+
+									</view>
+									<view class="line3 line" v-if='item2.lowVal&&item2.faultVal'>
+										{{item2.lowVal}}~{{item2.faultVal}}
+									</view>
+									<view class="line3 line" v-else>
+
+									</view>
+									<view class="line4 line">
+										{{item2.unit}}
+									</view>
+								</view>
+							</view>
+						</transition>
+					</view>
 			</view>
 
 			<!-- 内容列表 结束 -->
@@ -129,6 +147,10 @@
 	export default {
 		data() {
 			return {
+				// 显示卡片id
+				showIdList: [],
+				// 背景图
+				homebg: '',
 				workshopName: '',
 				// 头部车间列表
 				switchList: [],
@@ -238,6 +260,25 @@
 			// }
 		},
 		methods: {
+			// 显示卡片
+			showmore(item) {
+				console.log('showmore');
+				this.$nextTick(() => {
+					item.isshow = true;
+					this.wrapperList1.push()
+				})
+				this.showIdList.push(item.id)
+				console.log(this.showIdList);
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild)
+			},
+			// 隐藏卡片
+			showless(item) {
+				item.isshow = true;
+				console.log('showless', item.id);
+				this.showIdList = this.showIdList.filter(item1 => item1 != item.id);
+				console.log(this.showIdList);
+				this.getwrapperList(this.switchList[this.currentheaderIndex].id, this.isChild)
+			},
 			switchHead(index, item) {
 				//console.log(item.dictValue)
 				this.workshopName = item.dictValue
@@ -272,10 +313,35 @@
 					if (child) {
 						console.log('child', this.currentChildIndex);
 						this.ChildListTitle = res.map(item => item.dictValue)
-						this.wrapperList1 = res[this.currentChildIndex].children
-						console.log("wrapList", this.wrapperList1);
-					} else
-						this.wrapperList1 = res
+						this.wrapperList1 = res[this.currentChildIndex].children;
+						// 为每个卡片添加一个isshow字段用于显示隐藏卡片
+						for (let item of this.wrapperList1) {
+							item.isshow = false;
+						}
+						for (let item of this.wrapperList1) {
+
+							if (this.showIdList.indexOf(item.id) > -1) {
+
+								item.isshow = true;
+
+							}
+
+						}
+					} else {
+						this.wrapperList1 = res;
+						// 为每个卡片添加一个isshow字段用于显示隐藏卡片
+						for (let item of this.wrapperList1) {
+							item.isshow = false;
+						}
+						for (let item of this.wrapperList1) {
+							if (this.showIdList.indexOf(item.id) > -1) {
+								item.isshow = true;
+							}
+						}
+						this.wrapperList1.push();
+						// console.log(this.wrapperList1);
+					}
+
 				})
 				// 10s轮询
 				this.timer = setInterval(() => {
@@ -284,9 +350,31 @@
 					}).then(res => {
 						if (child) {
 							this.ChildListTitle = res.map(item => item.dictValue)
-							this.wrapperList1 = res[this.currentChildIndex].children
-						} else
-							this.wrapperList1 = res
+							this.wrapperList1 = res[this.currentChildIndex].children;
+							// 为每个卡片添加一个isshow字段用于显示隐藏卡片
+							for (let item of this.wrapperList1) {
+								item.isshow = false;
+							}
+							for (let item of this.wrapperList1) {
+								if (this.showIdList.indexOf(item.id) > -1) {
+									item.isshow = true;
+								}
+							}
+						} else {
+							this.wrapperList1 = res;
+							// 为每个卡片添加一个isshow字段用于显示隐藏卡片
+							for (let item of this.wrapperList1) {
+								item.isshow = false;
+							}
+							for (let item of this.wrapperList1) {
+								if (this.showIdList.indexOf(item.id) > -1) {
+									item.isshow = true;
+								}
+							}
+							this.wrapperList1.push();
+							// console.log(this.wrapperList1);
+						}
+
 					})
 
 				}, 10000)
@@ -311,6 +399,9 @@
 			// 	.then(banners => {
 			// 		this.swiperList = banners.records.map(item => item.img)
 			// 	})
+			let data = await this.api.gethomebg()
+			this.homebg = data[0].img;
+			console.log(134, this.homebg);
 
 		},
 		async onShow() {
@@ -343,7 +434,17 @@
 
 		.container {
 			width: 100%;
-			padding-top: calc(var(--status-bar-height) + 92upx);
+
+			// padding-top: calc(var(--status-bar-height) + 92upx);
+			.fade-enter-active,
+			.fade-leave-active {
+				transition: opacity .5s ease-out;
+			}
+
+			.fade-enter,
+			.fade-leave-active {
+				opacity: 0
+			}
 
 			.hidden {
 				top: 0;
@@ -406,6 +507,14 @@
 				}
 			}
 
+			.indexbg {
+				width: 750upx;
+				height: 592upx;
+				// background: url('~@/static/homebg.png') no-repeat;
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+			}
+
 			.swiper {
 				margin: 0 auto;
 				// margin-top: calc(var(--status-bar-height) + 86upx);
@@ -428,70 +537,6 @@
 				}
 			}
 
-
-			.child_hidden {
-				top: calc(var(--status-bar-height) + 86upx);
-				position: sticky;
-				// z-index: 100;
-				background: #F9F9F9;
-				height: 100upx;
-				// overflow: hidden;
-				width: 100%;
-
-				.child_switch {
-					// position: fixed;
-					// margin-top: 10upx;
-					// z-index: 100;
-					background: #F9F9F9;
-					width: 100%;
-					height: 100upx;
-					// padding-bottom: 12upx;
-					overflow-x: scroll;
-					overflow-y: hidden;
-					// display: flex;
-					// align-items: center;
-					white-space: nowrap;
-
-					.child_switch_item {
-						display: inline-block;
-						padding: 0 23upx;
-						height: 100upx;
-						line-height: 100upx;
-						font-size: 28upx;
-						font-weight: 400;
-						// color: #ecf0f1;
-						color: #999999;
-						opacity: 0.64;
-					}
-
-					.active_child {
-						position: relative;
-						font-size: 28upx;
-						height: 100upx;
-						font-weight: 600;
-						color: #2957C4;
-						opacity: 1;
-						transition: 0.3s;
-					}
-
-					.active_child::after {
-						position: absolute;
-						bottom: 18upx;
-						left: 50%;
-						transform: translateX(-50%);
-						content: "";
-						width: 50upx;
-						height: 6upx;
-						background: #2957C4;
-						opacity: 1;
-						border-radius: 6upx;
-					}
-				}
-
-				.child_switch::-webkit-scrollbar {
-					display: none;
-				}
-			}
 
 
 
@@ -522,32 +567,104 @@
 			}
 
 			.wrapper_list {
-				width: 710upx;
+				margin-top: -60upx;
+				width: 750upx;
 				box-sizing: border-box;
-				margin: 30upx 20upx;
+				// margin:30upx 0;
+				padding: 60upx 30upx;
+				// padding: 30upx 20upx;
+				border-radius: 60upx;
+
+				background: #FAFAFA;
+
+				.child_hidden {
+					top: calc(var(--status-bar-height) + 86upx);
+					position: sticky;
+					// z-index: 100;
+					background: #F9F9F9;
+					height: 100upx;
+					// overflow: hidden;
+					width: 100%;
+
+					.child_switch {
+						// position: fixed;
+						// margin-top: 10upx;
+						// z-index: 100;
+						background: #F9F9F9;
+						width: 100%;
+						height: 100upx;
+						// padding-bottom: 12upx;
+						overflow-x: scroll;
+						overflow-y: hidden;
+						// display: flex;
+						// align-items: center;
+						white-space: nowrap;
+
+						.child_switch_item {
+							display: inline-block;
+							padding: 0 23upx;
+							height: 100upx;
+							line-height: 100upx;
+							font-size: 28upx;
+							font-weight: 400;
+							// color: #ecf0f1;
+							color: #999999;
+							opacity: 0.64;
+						}
+
+						.active_child {
+							position: relative;
+							font-size: 28upx;
+							height: 100upx;
+							font-weight: 600;
+							color: #2957C4;
+							opacity: 1;
+							transition: 0.3s;
+						}
+
+						.active_child::after {
+							position: absolute;
+							bottom: 18upx;
+							left: 50%;
+							transform: translateX(-50%);
+							content: "";
+							width: 50upx;
+							height: 6upx;
+							background: #2957C4;
+							opacity: 1;
+							border-radius: 6upx;
+						}
+					}
+
+					.child_switch::-webkit-scrollbar {
+						display: none;
+					}
+				}
+
+
 
 				.wrapper_item {
 					box-sizing: border-box;
-					width: 710upx;
+					width: 690upx;
 					margin-bottom: 40upx;
-					padding: 20upx;
-					border-radius: 30upx;
+					padding: 30upx;
+					//border-radius: 100upx;
 					background-color: #fff;
 					// box-shadow: 0 0 30upx rgba(0,0,0,.2);
 
 					.wrapper_item_title {
 						width: 100%;
 						// padding:0 20upx;
-						box-sizing: border-box;
+						// box-sizing: border-box;
 						// border-left: 8upx solid #5481EA;
 						color: #5481EA;
-						padding-left: 20upx;
-						margin-bottom: 40upx;
+						// padding: 20upx;
+						// margin-bottom: 40upx;
 						// position: relative;
 						display: flex;
 						align-items: center;
 						justify-content: space-between;
-						height: 34upx;
+						// height: 34upx;
 						font-size: 32upx;
 
 						.title_text {
@@ -575,6 +692,8 @@
 
 
 
+
+
 					.wrapper_item_container {
 						background: #fff;
 						width: 100%;
@@ -584,22 +703,24 @@
 						// padding: 0 20upx;
 						.th {
 							display: flex;
-							padding: 10upx 20upx;
-							background: #C7E3FF;
+							padding: 16upx 20upx;
+							// background: #C7E3FF;
 							color: #5481EA;
+							border-bottom: 1px solid #E4EAEE;
 						}
 
 						.wrapper_item_item:nth-child(odd) {
-							background-color: #F1F1F1;
+							// background-color: #F1F1F1;
 						}
 
 						.wrapper_item_item:nth-child(even) {
-							background-color: #F9F9F9;
+							// background-color: #F9F9F9;
 						}
 
 						.wrapper_item_item {
 							display: flex;
-							padding: 10upx 20upx;
+							align-items: center;
+							padding: 16upx 20upx;
 
 
 						}
@@ -611,21 +732,21 @@
 						}
 
 						.line1 {
-							flex: 2;
+							flex: 20;
 						}
 
 						.line2 {
-							flex: 1;
+							flex: 8;
 							text-align: center;
 						}
 
 						.line3 {
-							flex: 1;
+							flex: 14;
 							text-align: center;
 						}
 
 						.line4 {
-							flex: 1;
+							flex: 8;
 							text-align: center;
 						}
 					}

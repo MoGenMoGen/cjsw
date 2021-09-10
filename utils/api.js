@@ -358,6 +358,17 @@ class api {
 		});
 
 	}
+	// 首页背景图
+	gethomebg() {
+		return new Promise((resolve, reject) => {
+			get("/blade-banner/banner/list?type=index", {}, {
+				'Content-Type': 'application/json'
+			}).then(res => {
+				resolve(res.data.records);
+			});
+		});
+
+	}
 	// 获取头部切换栏列表
 	getheadswitchList() {
 		return new Promise((resolve, reject) => {
@@ -520,7 +531,7 @@ class api {
 	//导出报表测试
 	getReportTest() {
 		return new Promise((resolve, reject) => {
-			get("/blade-mh/reportQuery/test",{},{
+			get("/blade-mh/reportQuery/test", {}, {
 				'Content-Type': 'application/json'
 			}).then(res => {
 				resolve(res.data);
